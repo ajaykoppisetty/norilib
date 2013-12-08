@@ -19,6 +19,8 @@ android {
     defaultConfig {
         minSdkVersion 7
         targetSdkVersion 19
+        testPackageName "com.vomitcuddle.norilib.test"
+        testInstrumentationRunner "android.test.InstrumentationTestRunner"
     }
 }
 
