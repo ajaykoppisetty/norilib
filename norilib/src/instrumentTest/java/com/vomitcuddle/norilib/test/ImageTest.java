@@ -67,13 +67,13 @@ public class ImageTest extends AndroidTestCase {
     assertEquals("http://safebooru.org/thumbnails/749/thumbnail_9636623c63a6fdd58250a7b822965dbdbe9adc6c.jpg", image.previewUrl);
     assertEquals(150, (int) image.previewWidth);
     assertEquals(112, (int) image.previewHeight);
-    assert Arrays.deepEquals(new String[]{"arm_grab", "bad_id", "black_hair", "blush", "bust", "female",
+    assertTrue(Arrays.deepEquals(new String[]{"arm_grab", "bad_id", "black_hair", "blush", "bust", "female",
         "gloves", "hair_ribbon", "hairband", "jacket", "multiple_girls", "pink_eyes", "pink_hair",
         "purple_eyes", "ribbon", "scarf", "shared_scarf", "smile", "snowing", "twintails", "violey_eyes",
-        "wink", "yuri"}, image.generalTags);
-    assert Arrays.deepEquals(new String[]{"tsuyushiro"}, image.artistTags);
-    assert Arrays.deepEquals(new String[]{"mahou_shoujo_madoka_magica"}, image.copyrightTags);
-    assert Arrays.deepEquals(new String[]{"kaname_madoka", "akemi_homura"}, image.characterTags);
+        "wink", "yuri"}, image.generalTags));
+    assertTrue(Arrays.deepEquals(new String[]{"tsuyushiro"}, image.artistTags));
+    assertTrue(Arrays.deepEquals(new String[]{"mahou_shoujo_madoka_magica"}, image.copyrightTags));
+    assertTrue(Arrays.deepEquals(new String[]{"kaname_madoka", "akemi_homura"}, image.characterTags));
     assertEquals(755027L, (long) image.id);
     assertEquals(-1L, (long) image.parentId);
     assertEquals(24377242L, (long) image.pixivId);
