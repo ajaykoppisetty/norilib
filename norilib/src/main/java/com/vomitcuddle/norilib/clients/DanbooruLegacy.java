@@ -30,7 +30,7 @@ public class DanbooruLegacy extends Imageboard {
   protected final String mPassword;
 
   /**
-   * Create a new instance of the Danbooru 1.x API client.
+   * Creates a new instance of the Danbooru 1.x API client without authentication.
    *
    * @param endpoint     URL to the API endpoint (example: http://yande.re), doesn't include path or trailing slashes.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
@@ -44,7 +44,7 @@ public class DanbooruLegacy extends Imageboard {
   }
 
   /**
-   * Create a new instance of the Danbooru 1.x API client with authentication.
+   * Creates a new instance of the Danbooru 1.x API client with authentication.
    *
    * @param endpoint     URL to the API endpoint (example: http://yande.re), doesn't include path or trailing slashes.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.

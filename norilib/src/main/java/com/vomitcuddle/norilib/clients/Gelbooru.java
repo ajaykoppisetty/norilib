@@ -19,6 +19,25 @@ public class Gelbooru extends Imageboard {
   /** Password used for authentication. Can be null. */
   private final String mPassword;
 
+  /**
+   * Creates a new instance of the Gelbooru API client without user authentication.
+   *
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   */
+  public Gelbooru(RequestQueue requestQueue) {
+    super(requestQueue);
+    // No authentication needed.
+    mUsername = null;
+    mPassword = null;
+  }
+
+  /**
+   * Creates a new instance of the Gelbooru API client with user authentication.
+   *
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   * @param username     Username.
+   * @param password     Password.
+   */
   public Gelbooru(RequestQueue requestQueue, String username, String password) {
     super(requestQueue);
     // Set credentials.
@@ -37,7 +56,6 @@ public class Gelbooru extends Imageboard {
     final Uri uri = Uri.parse(url);
     return !(uri.getHost() == null || uri.getScheme() == null) && checkUrl(uri.getScheme() + "://" + uri.getHost() + "/index.php?page=dapi&s=post&q=index");
   }
-
 
   @Override
   public String getDefaultQuery() {

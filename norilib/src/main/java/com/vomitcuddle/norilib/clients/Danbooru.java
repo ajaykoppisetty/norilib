@@ -4,12 +4,9 @@ import android.net.Uri;
 import android.util.Base64;
 
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpHeaderParser;
 import com.vomitcuddle.norilib.Image;
 import com.vomitcuddle.norilib.SearchResult;
 
@@ -40,10 +37,25 @@ public class Danbooru extends Imageboard {
   private final String mApiKey;
 
   /**
-   * Creates a new Danbooru client.
+   * Creates a new instance of the Danbooru 2.x client without user authentication.
    *
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
-   * @param apiEndpoint  API Endpoint, uses danbooru.donmai.us if null.
+   * @param apiEndpoint  API Endpoint, uses http://danbooru.donmai.us if null.
+   */
+  public Danbooru(RequestQueue requestQueue, String apiEndpoint) {
+    super(requestQueue);
+    // Use danbooru as default API endpoint.
+    mApiEndpoint = apiEndpoint != null ? apiEndpoint : DEFAULT_API_ENDPOINT;
+    // No authentication needed.
+    mUsername = null;
+    mApiKey = null;
+  }
+
+  /**
+   * Creates a new instance of the Danbooru 2.x client with user authentication.
+   *
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   * @param apiEndpoint  API Endpoint, uses http://danbooru.donmai.us if null.
    * @param username     Username (optional).
    * @param apiKey       API key (optional).
    */

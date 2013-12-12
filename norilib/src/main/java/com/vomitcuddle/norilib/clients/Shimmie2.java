@@ -19,6 +19,23 @@ public class Shimmie2 extends Imageboard {
   /** Password used for authentication. Can be null. */
   private final String mPassword;
 
+  /**
+   * Creates a new instance of the Shimmie2 API client without user authentication
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   */
+  public Shimmie2(RequestQueue requestQueue) {
+    super(requestQueue);
+    // No authentication needed.
+    mUsername = null;
+    mPassword = null;
+  }
+
+  /**
+   * Creates a new instance of the Shimmie2 API client with user authentication.
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   * @param username Username.
+   * @param password Password.
+   */
   public Shimmie2(RequestQueue requestQueue, String username, String password) {
     super(requestQueue);
     // Set credentials.
