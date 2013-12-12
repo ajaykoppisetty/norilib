@@ -1,5 +1,9 @@
 package com.vomitcuddle.norilib.clients;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.vomitcuddle.norilib.SearchResult;
+
 import org.apache.http.HttpStatus;
 
 import java.io.IOException;
@@ -8,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /** Base imageboard client class */
-public abstract class Imageboard {
+abstract class Imageboard {
 
   /**
    * Checks if URL returns a 200 OK status code.
@@ -41,4 +45,48 @@ public abstract class Imageboard {
     }
     return false;
   }
+
+  /**
+   * Gets default query, usually "rating:safe".
+   *
+   * @return Default query.
+   */
+  public abstract String getDefaultQuery();
+
+  /**
+   * Checks whether the API endpoint requires explicit authentication.
+   *
+   * @return True if authentication is required.
+   */
+  public abstract boolean requiresAuthentication();
+
+  /**
+   * Fetch a list of {@link com.vomitcuddle.norilib.Image}s using Android Volley.
+   *
+   * @param tags          Tags to search for. Any tag combination that works on the web should work here.
+   * @param pid           Page number.
+   * @param listener      Listener to receive the {@link SearchResult} response.
+   * @param errorListener Error listener, or null to ignore errors.
+   * @return Android Volley {@link com.android.volley.Request} that has been added to the {@link com.android.volley.RequestQueue}.
+   */
+  public abstract Request<SearchResult> search(String tags, int pid, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener);
+
+  /**
+   * Fetch a list of {@link com.vomitcuddle.norilib.Image}s using Android Volley.
+   *
+   * @param tags          Tags to search for. Any tag combination that works on the web should work here.
+   * @param listener      Listener to receive the {@link SearchResult} response.
+   * @param errorListener Error listener, or null to ignore errors.
+   * @return Android Volley {@link com.android.volley.Request} that has been added to the {@link com.android.volley.RequestQueue}.
+   */
+  public abstract Request<SearchResult> search(String tags, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener);
+
+  /**
+   * Parses API response into a {@link com.vomitcuddle.norilib.SearchResult}.
+   *
+   * @param data API returned from HTTP response.
+   * @return Parsed {@link com.vomitcuddle.norilib.SearchResult}.
+   * @throws Exception Error parsing response.
+   */
+  protected abstract SearchResult parseSearchResultResponse(String data) throws Exception;
 }
