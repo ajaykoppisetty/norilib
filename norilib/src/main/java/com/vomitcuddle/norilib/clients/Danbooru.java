@@ -34,12 +34,10 @@ public class Danbooru extends Imageboard {
   private static final int DEFAULT_LIMIT = 100;
   /** API endpoint. */
   private final String mApiEndpoint;
-  /** Username to authenticate with. */
+  /** Username used for authentication, can be null. */
   private final String mUsername;
-  /** API key to authenticate with. */
+  /** API key used for authentication, can be null. */
   private final String mApiKey;
-  /** Volley {@link com.android.volley.RequestQueue}. */
-  private final RequestQueue mRequestQueue;
 
   /**
    * Creates a new Danbooru client.
@@ -50,9 +48,10 @@ public class Danbooru extends Imageboard {
    * @param apiKey       API key (optional).
    */
   public Danbooru(RequestQueue requestQueue, String apiEndpoint, String username, String apiKey) {
+    super(requestQueue);
     // Use danbooru as default API endpoint.
     mApiEndpoint = apiEndpoint != null ? apiEndpoint : DEFAULT_API_ENDPOINT;
-    mRequestQueue = requestQueue;
+    // Set authentication credentials.
     mUsername = username;
     mApiKey = apiKey;
   }
@@ -194,50 +193,15 @@ public class Danbooru extends Imageboard {
     return request;
   }
 
-  private class SearchResultRequest extends Request<SearchResult> {
-    // Response listener.
-    private final Response.Listener<SearchResult> mListener;
-    // Request query.
-    private final String mQuery;
-
-    public SearchResultRequest(String url, String query, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {
-      super(Method.GET, url, errorListener);
-      // Set response listener and request query.
-      mListener = listener;
-      mQuery = query;
-      // Set request queue.
-      setRequestQueue(mRequestQueue);
+  @Override
+  protected Map<String, String> getAuthHeaders() throws AuthFailureError {
+    // Set authentication headers.
+    if (mUsername != null && mApiKey != null) {
+      final Map<String, String> headers = new HashMap<String, String>();
+      headers.put("Authorization", Base64.encodeToString((mUsername + ":" + mApiKey).getBytes(), Base64.DEFAULT));
+      return headers;
     }
-
-    @Override
-    protected Response<SearchResult> parseNetworkResponse(NetworkResponse response) {
-      try {
-        return Response.success(parseSearchResultResponse(new String(response.data, HttpHeaderParser.parseCharset(response.headers))),
-            HttpHeaderParser.parseCacheHeaders(response));
-      } catch (Exception e) {
-        return Response.error(new VolleyError("Error processing data"));
-      }
-    }
-
-    @Override
-    public Map<String, String> getHeaders() throws AuthFailureError {
-      // Set authentication headers.
-      if (mUsername != null && mApiKey != null) {
-        final Map<String, String> headers = new HashMap<String, String>();
-        headers.put("Authorization", Base64.encodeToString((mUsername + ":" + mApiKey).getBytes(), Base64.DEFAULT));
-        return headers;
-      }
-      return Collections.emptyMap();
-    }
-
-    @Override
-    protected void deliverResponse(SearchResult response) {
-      // Append search query to response.
-      if (response != null)
-        response.query = mQuery;
-      // Deliver response.
-      if (mListener != null)
-        mListener.onResponse(response);
-    }
+    // No authentication needed.
+    return Collections.emptyMap();
   }
 }

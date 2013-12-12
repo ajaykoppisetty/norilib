@@ -1,7 +1,12 @@
 package com.vomitcuddle.norilib.clients;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.vomitcuddle.norilib.SearchResult;
 
 import org.apache.http.HttpStatus;
@@ -10,9 +15,21 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 /** Base imageboard client class */
 abstract class Imageboard {
+  /** Volley {@link com.android.volley.RequestQueue}. */
+  protected final RequestQueue mRequestQueue;
+
+  /**
+   * Base constructor for all API clients.
+   *
+   * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
+   */
+  public Imageboard(RequestQueue requestQueue) {
+    mRequestQueue = requestQueue;
+  }
 
   /**
    * Checks if URL returns a 200 OK status code.
@@ -82,6 +99,14 @@ abstract class Imageboard {
   public abstract Request<SearchResult> search(String tags, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener);
 
   /**
+   * Generated authentication headers for all requests.
+   *
+   * @return Map of HTTP headers to send with all API requests.
+   * @throws AuthFailureError Authentication error.
+   */
+  protected abstract Map<String, String> getAuthHeaders() throws AuthFailureError;
+
+  /**
    * Parses API response into a {@link com.vomitcuddle.norilib.SearchResult}.
    *
    * @param data API returned from HTTP response.
@@ -89,4 +114,55 @@ abstract class Imageboard {
    * @throws Exception Error parsing response.
    */
   protected abstract SearchResult parseSearchResultResponse(String data) throws Exception;
+
+  /**
+   * Volley request fetching a {@link com.vomitcuddle.norilib.SearchResult}.
+   */
+  protected class SearchResultRequest extends Request<SearchResult> {
+    /** Response listener */
+    private final Response.Listener<SearchResult> mListener;
+    /** Query string we're searching for. */
+    private final String mQuery;
+
+    /**
+     * Create a new Volley {@link com.vomitcuddle.norilib.clients.Imageboard.SearchResultRequest}.
+     * @param url URL to fetch.
+     * @param query Query string being searched for.
+     * @param listener Listener to receive the {@link SearchResult} response.
+     * @param errorListener Error listener, or null to ignore errors.
+     */
+    public SearchResultRequest(String url, String query, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {
+      super(Method.GET, url, errorListener);
+      mListener = listener;
+      mQuery = query;
+      setRequestQueue(mRequestQueue);
+    }
+
+    @Override
+    public Map<String, String> getHeaders() throws AuthFailureError {
+      // Use abstract method to get the auth headers.
+      return getAuthHeaders();
+    }
+
+    @Override
+    protected Response<SearchResult> parseNetworkResponse(NetworkResponse response) {
+      try {
+        // Parse HTTP response.
+        return Response.success(parseSearchResultResponse(new String(response.data, HttpHeaderParser.parseCharset(response.headers))),
+            HttpHeaderParser.parseCacheHeaders(response));
+      } catch (Exception e) {
+        return Response.error(new VolleyError("Error processing data."));
+      }
+    }
+
+    @Override
+    protected void deliverResponse(SearchResult response) {
+      // Append search query to response.
+      if (response != null)
+        response.query = mQuery;
+      // Deliver response, if not canceled and response listener isn't null.
+      if (!isCanceled() && mListener != null)
+        mListener.onResponse(response);
+    }
+  }
 }

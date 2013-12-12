@@ -2,14 +2,29 @@ package com.vomitcuddle.norilib.clients;
 
 import android.net.Uri;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.vomitcuddle.norilib.SearchResult;
 
 import java.net.MalformedURLException;
+import java.util.Collections;
+import java.util.Map;
 
 /** Shimmie2 Danbooru API client */
 public class Shimmie2 extends Imageboard {
+  /** Username used for authentication. Can be null. */
+  private final String mUsername;
+  /** Password used for authentication. Can be null. */
+  private final String mPassword;
+
+  public Shimmie2(RequestQueue requestQueue, String username, String password) {
+    super(requestQueue);
+    // Set credentials.
+    mUsername = username;
+    mPassword = password;
+  }
 
   /**
    * Checks if site exposes a Shimmie2 API.
@@ -41,6 +56,12 @@ public class Shimmie2 extends Imageboard {
   @Override
   public Request<SearchResult> search(String tags, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {
     return null;
+  }
+
+  @Override
+  protected Map<String, String> getAuthHeaders() throws AuthFailureError {
+    // TODO: Implement me.
+    return Collections.emptyMap();
   }
 
   @Override
