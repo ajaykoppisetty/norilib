@@ -8,7 +8,7 @@ import com.android.volley.toolbox.NetworkImageView;
 /**
  * NetworkImageView with forced 1:1 aspect ratio.
  */
-public class SquareNetworkImageView extends NetworkImageView {
+class SquareNetworkImageView extends NetworkImageView {
 
   public SquareNetworkImageView(Context context) {
     super(context);
