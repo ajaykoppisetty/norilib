@@ -15,8 +15,10 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.StringReader;
 import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -154,12 +156,12 @@ public class Danbooru extends Imageboard {
         else if (name.equals("last-commented-at")) // Has comment
           image.hasComments = !xpp.nextText().equals("");
         else if (name.equals("created-at")) // Creation date
-          image.createdAt = DATE_FORMAT.parse(xpp.nextText());
+          image.createdAt = parseDateFromString(xpp.nextText());
 
       } else if (eventType == XmlPullParser.END_TAG) {
         if (xpp.getName().equals("post")) {
           // Append web URL.
-          image.webUrl = String.format(Locale.US, "%s/posts/%d", mApiEndpoint, image.id);
+          image.webUrl = getWebUrlFromImageId(image.id);
           // Add image to results.
           searchResult.images.add(image);
         }
@@ -169,6 +171,16 @@ public class Danbooru extends Imageboard {
       eventType = xpp.next();
     }
     return searchResult;
+  }
+
+  @Override
+  protected String getWebUrlFromImageId(long id) {
+    return String.format(Locale.US, "%s/posts/%d", mApiEndpoint, id);
+  }
+
+  @Override
+  protected Date parseDateFromString(String date) throws ParseException {
+    return DATE_FORMAT.parse(date);
   }
 
   @Override

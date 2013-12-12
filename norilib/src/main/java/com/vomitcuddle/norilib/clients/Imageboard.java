@@ -15,10 +15,16 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /** Base imageboard client class */
 abstract class Imageboard {
+  /** Regex used for parsing pixiv IDs from URLs */
+  private static final Pattern PIXIV_ID_FROM_URL_PATTERN = Pattern.compile("http://(?:www|i\\d)\\.pixiv\\.net/.+?(?:illust_id=|img/.+?/)(\\d+)");
   /** Volley {@link com.android.volley.RequestQueue}. */
   protected final RequestQueue mRequestQueue;
 
@@ -62,6 +68,37 @@ abstract class Imageboard {
     }
     return false;
   }
+
+  /**
+   * Gets Pixiv ID from Pixiv image URL.
+   *
+   * @param url URL to image on Pixiv.
+   * @return Pixiv ID or 1L if ID could not be found.
+   */
+  protected long parsePixivIdFromUrl(String url) {
+    // Make sure URL isn't empty of null.
+    if (url == null || url.equals(""))
+      return -1L;
+    // Match regex against URL.
+    final Matcher matcher = PIXIV_ID_FROM_URL_PATTERN.matcher(url);
+    if (matcher.find()) {
+      // Match found.
+      return Long.parseLong(matcher.group(1));
+    }
+    // Match not found.
+    return -1L;
+  }
+
+  /**
+   * Get web URL from image ID.
+   *
+   * @param id Image ID.
+   * @return Link to image on the Imageboard's website.
+   */
+  protected abstract String getWebUrlFromImageId(long id);
+
+  /** Parse date from API string */
+  protected abstract Date parseDateFromString(String date) throws ParseException;
 
   /**
    * Gets default query, usually "rating:safe".
@@ -126,9 +163,10 @@ abstract class Imageboard {
 
     /**
      * Create a new Volley {@link com.vomitcuddle.norilib.clients.Imageboard.SearchResultRequest}.
-     * @param url URL to fetch.
-     * @param query Query string being searched for.
-     * @param listener Listener to receive the {@link SearchResult} response.
+     *
+     * @param url           URL to fetch.
+     * @param query         Query string being searched for.
+     * @param listener      Listener to receive the {@link SearchResult} response.
      * @param errorListener Error listener, or null to ignore errors.
      */
     public SearchResultRequest(String url, String query, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {

@@ -9,7 +9,9 @@ import com.android.volley.Response;
 import com.vomitcuddle.norilib.SearchResult;
 
 import java.net.MalformedURLException;
+import java.text.ParseException;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Map;
 
 /** Gelbooru API client. */
@@ -29,6 +31,16 @@ public class Gelbooru extends Imageboard {
     // No authentication needed.
     mUsername = null;
     mPassword = null;
+  }
+
+  @Override
+  protected String getWebUrlFromImageId(long id) {
+    return null;
+  }
+
+  @Override
+  protected Date parseDateFromString(String date) throws ParseException {
+    return null;
   }
 
   /**
