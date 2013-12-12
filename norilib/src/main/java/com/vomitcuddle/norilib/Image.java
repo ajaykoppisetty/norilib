@@ -140,7 +140,7 @@ public class Image implements Parcelable {
    *
    * @return URL to this {@link Image}'s Pixiv page, null if {@link #pixivId} not set.
    */
-  public String getPixivLink() {
+  public String getPixivUrl() {
     return pixivId != -1 ? "http://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + pixivId : null;
   }
 
@@ -177,6 +177,7 @@ public class Image implements Parcelable {
     dest.writeLong(createdAt != null ? createdAt.getTime() : -1L);
   }
 
+  /** Obscenity ratings */
   public enum ObscenityRating {
     UNDEFINED,
     SAFE,
