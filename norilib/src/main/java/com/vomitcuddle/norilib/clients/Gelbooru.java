@@ -19,8 +19,6 @@ public class Gelbooru extends DanbooruLegacy {
   protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
   /** Default API endpoint = safebooru.org */
   private static final String DEFAULT_API_ENDPOINT = "http://safebooru.org";
-  /** API endpoint url. */
-  private final String mApiEndpoint;
 
   /**
    * Creates a new instance of the Gelbooru API client without user authentication.
@@ -30,9 +28,7 @@ public class Gelbooru extends DanbooruLegacy {
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
    */
   public Gelbooru(String endpoint, RequestQueue requestQueue) {
-    super(endpoint, requestQueue);
-    // Set API endpoint, default to safebooru if null.
-    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
+    super(endpoint != null ? endpoint : DEFAULT_API_ENDPOINT, requestQueue);
   }
 
   /**
@@ -45,9 +41,7 @@ public class Gelbooru extends DanbooruLegacy {
    * @param password     Password.
    */
   public Gelbooru(String endpoint, RequestQueue requestQueue, String username, String password) {
-    super(endpoint, requestQueue, username, password);
-    // Set API endpoint, default to safebooru if null.
-    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
+    super(endpoint != null ? endpoint : DEFAULT_API_ENDPOINT, requestQueue, username, password);
   }
 
   /**
