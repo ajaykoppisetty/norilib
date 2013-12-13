@@ -22,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /** Base imageboard client class */
-abstract class Imageboard {
+public abstract class Imageboard {
   /** Images to fetch per page */
   protected static final int DEFAULT_LIMIT = 100;
   /** Regex used for parsing pixiv IDs from URLs */
