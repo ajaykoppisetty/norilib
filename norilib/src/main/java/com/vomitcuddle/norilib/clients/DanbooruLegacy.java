@@ -26,7 +26,7 @@ public class DanbooruLegacy extends Imageboard {
   /** Date format used by Danbooru 1.x */
   protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss Z yyyy");
   /** API endpoint url. */
-  private final String mApiEndpoint;
+  protected final String mApiEndpoint;
   /** Username used for authentication. Can be null. */
   protected final String mUsername;
   /** Password used for authentication. Can be null. */
