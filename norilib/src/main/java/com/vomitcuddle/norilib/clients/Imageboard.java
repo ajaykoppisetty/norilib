@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
 
 /** Base imageboard client class */
 abstract class Imageboard {
+  /** Images to fetch per page */
+  protected static final int DEFAULT_LIMIT = 100;
   /** Regex used for parsing pixiv IDs from URLs */
   private static final Pattern PIXIV_ID_FROM_URL_PATTERN = Pattern.compile("http://(?:www|i\\d)\\.pixiv\\.net/.+?(?:illust_id=|img/.+?/)(\\d+)");
   /** Volley {@link com.android.volley.RequestQueue}. */

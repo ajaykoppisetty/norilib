@@ -2,7 +2,6 @@ package com.vomitcuddle.norilib.clients;
 
 import android.net.Uri;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -10,51 +9,45 @@ import com.vomitcuddle.norilib.SearchResult;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
-import java.util.Collections;
+import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Map;
+import java.util.Locale;
 
 /** Gelbooru API client. */
-public class Gelbooru extends Imageboard {
-  /** Username used for authentication. Can be null. */
-  private final String mUsername;
-  /** Password used for authentication. Can be null. */
-  private final String mPassword;
+public class Gelbooru extends DanbooruLegacy {
+  /** Date format used by Gelbooru. */
+  protected static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
+  /** Default API endpoint = safebooru.org */
+  private static final String DEFAULT_API_ENDPOINT = "http://safebooru.org";
+  /** API endpoint url. */
+  private final String mApiEndpoint;
 
   /**
    * Creates a new instance of the Gelbooru API client without user authentication.
    *
+   * @param endpoint     URL to the API endpoint, doesn't include path or trailing slashes.
+   *                     Defaults to http://safebooru.org if null.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
    */
-  public Gelbooru(RequestQueue requestQueue) {
-    super(requestQueue);
-    // No authentication needed.
-    mUsername = null;
-    mPassword = null;
-  }
-
-  @Override
-  protected String getWebUrlFromImageId(long id) {
-    return null;
-  }
-
-  @Override
-  protected Date parseDateFromString(String date) throws ParseException {
-    return null;
+  public Gelbooru(String endpoint, RequestQueue requestQueue) {
+    super(endpoint, requestQueue);
+    // Set API endpoint, default to safebooru if null.
+    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
   }
 
   /**
    * Creates a new instance of the Gelbooru API client with user authentication.
    *
+   * @param endpoint     URL to the API endpoint, doesn't include path or trailing slashes.
+   *                     Defaults to http://safebooru.org if null.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
    * @param username     Username.
    * @param password     Password.
    */
-  public Gelbooru(RequestQueue requestQueue, String username, String password) {
-    super(requestQueue);
-    // Set credentials.
-    mUsername = username;
-    mPassword = password;
+  public Gelbooru(String endpoint, RequestQueue requestQueue, String username, String password) {
+    super(endpoint, requestQueue, username, password);
+    // Set API endpoint, default to safebooru if null.
+    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
   }
 
   /**
@@ -70,33 +63,34 @@ public class Gelbooru extends Imageboard {
   }
 
   @Override
-  public String getDefaultQuery() {
-    return "rating:safe";
+  protected String getWebUrlFromImageId(long id) {
+    return String.format(Locale.US, "%s//index.php?page=post&s=view&id=%d", mApiEndpoint, id);
   }
 
   @Override
-  public boolean requiresAuthentication() {
-    return false;
+  protected Date parseDateFromString(String date) throws ParseException {
+    return DATE_FORMAT.parse(date);
   }
 
   @Override
   public Request<SearchResult> search(String tags, int pid, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {
-    return null;
+    // Create URL.
+    final String url = String.format(Locale.US, "%s/index.php?page=dapi&s=post&q=index&tags=%s&pid=%d&limit=%d", mApiEndpoint, Uri.encode(tags), pid, DEFAULT_LIMIT);
+    // Create request and add it to the RequestQueue.
+    final Request<SearchResult> request = new SearchResultRequest(url, tags, listener, errorListener);
+    mRequestQueue.add(request);
+    // Return request.
+    return request;
   }
 
   @Override
   public Request<SearchResult> search(String tags, Response.Listener<SearchResult> listener, Response.ErrorListener errorListener) {
-    return null;
-  }
-
-  @Override
-  protected Map<String, String> getAuthHeaders() throws AuthFailureError {
-    // TODO: Implement me.
-    return Collections.emptyMap();
-  }
-
-  @Override
-  protected SearchResult parseSearchResultResponse(String data) throws Exception {
-    return null;
+    // Create URL.
+    final String url = String.format(Locale.US, "%s//index.php?page=dapi&s=post&q=index&tags=%s&limit=%d", mApiEndpoint, Uri.encode(tags), DEFAULT_LIMIT);
+    // Create request and add it to the RequestQueue.
+    final Request<SearchResult> request = new SearchResultRequest(url, tags, listener, errorListener);
+    mRequestQueue.add(request);
+    // Return request.
+    return request;
   }
 }
