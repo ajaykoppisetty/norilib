@@ -41,13 +41,13 @@ public class Danbooru extends Imageboard {
   /**
    * Creates a new instance of the Danbooru 2.x client without user authentication.
    *
+   * @param endpoint  API Endpoint, uses http://danbooru.donmai.us if null.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
-   * @param apiEndpoint  API Endpoint, uses http://danbooru.donmai.us if null.
    */
-  public Danbooru(RequestQueue requestQueue, String apiEndpoint) {
+  public Danbooru(String endpoint, RequestQueue requestQueue) {
     super(requestQueue);
     // Use danbooru as default API endpoint.
-    mApiEndpoint = apiEndpoint != null ? apiEndpoint : DEFAULT_API_ENDPOINT;
+    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
     // No authentication needed.
     mUsername = null;
     mApiKey = null;
@@ -56,15 +56,15 @@ public class Danbooru extends Imageboard {
   /**
    * Creates a new instance of the Danbooru 2.x client with user authentication.
    *
+   * @param endpoint     API Endpoint, uses http://danbooru.donmai.us if null.
    * @param requestQueue Volley {@link com.android.volley.RequestQueue}.
-   * @param apiEndpoint  API Endpoint, uses http://danbooru.donmai.us if null.
    * @param username     Username (optional).
    * @param apiKey       API key (optional).
    */
-  public Danbooru(RequestQueue requestQueue, String apiEndpoint, String username, String apiKey) {
+  public Danbooru(String endpoint, RequestQueue requestQueue, String username, String apiKey) {
     super(requestQueue);
     // Use danbooru as default API endpoint.
-    mApiEndpoint = apiEndpoint != null ? apiEndpoint : DEFAULT_API_ENDPOINT;
+    mApiEndpoint = endpoint != null ? endpoint : DEFAULT_API_ENDPOINT;
     // Set authentication credentials.
     mUsername = username;
     mApiKey = apiKey;

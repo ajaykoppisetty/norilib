@@ -11,6 +11,7 @@ import com.vomitcuddle.norilib.clients.Imageboard;
 import com.vomitcuddle.norilib.clients.Shimmie2;
 
 public class ServiceSettings implements Parcelable {
+  /** Class loader used by unpacking Parcelables. */
   public static final Creator<ServiceSettings> CREATOR = new Creator<ServiceSettings>() {
     @Override
     public ServiceSettings createFromParcel(Parcel source) {
@@ -23,7 +24,7 @@ public class ServiceSettings implements Parcelable {
     }
   };
   /** URL to the service's API endpoint. */
-  public String apiUrl;
+  public String apiEndpoint;
   /** API version/type. */
   public ServiceType apiType;
   /** API Username */
@@ -31,11 +32,17 @@ public class ServiceSettings implements Parcelable {
   /** API Password */
   public String password;
 
+  /** Default constructor */
   public ServiceSettings() {
   }
 
+  /**
+   * Constructor used for deserializing from parcels.
+   *
+   * @param in Parcel to read data from.
+   */
   public ServiceSettings(Parcel in) {
-    this.apiUrl = in.readString();
+    this.apiEndpoint = in.readString();
     this.apiType = (ServiceType) in.readSerializable();
     if (in.readByte() == 0x01)
       this.username = in.readString();
@@ -53,20 +60,20 @@ public class ServiceSettings implements Parcelable {
     switch (apiType) {
       case DANBOORU:
         if (username != null && password != null)
-          return new Danbooru(requestQueue, apiUrl, username, password);
-        return new Danbooru(requestQueue, apiUrl);
+          return new Danbooru(apiEndpoint, requestQueue, username, password);
+        return new Danbooru(apiEndpoint, requestQueue);
       case DANBOORU_LEGACY:
         if (username != null && password != null)
-          return new DanbooruLegacy(apiUrl, requestQueue, username, password);
-        return new Danbooru(requestQueue, apiUrl);
+          return new DanbooruLegacy(apiEndpoint, requestQueue, username, password);
+        return new DanbooruLegacy(apiEndpoint, requestQueue);
       case GELBOORU:
         if (username != null && password != null)
-          return new Gelbooru(apiUrl, requestQueue, username, password);
-        return new Gelbooru(apiUrl, requestQueue);
+          return new Gelbooru(apiEndpoint, requestQueue, username, password);
+        return new Gelbooru(apiEndpoint, requestQueue);
       case SHIMMIE2:
         if (username != null && password != null)
-          return new Shimmie2(apiUrl, requestQueue, username, password);
-        return new Shimmie2(apiUrl, requestQueue);
+          return new Shimmie2(apiEndpoint, requestQueue, username, password);
+        return new Shimmie2(apiEndpoint, requestQueue);
       default:
         return null;
     }
@@ -79,7 +86,7 @@ public class ServiceSettings implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeString(apiUrl);
+    dest.writeString(apiEndpoint);
     dest.writeSerializable(apiType);
     // Write 0x01 if username isn't null.
     dest.writeByte((byte) (username != null ? 0x01 : 0x00));
@@ -91,7 +98,8 @@ public class ServiceSettings implements Parcelable {
       dest.writeString(password);
   }
 
-  public static enum ServiceType {
+  /** API types */
+  public enum ServiceType {
     DANBOORU,
     DANBOORU_LEGACY,
     GELBOORU,
