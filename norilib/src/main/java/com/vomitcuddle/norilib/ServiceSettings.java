@@ -37,6 +37,21 @@ public class ServiceSettings implements Parcelable {
   }
 
   /**
+   * Constructor used by {@link com.vomitcuddle.norilib.clients.Imageboard#exportServiceSettings()}.
+   *
+   * @param apiEndpoint API endpoint URL.
+   * @param apiType     API version/type.
+   * @param username    API username.
+   * @param password    API password.
+   */
+  public ServiceSettings(String apiEndpoint, ServiceType apiType, String username, String password) {
+    this.apiEndpoint = apiEndpoint;
+    this.apiType = apiType;
+    this.username = username;
+    this.password = password;
+  }
+
+  /**
    * Constructor used for deserializing from parcels.
    *
    * @param in Parcel to read data from.

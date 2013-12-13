@@ -8,6 +8,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.vomitcuddle.norilib.SearchResult;
+import com.vomitcuddle.norilib.ServiceSettings;
 
 import org.apache.http.HttpStatus;
 
@@ -153,6 +154,13 @@ public abstract class Imageboard {
    * @throws Exception Error parsing response.
    */
   protected abstract SearchResult parseSearchResultResponse(String data) throws Exception;
+
+  /**
+   * Exports current settings as {@link com.vomitcuddle.norilib.ServiceSettings}.
+   *
+   * @return {@link com.vomitcuddle.norilib.ServiceSettings} from which the client can be recreated.
+   */
+  protected abstract ServiceSettings exportServiceSettings();
 
   /**
    * Volley request fetching a {@link com.vomitcuddle.norilib.SearchResult}.

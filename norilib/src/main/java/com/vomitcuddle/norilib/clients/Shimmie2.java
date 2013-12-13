@@ -7,6 +7,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.vomitcuddle.norilib.Image;
 import com.vomitcuddle.norilib.SearchResult;
+import com.vomitcuddle.norilib.ServiceSettings;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -55,6 +56,11 @@ public class Shimmie2 extends DanbooruLegacy {
   public static boolean verifyUrl(String url) throws MalformedURLException {
     final Uri uri = Uri.parse(url);
     return !(uri.getHost() == null || uri.getScheme() == null) && checkUrl(uri.getScheme() + "://" + uri.getHost() + "/api/danbooru/find_posts/index.xml");
+  }
+
+  @Override
+  protected ServiceSettings exportServiceSettings() {
+    return new ServiceSettings(mApiEndpoint, ServiceSettings.ServiceType.SHIMMIE2, mUsername, mPassword);
   }
 
   @Override

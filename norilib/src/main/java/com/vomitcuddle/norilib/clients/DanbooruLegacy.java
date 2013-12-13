@@ -8,6 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.vomitcuddle.norilib.Image;
 import com.vomitcuddle.norilib.SearchResult;
+import com.vomitcuddle.norilib.ServiceSettings;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -222,6 +223,11 @@ public class DanbooruLegacy extends Imageboard {
       eventType = xpp.next();
     }
     return searchResult;
+  }
+
+  @Override
+  protected ServiceSettings exportServiceSettings() {
+    return new ServiceSettings(mApiEndpoint, ServiceSettings.ServiceType.DANBOORU_LEGACY, mUsername, mPassword);
   }
 
 

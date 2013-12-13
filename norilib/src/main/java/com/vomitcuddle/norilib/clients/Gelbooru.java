@@ -6,6 +6,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.vomitcuddle.norilib.SearchResult;
+import com.vomitcuddle.norilib.ServiceSettings;
 
 import java.net.MalformedURLException;
 import java.text.ParseException;
@@ -86,5 +87,10 @@ public class Gelbooru extends DanbooruLegacy {
     mRequestQueue.add(request);
     // Return request.
     return request;
+  }
+
+  @Override
+  protected ServiceSettings exportServiceSettings() {
+    return new ServiceSettings(mApiEndpoint, ServiceSettings.ServiceType.GELBOORU, mUsername, mPassword);
   }
 }
