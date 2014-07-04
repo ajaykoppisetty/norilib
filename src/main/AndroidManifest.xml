@@ -1,0 +1,11 @@
+<!--
+  ~ This file is part of nori.
+  ~ Copyright (c) 2014 Tomasz Jan Góralczyk <tomg@fastmail.uk>
+  ~ License: ISC
+  -->
+
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cuddlesoft.norilib">
+    <uses-permission android:name="android.permission.INTERNET" />
+
+</manifest>
