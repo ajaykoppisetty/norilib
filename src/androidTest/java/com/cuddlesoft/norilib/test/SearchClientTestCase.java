@@ -7,16 +7,20 @@
 package com.cuddlesoft.norilib.test;
 
 
-import android.test.AndroidTestCase;
+import android.test.InstrumentationTestCase;
 
 import com.cuddlesoft.norilib.Image;
 import com.cuddlesoft.norilib.SearchResult;
 import com.cuddlesoft.norilib.clients.SearchClient;
 
+import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /** Extend this class to test a class implementing the {@link com.cuddlesoft.norilib.clients.SearchClient} API. */
-public abstract class SearchClientTestCase extends AndroidTestCase {
+public abstract class SearchClientTestCase extends InstrumentationTestCase {
 
   public void testSearchUsingTags() throws Throwable {
     // TODO: Ideally this should be mocked, so testing doesn't rely on external APIs.
@@ -51,6 +55,50 @@ public abstract class SearchClientTestCase extends AndroidTestCase {
     assertThat(page1.getImages()).isNotEmpty();
     assertThat(page2.getImages()).isNotEmpty();
     assertThat(page1.getImages()[0].id).isNotEqualTo(page2.getImages()[0].id);
+  }
+
+  /** Test asynchronous search requests */
+  public void testSearchAsync() throws Throwable {
+    // Create a lock to wait for the async request to finish.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Hold on to errors and SearchResult returned in the SearchCallback.
+    // One-element arrays are a hack used to set values from outside the main thread.
+    final IOException[] error = new IOException[1];
+    final SearchResult[] searchResults = new SearchResult[1];
+
+    // Run search requests on the UI thread.
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        final SearchClient client = createSearchClient();
+        // Retrieve a search result.
+        client.search("tagme", new SearchClient.SearchCallback() {
+          @Override
+          public void onFailure(IOException e) {
+            error[0] = e;
+            // Clear the lock.
+            lock.countDown();
+          }
+
+          @Override
+          public void onSuccess(SearchResult searchResult) {
+            searchResults[0] = searchResult;
+            // Clear the lock.
+            lock.countDown();
+          }
+        });
+      }
+    });
+
+    // Wait 30 seconds for the async response.
+    lock.await(30, TimeUnit.SECONDS);
+    // If the callback received an error, throw it and mark the test as failed.
+    if (error[0] != null) {
+      throw error[0];
+    }
+    // Make sure a SearchResult was returned.
+    assertThat(searchResults[0]).isNotNull();
+    assertThat(searchResults[0].getImages()).isNotEmpty();
   }
 
   public void testGetDefaultQuery() throws Throwable {

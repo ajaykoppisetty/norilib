@@ -7,6 +7,7 @@
 package com.cuddlesoft.norilib.clients;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Base64;
 
 import com.cuddlesoft.norilib.Image;
@@ -112,6 +113,42 @@ public class Danbooru implements SearchClient {
 
     // Return parsed SearchResult.
     return parseXMLResponse(body, tags);
+  }
+
+  @Override
+  public void search(String tags, SearchCallback callback) {
+    // Return results for page 0.
+    search(tags, 0, callback);
+  }
+
+  @Override
+  public void search(final String tags, final int pid, final SearchCallback callback) {
+    // Fetch results on a background thread.
+    new AsyncTask<Void,Void,SearchResult>() {
+      /** Error returned when attempting to fetch the SearchResult. */
+      private IOException error;
+
+      @Override
+      protected SearchResult doInBackground(Void... voids) {
+        try {
+          return Danbooru.this.search(tags, pid);
+        } catch (IOException e) {
+          // Hold on to the error for now and handle it on the main UI thread in #postExecute().
+          error = e;
+        }
+        return null;
+      }
+
+      @Override
+      protected void onPostExecute(SearchResult searchResult) {
+        // Pass the result or error to the SearchCallback.
+        if (error != null || searchResult == null) {
+          callback.onFailure(error);
+        } else {
+          callback.onSuccess(searchResult);
+        }
+      }
+    }.execute();
   }
 
   /**
