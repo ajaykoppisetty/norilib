@@ -6,9 +6,18 @@
 
 apply plugin: 'com.android.library'
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:0.12.+'
+    }
+}
+
 android {
-    compileSdkVersion 20
-    buildToolsVersion "20.0.0"
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
 
     defaultConfig {
         applicationId "com.cuddlesoft.norilib"
@@ -41,6 +50,10 @@ dependencies {
     androidTestCompile 'org.easytesting:fest-assert-core:2.0M10'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+repositories {
+    mavenCentral()
 }
 
 // Used to append Git commit hash to version names.
