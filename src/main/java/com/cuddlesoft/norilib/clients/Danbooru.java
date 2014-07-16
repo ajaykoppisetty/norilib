@@ -235,8 +235,11 @@ public class Danbooru implements SearchClient {
             // FIXME: API does not return sample sizes.
             image.sampleWidth = SAMPLE_SIZE;
             image.sampleHeight = SAMPLE_SIZE;
-            // Add to result.
-            imageList.add(image);
+            // Discard images requiring a gold account. They do not return a valid file_url.
+            if (image.fileUrl != null) {
+              // Add to result.
+              imageList.add(image);
+            }
           }
         }
         xpp.next();
