@@ -43,7 +43,7 @@ android {
 
 dependencies {
     // HTTP Client library from Square. (http://square.github.io/okhttp/)
-    compile 'com.squareup.okhttp:okhttp:2.0.+'
+    compile 'com.squareup.okhttp:okhttp:2.0.0'
     // Apache utility library for dealing with Collections.
     compile 'org.apache.commons:commons-collections4:4.0'
     // FEST for easier unit testing.
