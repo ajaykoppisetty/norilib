@@ -122,7 +122,7 @@ public class DanbooruLegacy implements SearchClient {
   @Override
   public void search(final String tags, final int pid, final SearchCallback callback) {
     // Fetch results on a background thread.
-    new AsyncTask<Void,Void,SearchResult>() {
+    new AsyncTask<Void, Void, SearchResult>() {
       /** Error returned when attempting to fetch the SearchResult. */
       private IOException error;
 
@@ -185,19 +185,19 @@ public class DanbooruLegacy implements SearchClient {
 
               // Set the appropriate value for each tag name.
               if (name.equals("file_url")) {
-                image.fileUrl = apiEndpoint + value;
+                image.fileUrl = normalizeUrl(value);
               } else if (name.equals("width")) {
                 image.width = Integer.parseInt(value);
               } else if (name.equals("height")) {
                 image.height = Integer.parseInt(value);
               } else if (name.equals("preview_url")) {
-                image.previewUrl = apiEndpoint + value;
+                image.previewUrl = normalizeUrl(value);
               } else if (name.equals("preview_width")) {
                 image.previewWidth = Integer.valueOf(value);
               } else if (name.equals("preview_height")) {
                 image.previewHeight = Integer.valueOf(value);
               } else if (name.equals("sample_url")) {
-                image.sampleUrl = apiEndpoint + value;
+                image.sampleUrl = normalizeUrl(value);
               } else if (name.equals("sample_width")) {
                 image.sampleWidth = Integer.valueOf(value);
               } else if (name.equals("sample_height")) {
@@ -249,6 +249,26 @@ public class DanbooruLegacy implements SearchClient {
   public String getDefaultQuery() {
     // Show all safe-for-work images by default.
     return "rating:safe";
+  }
+
+  /**
+   * Convert a relative image URL to an absolute URL.
+   *
+   * @param url URL to convert.
+   * @return Absolute URL.
+   */
+  protected String normalizeUrl(String url) {
+    // Return empty string for empty URLs.
+    if (url == null || url.isEmpty()) {
+      return "";
+    }
+    // Prepend API endpoint path if url is relative.
+    final Uri uri = Uri.parse(url);
+    if (uri.isRelative()) {
+      return apiEndpoint + url;
+    }
+    // URL already absolute.
+    return url;
   }
 
   /**
