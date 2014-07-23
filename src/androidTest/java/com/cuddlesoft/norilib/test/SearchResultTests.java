@@ -90,6 +90,6 @@ public class SearchResultTests extends AndroidTestCase {
         ImageTests.getMockImage(Image.ObscenityRating.QUESTIONABLE,
             new Tag("bird"))
     };
-    return new SearchResult(images, new Tag[]{new Tag("Tag")});
+    return new SearchResult(images, new Tag[]{new Tag("Tag")}, 0);
   }
 }

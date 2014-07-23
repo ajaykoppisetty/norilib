@@ -53,11 +53,13 @@ public class SearchResult implements Parcelable {
    *
    * @param images List of images included in this SearchResult.
    * @param query  Tags used to retrieve this query.
+   * @param offset Current paging offset.
    */
-  public SearchResult(Image[] images, Tag[] query) {
+  public SearchResult(Image[] images, Tag[] query, int offset) {
     // Have to use the ArrayList constructor because the Lists returned by Arrays.asList are not resizable which is a bummer for filtering.
     this.images = new ArrayList<>(Arrays.asList(images));
     this.query = query.clone();
+    this.offset = offset;
   }
 
   /**

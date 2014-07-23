@@ -112,7 +112,7 @@ public class Danbooru implements SearchClient {
     final String body = response.body().string();
 
     // Return parsed SearchResult.
-    return parseXMLResponse(body, tags);
+    return parseXMLResponse(body, tags, pid);
   }
 
   @Override
@@ -124,7 +124,7 @@ public class Danbooru implements SearchClient {
   @Override
   public void search(final String tags, final int pid, final SearchCallback callback) {
     // Fetch results on a background thread.
-    new AsyncTask<Void,Void,SearchResult>() {
+    new AsyncTask<Void, Void, SearchResult>() {
       /** Error returned when attempting to fetch the SearchResult. */
       private IOException error;
 
@@ -154,12 +154,13 @@ public class Danbooru implements SearchClient {
   /**
    * Parse an XML response returned by the API.
    *
-   * @param body HTTP Response body.
-   * @param tags Tags used to retrieve the response.
+   * @param body   HTTP Response body.
+   * @param tags   Tags used to retrieve the response.
+   * @param offset Current paging offset.
    * @return A {@link com.cuddlesoft.norilib.SearchResult} parsed from given XML.
    */
   @SuppressWarnings("FeatureEnvy")
-  protected SearchResult parseXMLResponse(String body, String tags) throws IOException {
+  protected SearchResult parseXMLResponse(String body, String tags, int offset) throws IOException {
     // Create variables to hold the values as XML is being parsed.
     final List<Image> imageList = new ArrayList<>(DEFAULT_LIMIT);
     Image image = new Image();
@@ -251,7 +252,7 @@ public class Danbooru implements SearchClient {
       throw new IOException(e);
     }
 
-    return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags));
+    return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags), offset);
   }
 
   /**

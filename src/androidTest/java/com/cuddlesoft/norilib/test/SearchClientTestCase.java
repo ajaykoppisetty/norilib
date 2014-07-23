@@ -54,6 +54,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Make sure that the results differ.
     assertThat(page1.getImages()).isNotEmpty();
     assertThat(page2.getImages()).isNotEmpty();
+    assertThat(page2.getCurrentOffset()).isEqualTo(1);
     assertThat(page1.getImages()[0].id).isNotEqualTo(page2.getImages()[0].id);
   }
 

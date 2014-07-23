@@ -110,7 +110,7 @@ public class DanbooruLegacy implements SearchClient {
     final String body = response.body().string();
 
     // Return parsed SearchResult.
-    return parseXMLResponse(body, tags);
+    return parseXMLResponse(body, tags, pid);
   }
 
   @Override
@@ -152,11 +152,12 @@ public class DanbooruLegacy implements SearchClient {
   /**
    * Parse an XML response returned by the API.
    *
-   * @param body HTTP Response body.
-   * @param tags Tags used to retrieve the response.
+   * @param body   HTTP Response body.
+   * @param tags   Tags used to retrieve the response.
+   * @param offset Current paging offset.
    * @return A {@link com.cuddlesoft.norilib.SearchResult} parsed from given XML.
    */
-  protected SearchResult parseXMLResponse(String body, String tags) throws IOException {
+  protected SearchResult parseXMLResponse(String body, String tags, int offset) throws IOException {
     // Create variables to hold the values as XML is being parsed.
     final List<Image> imageList = new ArrayList<>(DEFAULT_LIMIT);
 
@@ -242,7 +243,7 @@ public class DanbooruLegacy implements SearchClient {
       throw new IOException(e);
     }
     // Create and return a SearchResult.
-    return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags));
+    return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags), offset);
   }
 
   @Override
