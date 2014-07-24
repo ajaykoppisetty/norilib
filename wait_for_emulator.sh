@@ -11,7 +11,7 @@ until [[ "$bootanim" =~ "stopped" ]]; do
    echo -n "."
    if [[ "$bootanim" =~ "not found" ]]; then
       let "failcounter += 1"
-      if [[ $failcounter -gt 3 ]]; then
+      if [[ $failcounter -gt 10 ]]; then
         echo "Failed to start emulator"
         exit 1
       fi
