@@ -30,6 +30,11 @@ public class Gelbooru extends DanbooruLegacy {
   }
 
   @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.GELBOORU, apiEndpoint, username, password);
+  }
+
+  @Override
   protected String createSearchURL(String tags, int pid, int limit) {
     // Unlike DanbooruLegacy, page numbers are 0-indexed for Gelbooru APIs.
     return String.format(Locale.US, "%s/index.php?page=dapi&s=post&q=index&tags=%s&pid=%d&limit=%d", apiEndpoint, Uri.encode(tags), pid, limit);

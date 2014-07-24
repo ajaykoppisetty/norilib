@@ -7,6 +7,7 @@
 package com.cuddlesoft.norilib.test;
 
 
+import android.os.Bundle;
 import android.test.InstrumentationTestCase;
 
 import com.cuddlesoft.norilib.Image;
@@ -110,6 +111,21 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
   public void testRequiredAuthentication() throws Throwable {
     final SearchClient client = createSearchClient();
     assertThat(client.getDefaultQuery()).isNotNull();
+  }
+
+  public void testGetSettings() throws Throwable {
+    SearchClient client = createSearchClient();
+    SearchClient.Settings settings = client.getSettings();
+    assertThat(settings).isNotNull();
+
+    // Parcel the settings object and recreate it from the bundle.
+    final Bundle bundle = new Bundle();
+    bundle.putParcelable("settings", settings);
+    settings = bundle.getParcelable("settings");
+
+    // Recreate SearchClient from the settings object and test it.
+    client = settings.createSearchClient();
+    assertThat(client).isInstanceOf(createSearchClient().getClass());
   }
 
   protected abstract SearchClient createSearchClient();

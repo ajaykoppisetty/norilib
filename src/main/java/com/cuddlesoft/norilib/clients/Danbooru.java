@@ -287,6 +287,11 @@ public class Danbooru implements SearchClient {
   }
 
   @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.DANBOORU, apiEndpoint, username, apiKey);
+  }
+
+  @Override
   public AuthenticationType requiresAuthentication() {
     return AuthenticationType.OPTIONAL;
   }

@@ -22,6 +22,11 @@ public class Shimmie extends DanbooruLegacy {
   }
 
   @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.SHIMMIE, apiEndpoint, username, password);
+  }
+
+  @Override
   protected String webUrlFromId(String id) {
     return String.format(Locale.US, "%s/post/view/%s", apiEndpoint, id);
   }

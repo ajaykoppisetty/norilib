@@ -49,9 +49,9 @@ public class DanbooruLegacy implements SearchClient {
   /** URL to the HTTP API Endpoint - the server implementing the API. */
   protected final String apiEndpoint;
   /** Username used for authentication. (optional) */
-  private final String username;
+  protected final String username;
   /** Password used for authentication. (optional) */
-  private final String password;
+  protected final String password;
 
   /**
    * Create a new Danbooru 1.x client without authentication.
@@ -250,6 +250,11 @@ public class DanbooruLegacy implements SearchClient {
   public String getDefaultQuery() {
     // Show all safe-for-work images by default.
     return "rating:safe";
+  }
+
+  @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.DANBOORU_LEGACY, apiEndpoint, username, password);
   }
 
   /**
