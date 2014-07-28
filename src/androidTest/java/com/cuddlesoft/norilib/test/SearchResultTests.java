@@ -61,7 +61,7 @@ public class SearchResultTests extends AndroidTestCase {
   /** Tests the {@link com.cuddlesoft.norilib.SearchResult#filter(com.cuddlesoft.norilib.Image.ObscenityRating...)} method. */
   public void testFilterWithObscenityRating() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
-    searchResult.filter(Image.ObscenityRating.SAFE, Image.ObscenityRating.EXPLICIT);
+    searchResult.filter(Image.ObscenityRating.QUESTIONABLE);
     assertThat(searchResult.getImages()).hasSize(1);
     assertThat(searchResult.getImages()[0].obscenityRating).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
   }
