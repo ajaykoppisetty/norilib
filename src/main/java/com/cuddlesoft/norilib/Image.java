@@ -9,7 +9,9 @@ package com.cuddlesoft.norilib;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -180,6 +182,30 @@ public class Image implements Parcelable {
     EXPLICIT,
     /** Rating is unknown or has not been set. */
     UNDEFINED;
+
+    /**
+     * Convert a String array into an array of {@link com.cuddlesoft.norilib.Image.ObscenityRating}s.
+     *
+     * @param strings String array.
+     * @return Array of {@link com.cuddlesoft.norilib.Image.ObscenityRating}s.
+     */
+    public static ObscenityRating[] arrayFromStrings(String... strings) {
+      final List<ObscenityRating> ratingList = new ArrayList<>(4);
+
+      for (String string : strings) {
+        if (string.equals("safe")) {
+          ratingList.add(ObscenityRating.SAFE);
+        } else if (string.equals("questionable")) {
+          ratingList.add(ObscenityRating.QUESTIONABLE);
+        } else if (string.equals("explicit")) {
+          ratingList.add(ObscenityRating.EXPLICIT);
+        } else if (string.equals("undefined")) {
+          ratingList.add(ObscenityRating.UNDEFINED);
+        }
+      }
+
+      return ratingList.toArray(new ObscenityRating[ratingList.size()]);
+    }
 
     /**
      * Get a ObscenityRating from a raw String representation returned by the API.
