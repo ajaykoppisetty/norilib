@@ -100,7 +100,7 @@ public class SearchResult implements Parcelable {
   }
 
   /**
-   * Remove images with the given set of {@link Image.ObscenityRating} from this SearchResult.
+   * Remove images not in the given set of {@link Image.ObscenityRating} from this SearchResult.
    *
    * @param obscenityRatings Obscenity ratings to remove.
    */
@@ -116,7 +116,7 @@ public class SearchResult implements Parcelable {
     CollectionUtils.filter(images, new Predicate<Image>() {
       @Override
       public boolean evaluate(Image image) {
-        return !ratingList.contains(image.obscenityRating);
+        return ratingList.contains(image.obscenityRating);
       }
     });
   }
