@@ -14,6 +14,7 @@ import org.apache.commons.collections4.Predicate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -86,15 +87,15 @@ public class SearchResult implements Parcelable {
     }
 
     // Convert filtered tag array to List.
-    final List<Tag> tagList = Arrays.asList(tags);
+    Collection<Tag> tagList = Arrays.asList(tags);
     // Don't filter tags searched for by the user.
-    CollectionUtils.removeAll(tagList, Arrays.asList(query));
+    final Collection<Tag> finalTagList = CollectionUtils.removeAll(tagList, Arrays.asList(query));
 
     // Remove images containing filtered tags.
     CollectionUtils.filter(images, new Predicate<Image>() {
       @Override
       public boolean evaluate(Image image) {
-        return !CollectionUtils.containsAny(Arrays.asList(image.tags), tagList);
+        return !CollectionUtils.containsAny(Arrays.asList(image.tags), finalTagList);
       }
     });
   }
