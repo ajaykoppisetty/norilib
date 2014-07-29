@@ -283,7 +283,7 @@ public class Danbooru implements SearchClient {
   @Override
   public String getDefaultQuery() {
     // Show work-safe images by default.
-    return "rating:safe";
+    return "";
   }
 
   @Override

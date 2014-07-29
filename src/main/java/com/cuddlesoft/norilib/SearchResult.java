@@ -86,16 +86,14 @@ public class SearchResult implements Parcelable {
       return;
     }
 
-    // Convert filtered tag array to List.
-    Collection<Tag> tagList = Arrays.asList(tags);
     // Don't filter tags searched for by the user.
-    final Collection<Tag> finalTagList = CollectionUtils.removeAll(tagList, Arrays.asList(query));
+    final Collection<Tag> tagList = CollectionUtils.removeAll(Arrays.asList(tags), Arrays.asList(query));
 
     // Remove images containing filtered tags.
     CollectionUtils.filter(images, new Predicate<Image>() {
       @Override
       public boolean evaluate(Image image) {
-        return !CollectionUtils.containsAny(Arrays.asList(image.tags), finalTagList);
+        return !CollectionUtils.containsAny(Arrays.asList(image.tags), tagList);
       }
     });
   }
