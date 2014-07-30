@@ -170,6 +170,9 @@ public interface SearchClient {
       return apiType;
     }
 
+    /** Get human readable name of the API endpoint. */
+    public String getName() { return name; }
+
     /** Get the server endpoint URL. */
     public String getEndpoint() {
       return endpoint;
