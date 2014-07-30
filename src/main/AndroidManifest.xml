@@ -8,4 +8,8 @@
     package="com.cuddlesoft.norilib">
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <application>
+        <service android:name=".service.ServiceTypeDetectionService" android:exported="false"/>
+    </application>
+
 </manifest>
