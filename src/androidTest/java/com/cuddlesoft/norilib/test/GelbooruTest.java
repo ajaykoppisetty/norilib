@@ -16,6 +16,6 @@ public class GelbooruTest extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new Gelbooru("http://gelbooru.com");
+    return new Gelbooru("Gelbooru", "http://gelbooru.com");
   }
 }

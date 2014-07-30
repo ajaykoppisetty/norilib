@@ -46,6 +46,8 @@ public class DanbooruLegacy implements SearchClient {
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
   /** OkHTTP Client. */
   private final OkHttpClient okHttpClient = new OkHttpClient();
+  /** Human-readable service name. */
+  protected final String name;
   /** URL to the HTTP API Endpoint - the server implementing the API. */
   protected final String apiEndpoint;
   /** Username used for authentication. (optional) */
@@ -58,7 +60,8 @@ public class DanbooruLegacy implements SearchClient {
    *
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    */
-  public DanbooruLegacy(String endpoint) {
+  public DanbooruLegacy(String name, String endpoint) {
+    this.name = name;
     this.apiEndpoint = endpoint;
     this.username = null;
     this.password = null;
@@ -71,7 +74,8 @@ public class DanbooruLegacy implements SearchClient {
    * @param username Username used for authentication.
    * @param password Password used for authentication.
    */
-  public DanbooruLegacy(String endpoint, String username, String password) {
+  public DanbooruLegacy(String name, String endpoint, String username, String password) {
+    this.name = name;
     this.apiEndpoint = endpoint;
     this.username = username;
     this.password = password;
@@ -254,7 +258,7 @@ public class DanbooruLegacy implements SearchClient {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOORU_LEGACY, apiEndpoint, username, password);
+    return new Settings(Settings.APIType.DANBOORU_LEGACY, name, apiEndpoint, username, password);
   }
 
   /**

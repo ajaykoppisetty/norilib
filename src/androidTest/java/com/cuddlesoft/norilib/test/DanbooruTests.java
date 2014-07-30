@@ -17,6 +17,6 @@ public class DanbooruTests extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new Danbooru("http://danbooru.donmai.us");
+    return new Danbooru("Danbooru", "http://danbooru.donmai.us");
   }
 }

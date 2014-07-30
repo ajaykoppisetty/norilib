@@ -21,17 +21,17 @@ public class Gelbooru extends DanbooruLegacy {
   /** Date format used by Gelbooru. */
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
 
-  public Gelbooru(String endpoint) {
-    super(endpoint);
+  public Gelbooru(String name, String endpoint) {
+    super(name, endpoint);
   }
 
-  public Gelbooru(String endpoint, String username, String password) {
-    super(endpoint, username, password);
+  public Gelbooru(String name, String endpoint, String username, String password) {
+    super(name, endpoint, username, password);
   }
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.GELBOORU, apiEndpoint, username, password);
+    return new Settings(Settings.APIType.GELBOORU, name, apiEndpoint, username, password);
   }
 
   @Override

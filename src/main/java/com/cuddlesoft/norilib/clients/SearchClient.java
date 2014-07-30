@@ -124,6 +124,8 @@ public interface SearchClient {
     };
     /** {@link SearchClient} type. */
     private final APIType apiType;
+    /** Human-readable service name. */
+    private final String name;
     /** API server endpoint URL. */
     private final String endpoint;
     /** API authentication URL. */
@@ -131,12 +133,13 @@ public interface SearchClient {
     /** API authentication password/API key. */
     private final String password;
 
-    public Settings(APIType apiType, String endpoint) {
-      this(apiType, endpoint, null, null);
+    public Settings(APIType apiType, String name, String endpoint) {
+      this(apiType, name, endpoint, null, null);
     }
 
-    public Settings(APIType apiType, String endpoint, String username, String password) {
+    public Settings(APIType apiType, String name, String endpoint, String username, String password) {
       this.apiType = apiType;
+      this.name = name;
       this.endpoint = endpoint;
       this.username = username;
       this.password = password;
@@ -150,6 +153,7 @@ public interface SearchClient {
      */
     protected Settings(Parcel in) {
       this.apiType = APIType.values()[in.readInt()];
+      this.name = in.readString();
       this.endpoint = in.readString();
       // Read authentication credentials, if available.
       if (in.readByte() == 0x01) {
@@ -189,13 +193,13 @@ public interface SearchClient {
     public SearchClient createSearchClient() {
       switch (apiType) {
         case DANBOORU:
-          return new Danbooru(endpoint, username, password);
+          return new Danbooru(name, endpoint, username, password);
         case DANBOORU_LEGACY:
-          return new DanbooruLegacy(endpoint, username, password);
+          return new DanbooruLegacy(name, endpoint, username, password);
         case SHIMMIE:
-          return new Shimmie(endpoint, username, password);
+          return new Shimmie(name, endpoint, username, password);
         case GELBOORU:
-          return new Gelbooru(endpoint, username, password);
+          return new Gelbooru(name, endpoint, username, password);
         default:
           return null;
       }
@@ -209,6 +213,7 @@ public interface SearchClient {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
       dest.writeInt(apiType.ordinal());
+      dest.writeString(name);
       dest.writeString(endpoint);
       if (username != null && password != null) {
         dest.writeByte((byte) 0x01);

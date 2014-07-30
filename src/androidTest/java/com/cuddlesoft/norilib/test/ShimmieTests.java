@@ -16,6 +16,6 @@ public class ShimmieTests extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new Shimmie("http://dollbooru.org");
+    return new Shimmie("Dollbooru", "http://dollbooru.org");
   }
 }

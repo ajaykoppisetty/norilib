@@ -50,6 +50,8 @@ public class Danbooru implements SearchClient {
   private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
   /** OkHTTP Client. */
   private final OkHttpClient okHttpClient = new OkHttpClient();
+  /** Human-readable service name */
+  private final String name;
   /** URL to the HTTP API Endpoint - the server implementing the API. */
   private final String apiEndpoint;
   /** Username used for authentication. (optional) */
@@ -60,9 +62,11 @@ public class Danbooru implements SearchClient {
   /**
    * Create a new Danbooru 2.x client without authentication.
    *
+   * @param name Human-readable service name.
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    */
-  public Danbooru(String endpoint) {
+  public Danbooru(String name, String endpoint) {
+    this.name = name;
     this.apiEndpoint = endpoint;
     this.username = null;
     this.apiKey = null;
@@ -71,11 +75,13 @@ public class Danbooru implements SearchClient {
   /**
    * Create a new Danbooru 1.x client with authentication.
    *
+   * @param name Human-readable service name.
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    * @param username Username used for authentication.
    * @param apiKey   API key used for authentication.
    */
-  public Danbooru(String endpoint, String username, final String apiKey) {
+  public Danbooru(String name, String endpoint, String username, final String apiKey) {
+    this.name = name;
     this.apiEndpoint = endpoint;
     this.username = username;
     this.apiKey = apiKey;
@@ -288,7 +294,7 @@ public class Danbooru implements SearchClient {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOORU, apiEndpoint, username, apiKey);
+    return new Settings(Settings.APIType.DANBOORU, name, apiEndpoint, username, apiKey);
   }
 
   @Override

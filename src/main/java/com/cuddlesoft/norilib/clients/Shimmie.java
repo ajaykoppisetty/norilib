@@ -13,17 +13,17 @@ import java.util.Locale;
  * Shimmie2 provides an extension that enables a Danbooru 1.x-based API.
  */
 public class Shimmie extends DanbooruLegacy {
-  public Shimmie(String endpoint) {
-    super(endpoint);
+  public Shimmie(String name, String endpoint) {
+    super(name, endpoint);
   }
 
-  public Shimmie(String endpoint, String username, String password) {
-    super(endpoint, username, password);
+  public Shimmie(String name, String endpoint, String username, String password) {
+    super(name, endpoint, username, password);
   }
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.SHIMMIE, apiEndpoint, username, password);
+    return new Settings(Settings.APIType.SHIMMIE, name, apiEndpoint, username, password);
   }
 
   @Override
