@@ -100,6 +100,7 @@ public class ServiceTypeDetectionService extends IntentService {
         if (response.code() == HttpStatus.SC_OK && response.priorResponse() == null) {
           // Found an API endpoint.
           broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
+          broadcastIntent.putExtra(ENDPOINT_URL, baseUri);
           broadcastIntent.putExtra(API_TYPE, entry.getKey().ordinal());
           sendBroadcast(broadcastIntent);
           return;
