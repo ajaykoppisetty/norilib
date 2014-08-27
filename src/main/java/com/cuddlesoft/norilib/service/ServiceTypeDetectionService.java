@@ -19,7 +19,9 @@ import org.apache.http.HttpStatus;
 
 import java.io.IOException;
 import java.util.AbstractMap;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -57,6 +59,16 @@ public class ServiceTypeDetectionService extends IntentService {
     API_ENDPOINT_PATHS.remove(SearchClient.Settings.APIType.DANBOORU);
   }
 
+  /** Uri schemes to use when detecting services. */
+  // Would really like to default to HTTPS here, but the sad truth is that most sites either force TLS on all users
+  // (yande.re) or do not support TLS at all (most sites, although danbooru is a notable exception).
+  public static final String[] URI_SCHEMES = {"http://", "https://"};
+  /** Uri schemes list used to prefer using TLS connections for sites that are known to support it. */
+  public static final String[] URI_SCHEMES_PREFER_SSL = {"https://", "http://"};
+  /** List of site URIs known to support TLS. */
+  public static final List<String> TLS_SUPPORT;
+
+
   static {
     // Populate the API type -> API endpoint path hash map.
     API_ENDPOINT_PATHS = new LinkedHashMap<>();
@@ -64,6 +76,11 @@ public class ServiceTypeDetectionService extends IntentService {
     API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.DANBOORU_LEGACY, "/post/index.xml");
     API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.GELBOORU, "/index.php?page=dapi&s=post&q=index");
     API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.SHIMMIE, "/api/danbooru/find_posts/index.xml");
+    // Populate list of sites with known TLS support.
+    TLS_SUPPORT = new ArrayList<>();
+    TLS_SUPPORT.add("danbooru.donmai.us");
+    TLS_SUPPORT.add("yande.re");
+    TLS_SUPPORT.add("konachan.com");
   }
 
   @Override
@@ -77,38 +94,39 @@ public class ServiceTypeDetectionService extends IntentService {
       sendBroadcast(broadcastIntent.putExtra(RESULT_CODE, RESULT_FAIL_INVALID_URL));
       return;
     }
-    // Create a base URL, while discarding any path or query string information that may have been supplied.
-    final String baseUri = uri.getScheme() + "://" + uri.getHost();
-
 
     // Create the HTTP client.
     final OkHttpClient okHttpClient = new OkHttpClient();
     okHttpClient.setConnectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
     okHttpClient.setReadTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
 
-    // Iterate over each endpoint path.
-    for (Map.Entry<SearchClient.Settings.APIType, String> entry : API_ENDPOINT_PATHS.entrySet()) {
-      // Create a HTTP request object.
-      final Request request = new Request.Builder()
-          .url(baseUri + entry.getValue())
-          .build();
+    // Iterate over supported URI schemes for given URL.
+    for (String uriScheme : (TLS_SUPPORT.contains(uri.getHost()) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
+      String baseUri = uriScheme + uri.getHost();
+      // Iterate over each endpoint path.
+      for (Map.Entry<SearchClient.Settings.APIType, String> entry : API_ENDPOINT_PATHS.entrySet()) {
+        // Create a HTTP request object.
+        final Request request = new Request.Builder()
+            .url(baseUri + entry.getValue())
+            .build();
 
-      try {
-        // Fetch response.
-        final Response response = okHttpClient.newCall(request).execute();
-        // Make sure the response code was OK and that the HTTP client wasn't redirected along the way.
-        if (response.code() == HttpStatus.SC_OK && response.priorResponse() == null) {
-          // Found an API endpoint.
-          broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
-          broadcastIntent.putExtra(ENDPOINT_URL, baseUri);
-          broadcastIntent.putExtra(API_TYPE, entry.getKey().ordinal());
-          sendBroadcast(broadcastIntent);
+        try {
+          // Fetch response.
+          final Response response = okHttpClient.newCall(request).execute();
+          // Make sure the response code was OK and that the HTTP client wasn't redirected along the way.
+          if (response.code() == HttpStatus.SC_OK && response.priorResponse() == null) {
+            // Found an API endpoint.
+            broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
+            broadcastIntent.putExtra(ENDPOINT_URL, baseUri);
+            broadcastIntent.putExtra(API_TYPE, entry.getKey().ordinal());
+            sendBroadcast(broadcastIntent);
+            return;
+          }
+        } catch (IOException e) {
+          // Network error. Notify the listeners and return.
+          sendBroadcast(broadcastIntent.putExtra(RESULT_CODE, RESULT_FAIL_NETWORK));
           return;
         }
-      } catch (IOException e) {
-        // Network error. Notify the listeners and return.
-        sendBroadcast(broadcastIntent.putExtra(RESULT_CODE, RESULT_FAIL_NETWORK));
-        return;
       }
     }
 
