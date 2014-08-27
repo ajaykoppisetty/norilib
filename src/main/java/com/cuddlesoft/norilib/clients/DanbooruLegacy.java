@@ -8,6 +8,7 @@ package com.cuddlesoft.norilib.clients;
 
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.cuddlesoft.norilib.Image;
 import com.cuddlesoft.norilib.SearchResult;
@@ -42,8 +43,6 @@ public class DanbooruLegacy implements SearchClient {
    * Best to use a large value to minimize number of unique HTTP requests.
    */
   private static final int DEFAULT_LIMIT = 100;
-  /** Parser used to read the date format used by this API. */
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
   /** OkHTTP Client. */
   private final OkHttpClient okHttpClient = new OkHttpClient();
   /** Human-readable service name. */
@@ -298,7 +297,15 @@ public class DanbooruLegacy implements SearchClient {
    * @return Date converted from given String.
    */
   protected Date dateFromString(String date) throws ParseException {
-    return DATE_FORMAT.parse(date);
+    // Parser for the date format used by upstream Danbooru 1.x.
+    final DateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+
+    if (TextUtils.isDigitsOnly(date)) {
+      // Moebooru-based boards (Danbooru 1.x fork) use Unix timestamps.
+      return new Date(Integer.valueOf(date));
+    } else {
+      return DATE_FORMAT_DEFAULT.parse(date);
+    }
   }
 
   /**

@@ -181,6 +181,44 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.SHIMMIE.ordinal());
   }
 
+  /** Test detection of Moebooru (Danbooru 1.x fork) boards. */
+  public void testMoebooruDetection() throws Throwable {
+    // Create a lock that waits for the request to complete in background.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Values received from the BroadcastReceiver.
+    // One-element arrays are a hack used to set values from outside the main thread without bothering with locking.
+    final int[] resultCode = new int[1];
+    final int[] serviceType = new int[1];
+
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // Register the broadcast receiver.
+        getInstrumentation().getContext().registerReceiver(new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            // Set values received in the intent.
+            resultCode[0] = intent.getIntExtra(ServiceTypeDetectionService.RESULT_CODE, -1);
+            serviceType[0] = intent.getIntExtra(ServiceTypeDetectionService.API_TYPE, -1);
+            // Unregister broadcast receiver.
+            getInstrumentation().getContext().unregisterReceiver(this);
+            // Clear the lock in the main thread.
+            lock.countDown();
+          }
+        }, INTENT_FILTER);
+        // Start the service.
+        getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
+            ServiceTypeDetectionService.class)
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://yande.re/"));
+      }
+    });
+
+    // Wait to receive broadcast from the service.
+    lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+    assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOORU_LEGACY.ordinal());
+  }
+
   /** Test error returned when an invalid URL is supplied. */
   public void testInvalidUrlError() throws Throwable {
     // Create a lock that waits for the request to complete in background.
