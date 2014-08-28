@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Tag type color codes, as used by Danbooru, modified to match Android style guidelines. -->
+  <color name="tag_color_general">#33B5E5</color>
+  <color name="tag_color_artist">#FF4444</color>
+  <color name="tag_color_character">#99CC00</color>
+  <color name="tag_color_copyright">#AA66CC</color>
+</resources>

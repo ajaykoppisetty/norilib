@@ -6,6 +6,8 @@
 
 package com.cuddlesoft.norilib;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -103,6 +105,24 @@ public class Tag implements Comparable<Tag>, Parcelable {
     return type;
   }
 
+  /**
+   * Get color used to display Tag's type.
+   *
+   * @return Resource ID of the color that should be used to display this Tag's name.
+   */
+  public int getColor() {
+    switch (getType()) {
+      case ARTIST:
+        return R.color.tag_color_artist;
+      case CHARACTER:
+        return R.color.tag_color_character;
+      case COPYRIGHT:
+        return R.color.tag_color_copyright;
+      default:
+        return R.color.tag_color_general;
+    }
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -160,7 +180,7 @@ public class Tag implements Comparable<Tag>, Parcelable {
     // Convert each String into a Tag object.
     final Tag[] tags = new Tag[strings.length];
     for (int i = 0; i < strings.length; i++) {
-        tags[i] = new Tag(strings[i], type);
+      tags[i] = new Tag(strings[i], type);
     }
     return tags;
   }
