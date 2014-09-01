@@ -55,7 +55,7 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
         // Start the service.
         getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
             ServiceTypeDetectionService.class)
-        .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://danbooru.donmai.us/"));
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://danbooru.donmai.us/"));
       }
     });
 

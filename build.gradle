@@ -7,57 +7,57 @@
 apply plugin: 'com.android.library'
 
 buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:0.12.2'
-    }
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:0.12.2'
+  }
 }
 
 android {
-    compileSdkVersion 20
-    buildToolsVersion "19.1.0"
+  compileSdkVersion 20
+  buildToolsVersion "19.1.0"
 
-    defaultConfig {
-        applicationId "com.cuddlesoft.norilib"
-        minSdkVersion 10
-        targetSdkVersion 20
-        versionCode 1
-        versionName "2.0.0-${gitRevision()}"
-        testApplicationId "com.cuddlesoft.norilib.test"
-        testInstrumentationRunner "android.test.InstrumentationTestRunner"
-    }
+  defaultConfig {
+    applicationId "com.cuddlesoft.norilib"
+    minSdkVersion 10
+    targetSdkVersion 20
+    versionCode 1
+    versionName "2.0.0-${gitRevision()}"
+    testApplicationId "com.cuddlesoft.norilib.test"
+    testInstrumentationRunner "android.test.InstrumentationTestRunner"
+  }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_7
-        targetCompatibility JavaVersion.VERSION_1_7
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
+  buildTypes {
+    release {
+      runProguard false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
-    buildTypes {
-        release {
-            runProguard false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
+  }
 }
 
 dependencies {
-    // HTTP Client library from Square. (http://square.github.io/okhttp/)
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
-    // Apache utility library for dealing with Collections.
-    compile 'org.apache.commons:commons-collections4:4.0'
-    // FEST for easier unit testing.
-    androidTestCompile 'org.easytesting:fest-assert-core:2.0M10'
+  // HTTP Client library from Square. (http://square.github.io/okhttp/)
+  compile 'com.squareup.okhttp:okhttp:2.0.0'
+  // Apache utility library for dealing with Collections.
+  compile 'org.apache.commons:commons-collections4:4.0'
+  // FEST for easier unit testing.
+  androidTestCompile 'org.easytesting:fest-assert-core:2.0M10'
 
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+  compile fileTree(dir: 'libs', include: ['*.jar'])
 }
 
 repositories {
-    mavenCentral()
+  mavenCentral()
 }
 
 // Used to append Git commit hash to version names.
 def gitRevision() {
-    def cmd = "git rev-parse --short HEAD"
-    return cmd.execute().text.trim()
+  def cmd = "git rev-parse --short HEAD"
+  return cmd.execute().text.trim()
 }

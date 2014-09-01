@@ -62,7 +62,7 @@ public class Danbooru implements SearchClient {
   /**
    * Create a new Danbooru 2.x client without authentication.
    *
-   * @param name Human-readable service name.
+   * @param name     Human-readable service name.
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    */
   public Danbooru(String name, String endpoint) {
@@ -75,7 +75,7 @@ public class Danbooru implements SearchClient {
   /**
    * Create a new Danbooru 1.x client with authentication.
    *
-   * @param name Human-readable service name.
+   * @param name     Human-readable service name.
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    * @param username Username used for authentication.
    * @param apiKey   API key used for authentication.
