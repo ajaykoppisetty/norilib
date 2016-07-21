@@ -15,8 +15,6 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import org.apache.http.HttpStatus;
-
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -114,7 +112,7 @@ public class ServiceTypeDetectionService extends IntentService {
           // Fetch response.
           final Response response = okHttpClient.newCall(request).execute();
           // Make sure the response code was OK and that the HTTP client wasn't redirected along the way.
-          if (response.code() == HttpStatus.SC_OK && response.priorResponse() == null) {
+          if (response.code() == 200 && response.priorResponse() == null) {
             // Found an API endpoint.
             broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
             broadcastIntent.putExtra(ENDPOINT_URL, baseUri);

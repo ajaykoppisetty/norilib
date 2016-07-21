@@ -8,21 +8,20 @@ apply plugin: 'com.android.library'
 
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:0.12.2'
+    classpath 'com.android.tools.build:gradle:2.1.2'
   }
 }
 
 android {
-  compileSdkVersion 20
-  buildToolsVersion "19.1.0"
+  compileSdkVersion 24
+  buildToolsVersion "24.0.1"
 
   defaultConfig {
-    applicationId "com.cuddlesoft.norilib"
     minSdkVersion 10
-    targetSdkVersion 20
+    targetSdkVersion 24
     versionCode 1
     versionName "2.0.0-${gitRevision()}"
     testApplicationId "com.cuddlesoft.norilib.test"
@@ -35,7 +34,7 @@ android {
   }
   buildTypes {
     release {
-      runProguard false
+      minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
@@ -53,7 +52,7 @@ dependencies {
 }
 
 repositories {
-  mavenCentral()
+  jcenter()
 }
 
 // Used to append Git commit hash to version names.
