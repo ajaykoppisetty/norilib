@@ -4,7 +4,7 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,19 +12,19 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.test.InstrumentationTestCase;
 
-import com.cuddlesoft.norilib.clients.SearchClient;
-import com.cuddlesoft.norilib.service.ServiceTypeDetectionService;
+import io.github.tjg1.library.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.service.ServiceTypeDetectionService;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Test unit for the {@link com.cuddlesoft.norilib.service.ServiceTypeDetectionService} service. */
+/** Test unit for the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService} service. */
 public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
   /** Wait this many seconds for the detection to complete. */
   private static final int RESPONSE_TIMEOUT = 120;
-  /** {@link IntentFilter} used to receive responses from {@link com.cuddlesoft.norilib.service.ServiceTypeDetectionService}. */
+  /** {@link IntentFilter} used to receive responses from {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
   private final static IntentFilter INTENT_FILTER = new IntentFilter(ServiceTypeDetectionService.ACTION_DONE);
 
   /** Test detection of the Danbooru 2.x API */

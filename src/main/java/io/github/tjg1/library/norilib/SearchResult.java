@@ -4,7 +4,7 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib;
+package io.github.tjg1.library.norilib;
 
 import android.os.Parcel;
 import android.os.Parcelable;

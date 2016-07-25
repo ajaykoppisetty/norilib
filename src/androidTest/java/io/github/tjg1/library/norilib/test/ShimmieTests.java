@@ -4,10 +4,10 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
-import com.cuddlesoft.norilib.clients.SearchClient;
-import com.cuddlesoft.norilib.clients.Shimmie;
+import io.github.tjg1.library.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.clients.Shimmie;
 
 /**
  * Tests for the Shimmie2 API client.

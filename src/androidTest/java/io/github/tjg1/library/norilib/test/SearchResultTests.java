@@ -4,18 +4,18 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 
-import com.cuddlesoft.norilib.Image;
-import com.cuddlesoft.norilib.SearchResult;
-import com.cuddlesoft.norilib.Tag;
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.SearchResult;
+import io.github.tjg1.library.norilib.Tag;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Tests the {@link com.cuddlesoft.norilib.SearchResult} test. */
+/** Tests the {@link io.github.tjg1.library.norilib.SearchResult} test. */
 public class SearchResultTests extends AndroidTestCase {
 
   /** Verify that SearchResult can be written and read from Parcels correctly. */
@@ -35,7 +35,7 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(unParceled.hasNextPage()).isEqualTo(original.hasNextPage());
   }
 
-  /** Tests the {@link SearchResult#filter(com.cuddlesoft.norilib.Tag...)}  method. */
+  /** Tests the {@link SearchResult#filter(io.github.tjg1.library.norilib.Tag...)}  method. */
   public void testFilterWithTags() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     searchResult.filter(new Tag("duck"));
@@ -43,7 +43,7 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.getImages()[0].tags[0].getName()).isEqualTo("bird");
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.SearchResult#addImages(com.cuddlesoft.norilib.Image[], int)} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#addImages(io.github.tjg1.library.norilib.Image[], int)} method. */
   public void testAddImages() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     searchResult.addImages(new Image[]{ImageTests.getMockImage(Image.ObscenityRating.EXPLICIT, new Tag("quack"))}, 20);
@@ -52,13 +52,13 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.getCurrentOffset()).isEqualTo(20);
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.SearchResult#getImages()} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#getImages()} method. */
   public void testGetImages() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     assertThat(searchResult.getImages()).isNotEmpty();
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.SearchResult#filter(com.cuddlesoft.norilib.Image.ObscenityRating...)} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#filter(io.github.tjg1.library.norilib.Image.ObscenityRating...)} method. */
   public void testFilterWithObscenityRating() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     searchResult.filter(Image.ObscenityRating.QUESTIONABLE);
@@ -66,7 +66,7 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.getImages()[0].obscenityRating).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.SearchResult#getCurrentOffset()} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#getCurrentOffset()} method. */
   public void testGetCurrentOffset() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     assertThat(searchResult.getCurrentOffset()).isEqualTo(0);
@@ -74,7 +74,7 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.getCurrentOffset()).isEqualTo(30);
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.SearchResult#onLastPage()} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#onLastPage()} method. */
   public void testOnLastPage() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
     assertThat(searchResult.hasNextPage()).isTrue();

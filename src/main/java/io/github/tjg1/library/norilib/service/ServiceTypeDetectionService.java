@@ -4,13 +4,13 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.service;
+package io.github.tjg1.library.norilib.service;
 
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
 
-import com.cuddlesoft.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-/** Service that detects the {@link com.cuddlesoft.norilib.clients.SearchClient} API type for given URL. */
+/** Service that detects the {@link io.github.tjg1.library.norilib.clients.SearchClient} API type for given URL. */
 public class ServiceTypeDetectionService extends IntentService {
   /** Result code returned when the service type was detected successfully. */
   public static final int RESULT_OK = 0x00;
@@ -34,22 +34,22 @@ public class ServiceTypeDetectionService extends IntentService {
   /** Result code returned when no valid API was found at given URL. */
   public static final int RESULT_FAIL_NO_API = 0x03;
   /** Action ID of the broadcast sent when the detection has completed. */
-  public static final String ACTION_DONE = "com.cuddlesoft.norilib.service.ServiceTypeDetectionService.done";
+  public static final String ACTION_DONE = "io.github.tjg1.library.norilib.service.ServiceTypeDetectionService.done";
   /** Parcel ID to package the API endpoint URL to test. */
-  public static final String ENDPOINT_URL = "com.cuddlesoft.norilib.clients.SearchClient.Settings.url";
+  public static final String ENDPOINT_URL = "io.github.tjg1.library.norilib.clients.SearchClient.Settings.url";
   /** Parcel ID used to send the result code back to the listening activity. */
-  public static final String RESULT_CODE = "com.cuddlesoft.norilib.service.ServiceTypeDetectionService.resultCode";
-  /** Parcel ID used to send the {@link com.cuddlesoft.norilib.clients.SearchClient.Settings.APIType#ordinal()} value back to the {@link android.content.BroadcastReceiver}. */
-  public static final String API_TYPE = "com.cuddlesoft.norilib.clients.SearchClient.Settings.APIType.ordinal";
-  /** Hash map containing the expected API endpoint path for each {@link com.cuddlesoft.norilib.clients.SearchClient.Settings.APIType}. */
+  public static final String RESULT_CODE = "io.github.tjg1.library.norilib.service.ServiceTypeDetectionService.resultCode";
+  /** Parcel ID used to send the {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType#ordinal()} value back to the {@link android.content.BroadcastReceiver}. */
+  public static final String API_TYPE = "io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType.ordinal";
+  /** Hash map containing the expected API endpoint path for each {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType}. */
   private static final AbstractMap<SearchClient.Settings.APIType, String> API_ENDPOINT_PATHS;
   /** Time to wait for the HTTP requests to complete. (Gelbooru tends to be slow :() */
   private static final int REQUEST_TIMEOUT = 30;
 
 
-  /** Called by the framework to instantiate the {@link com.cuddlesoft.norilib.service.ServiceTypeDetectionService}. */
+  /** Called by the framework to instantiate the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
   public ServiceTypeDetectionService() {
-    super("com.cuddlesoft.norilib.ServiceTypeDetectionService");
+    super("io.github.tjg1.library.norilib.ServiceTypeDetectionService");
   }
 
   /** Disables detection of the Danbooru 2.x API. Only intended for testing. */

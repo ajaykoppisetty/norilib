@@ -4,10 +4,10 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
-import com.cuddlesoft.norilib.clients.DanbooruLegacy;
-import com.cuddlesoft.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.clients.DanbooruLegacy;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 
 /** Tests support for Moebooru-based boards in the DanbooruLegacy client. */
 public class MoebooruTest extends SearchClientTestCase {

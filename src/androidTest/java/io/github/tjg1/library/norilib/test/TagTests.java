@@ -4,12 +4,12 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 
-import com.cuddlesoft.norilib.Tag;
+import io.github.tjg1.library.norilib.Tag;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import java.util.List;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Tests for the {@link com.cuddlesoft.norilib.Tag} class. */
+/** Tests for the {@link io.github.tjg1.library.norilib.Tag} class. */
 public class TagTests extends AndroidTestCase {
 
   /** Verify that Tags are read and written to Parcels correctly. */

@@ -4,10 +4,10 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
-import com.cuddlesoft.norilib.clients.Gelbooru;
-import com.cuddlesoft.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.clients.Gelbooru;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 
 /**
  * Tests for the Gelbooru API client.

@@ -4,7 +4,7 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib;
+package io.github.tjg1.library.norilib;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -184,10 +184,10 @@ public class Image implements Parcelable {
     UNDEFINED;
 
     /**
-     * Convert a String array into an array of {@link com.cuddlesoft.norilib.Image.ObscenityRating}s.
+     * Convert a String array into an array of {@link io.github.tjg1.library.norilib.Image.ObscenityRating}s.
      *
      * @param strings String array.
-     * @return Array of {@link com.cuddlesoft.norilib.Image.ObscenityRating}s.
+     * @return Array of {@link io.github.tjg1.library.norilib.Image.ObscenityRating}s.
      */
     public static ObscenityRating[] arrayFromStrings(String... strings) {
       final List<ObscenityRating> ratingList = new ArrayList<>(4);

@@ -4,15 +4,15 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
 
 import android.os.Bundle;
 import android.test.InstrumentationTestCase;
 
-import com.cuddlesoft.norilib.Image;
-import com.cuddlesoft.norilib.SearchResult;
-import com.cuddlesoft.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.SearchResult;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
-/** Extend this class to test a class implementing the {@link com.cuddlesoft.norilib.clients.SearchClient} API. */
+/** Extend this class to test a class implementing the {@link io.github.tjg1.library.norilib.clients.SearchClient} API. */
 public abstract class SearchClientTestCase extends InstrumentationTestCase {
 
   public void testSearchUsingTags() throws Throwable {

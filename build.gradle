@@ -24,7 +24,7 @@ android {
     targetSdkVersion 24
     versionCode 1
     versionName "2.0.0-${gitRevision()}"
-    testApplicationId "com.cuddlesoft.norilib.test"
+    testApplicationId "io.github.tjg1.library.norilib.test"
     testInstrumentationRunner "android.test.InstrumentationTestRunner"
   }
 

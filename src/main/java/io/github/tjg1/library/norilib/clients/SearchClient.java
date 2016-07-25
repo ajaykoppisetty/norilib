@@ -4,12 +4,12 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.clients;
+package io.github.tjg1.library.norilib.clients;
 
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.cuddlesoft.norilib.SearchResult;
+import io.github.tjg1.library.norilib.SearchResult;
 
 import java.io.IOException;
 
@@ -22,7 +22,7 @@ public interface SearchClient {
    * Fetch first page of results containing images with the given set of tags.
    *
    * @param tags Search query. A space-separated list of tags.
-   * @return A {@link com.cuddlesoft.norilib.SearchResult} containing a set of Images.
+   * @return A {@link io.github.tjg1.library.norilib.SearchResult} containing a set of Images.
    * @throws IOException Network error.
    */
   public SearchResult search(String tags) throws IOException;
@@ -32,7 +32,7 @@ public interface SearchClient {
    *
    * @param tags Search query. A space-separated list of tags.
    * @param pid  Page number. (zero-indexed)
-   * @return A {@link com.cuddlesoft.norilib.SearchResult} containing a set of Images.
+   * @return A {@link io.github.tjg1.library.norilib.SearchResult} containing a set of Images.
    * @throws java.io.IOException Network error.
    */
   public SearchResult search(String tags, int pid) throws IOException;
@@ -62,10 +62,10 @@ public interface SearchClient {
   public String getDefaultQuery();
 
   /**
-   * Get a serializable {@link com.cuddlesoft.norilib.clients.SearchClient.Settings} object with this
-   * {@link com.cuddlesoft.norilib.clients.SearchClient}'s settings.
+   * Get a serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object with this
+   * {@link io.github.tjg1.library.norilib.clients.SearchClient}'s settings.
    *
-   * @return A serializable {@link com.cuddlesoft.norilib.clients.SearchClient.Settings} object.
+   * @return A serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object.
    */
   public Settings getSettings();
 
@@ -77,7 +77,7 @@ public interface SearchClient {
    * If OPTIONAL, the credential form is shown, but can be left empty.
    * If NONE, the credential form will not be shown.
    *
-   * @return {@link com.cuddlesoft.norilib.clients.SearchClient.AuthenticationType} value for this API backend.
+   * @return {@link io.github.tjg1.library.norilib.clients.SearchClient.AuthenticationType} value for this API backend.
    */
   public abstract AuthenticationType requiresAuthentication();
 
@@ -88,7 +88,7 @@ public interface SearchClient {
     NONE
   }
 
-  /** Callback listening for an {@link com.cuddlesoft.norilib.SearchResult} from an asynchronous request fetched on a background thread. */
+  /** Callback listening for an {@link io.github.tjg1.library.norilib.SearchResult} from an asynchronous request fetched on a background thread. */
   public static interface SearchCallback {
     /**
      * Called when the request could not be executed due to cancellation, a connectivity problem or timeout.
@@ -105,7 +105,7 @@ public interface SearchClient {
     public void onSuccess(SearchResult searchResult);
   }
 
-  /** Class used to handle storing, serializing and deserializing {@link com.cuddlesoft.norilib.clients.SearchClient} settings. */
+  /** Class used to handle storing, serializing and deserializing {@link io.github.tjg1.library.norilib.clients.SearchClient} settings. */
   public static class Settings implements Parcelable {
     // Parcelable are the standard Android serialization API used to retain data between sessions.
     /** Class loader used when deserializing from a {@link android.os.Parcel}. */
@@ -146,7 +146,7 @@ public interface SearchClient {
     }
 
     /**
-     * Constructor used to deserialize a {@link com.cuddlesoft.norilib.clients.SearchClient.Settings} object from
+     * Constructor used to deserialize a {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object from
      * a parcel.
      *
      * @param in Parcel to deserialize from.
@@ -165,7 +165,7 @@ public interface SearchClient {
       }
     }
 
-    /** Get the {@link com.cuddlesoft.norilib.clients.SearchClient} type used by the API endpoint */
+    /** Get the {@link io.github.tjg1.library.norilib.clients.SearchClient} type used by the API endpoint */
     public APIType getApiType() {
       return apiType;
     }
@@ -191,9 +191,9 @@ public interface SearchClient {
     }
 
     /**
-     * Create a {@link com.cuddlesoft.norilib.clients.SearchClient} from this {@link com.cuddlesoft.norilib.clients.SearchClient.Settings} object.
+     * Create a {@link io.github.tjg1.library.norilib.clients.SearchClient} from this {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object.
      *
-     * @return A {@link com.cuddlesoft.norilib.clients.SearchClient} created using settings from this object.
+     * @return A {@link io.github.tjg1.library.norilib.clients.SearchClient} created using settings from this object.
      */
     public SearchClient createSearchClient() {
       switch (apiType) {

@@ -4,15 +4,15 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.clients;
+package io.github.tjg1.library.norilib.clients;
 
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
-import com.cuddlesoft.norilib.Image;
-import com.cuddlesoft.norilib.SearchResult;
-import com.cuddlesoft.norilib.Tag;
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.SearchResult;
+import io.github.tjg1.library.norilib.Tag;
 import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
@@ -158,7 +158,7 @@ public class DanbooruLegacy implements SearchClient {
    * @param body   HTTP Response body.
    * @param tags   Tags used to retrieve the response.
    * @param offset Current paging offset.
-   * @return A {@link com.cuddlesoft.norilib.SearchResult} parsed from given XML.
+   * @return A {@link io.github.tjg1.library.norilib.SearchResult} parsed from given XML.
    */
   protected SearchResult parseXMLResponse(String body, String tags, int offset) throws IOException {
     // Create variables to hold the values as XML is being parsed.
@@ -283,7 +283,7 @@ public class DanbooruLegacy implements SearchClient {
   /**
    * Get a URL viewable in the system web browser for given Image ID.
    *
-   * @param id {@link com.cuddlesoft.norilib.Image} ID.
+   * @param id {@link io.github.tjg1.library.norilib.Image} ID.
    * @return URL for viewing the image in the browser.
    */
   protected String webUrlFromId(String id) {

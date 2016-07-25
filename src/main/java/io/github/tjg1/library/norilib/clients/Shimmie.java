@@ -4,7 +4,7 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.clients;
+package io.github.tjg1.library.norilib.clients;
 
 import java.util.Locale;
 

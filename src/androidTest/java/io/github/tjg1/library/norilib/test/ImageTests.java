@@ -4,14 +4,14 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
 import android.os.Bundle;
 import android.test.AndroidTestCase;
 import android.util.Log;
 
-import com.cuddlesoft.norilib.Image;
-import com.cuddlesoft.norilib.Tag;
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.Tag;
 
 import java.util.Date;
 import java.util.Locale;
@@ -20,12 +20,12 @@ import java.util.regex.Pattern;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
- * Tests and utilities for testing the {@link com.cuddlesoft.norilib.Image} class.
+ * Tests and utilities for testing the {@link io.github.tjg1.library.norilib.Image} class.
  */
 public class ImageTests extends AndroidTestCase {
 
   /** LogCat tag. */
-  private static final String TAG = "com.cuddlesoft.norilib.test.ImageTests";
+  private static final String TAG = "io.github.tjg1.library.norilib.test.ImageTests";
 
   /**
    * RegEx Pattern used for matching URLs.
@@ -74,7 +74,7 @@ public class ImageTests extends AndroidTestCase {
     assertThat(Image.getPixivIdFromUrl("http://www.pixiv.net/member_illust.php?mode=medium&illust_id=44466677")).isEqualTo("44466677");
   }
 
-  /** Tests the {@link com.cuddlesoft.norilib.Image.ObscenityRating#fromString(String)} method. */
+  /** Tests the {@link io.github.tjg1.library.norilib.Image.ObscenityRating#fromString(String)} method. */
   public void testObscenityRatingFromString() throws Throwable {
     assertThat(Image.ObscenityRating.fromString("Safe")).isEqualTo(Image.ObscenityRating.SAFE);
     assertThat(Image.ObscenityRating.fromString("Questionable")).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
@@ -109,7 +109,7 @@ public class ImageTests extends AndroidTestCase {
   }
 
   /**
-   * Verify validity of an {@link com.cuddlesoft.norilib.Image} object.
+   * Verify validity of an {@link io.github.tjg1.library.norilib.Image} object.
    * Used to ensure that Image values returned by each individual API client are correct.
    *
    * @throws Throwable Assertion failure.

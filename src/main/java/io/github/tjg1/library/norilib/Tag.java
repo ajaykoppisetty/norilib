@@ -4,7 +4,7 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib;
+package io.github.tjg1.library.norilib;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -133,7 +133,7 @@ public class Tag implements Comparable<Tag>, Parcelable {
   }
 
   /**
-   * Convert an array of tags into a querystring suitable for use with {@link com.cuddlesoft.norilib.clients.SearchClient#search(String)}.
+   * Convert an array of tags into a querystring suitable for use with {@link io.github.tjg1.library.norilib.clients.SearchClient#search(String)}.
    *
    * @param tags Tags
    * @return A space-separated list of tags.

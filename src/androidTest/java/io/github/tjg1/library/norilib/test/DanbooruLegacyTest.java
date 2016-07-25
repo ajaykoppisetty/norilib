@@ -4,10 +4,10 @@
  * License: ISC
  */
 
-package com.cuddlesoft.norilib.test;
+package io.github.tjg1.library.norilib.test;
 
-import com.cuddlesoft.norilib.clients.DanbooruLegacy;
-import com.cuddlesoft.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.clients.DanbooruLegacy;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 
 /**
  * Tests for the Danbooru 1.x API client.
