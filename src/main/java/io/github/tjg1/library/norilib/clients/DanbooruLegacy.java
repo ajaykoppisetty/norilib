@@ -18,6 +18,7 @@ import com.squareup.okhttp.Credentials;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import com.squareup.okhttp.ResponseBody;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -110,7 +111,9 @@ public class DanbooruLegacy implements SearchClient {
         .build();
     // Get HTTP response.
     final Response response = okHttpClient.newCall(request).execute();
-    final String body = response.body().string();
+    final ResponseBody responseBody = response.body();
+    final String body = responseBody.string();
+    responseBody.close();
 
     // Return parsed SearchResult.
     return parseXMLResponse(body, tags, pid);
