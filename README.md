@@ -26,9 +26,8 @@ You can also use [Android Studio](https://developer.android.com/studio/index.htm
 - Gelbooru
 - Shimmie2
 
-### Patreon ###
+### Donations ###
 
-If you would like to help keep Nori/Norilib free (and free of ads) by supporting their continued development, you can do so by making a monthly pledge to my Patreon account. It's completely optional, but I appreciate it a lot. Some of that money goes to sponsoring Git bounties, so that other people working on Nori/Norilib can also get rewarded.
+If you would like to help keep Nori/Norilib free (and free of ads) by supporting its continued development, you can do so by making a monthly pledge to [my Patreon account](https://www.patreon.com/user?u=3696048).
 
-[![Become my patron on Patreon](https://s3.amazonaws.com/patreon_public_assets/kaGh5_patreon_name_and_message.png)](https://www.patreon.com/user?u=3696048)
-
+Alternatively, you can make a one-off donation to [my PayPal account](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=FSVJZBNKMVZ9J).
