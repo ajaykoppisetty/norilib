@@ -191,50 +191,50 @@ public class Danbooru implements SearchClient {
           // Get the tag's name.
           final String name = xpp.getName();
 
-          if (name.equals("post")) {
+          if ("post".equals(name)) {
             // Create a new image for each <post> tag.
             image = new Image();
             imageTags = new ArrayList<>();
           }
           // Extract image metadata from XML tags.
-          else if (name.equals("large-file-url")) {
+          else if ("large-file-url".equals(name)) {
             image.fileUrl = apiEndpoint + xpp.nextText();
-          } else if (name.equals("image-width")) {
+          } else if ("image-width".equals(name)) {
             image.width = Integer.parseInt(xpp.nextText());
-          } else if (name.equals("image-height")) {
+          } else if ("image-height".equals(name)) {
             image.height = Integer.parseInt(xpp.nextText());
-          } else if (name.equals("preview-file-url")) {
+          } else if ("preview-file-url".equals(name)) {
             image.previewUrl = apiEndpoint + xpp.nextText();
-          } else if (name.equals("file-url")) {
+          } else if ("file-url".equals(name)) {
             image.sampleUrl = apiEndpoint + xpp.nextText();
-          } else if (name.equals("tag-string-general")) {
+          } else if ("tag-string-general".equals(name)) {
             imageTags.addAll(Arrays.asList(Tag.arrayFromString(xpp.nextText(), Tag.Type.GENERAL)));
-          } else if (name.equals("tag-string-artist")) {
+          } else if ("tag-string-artist".equals(name)) {
             imageTags.addAll(Arrays.asList(Tag.arrayFromString(xpp.nextText(), Tag.Type.ARTIST)));
-          } else if (name.equals("tag-string-character")) {
+          } else if ("tag-string-character".equals(name)) {
             imageTags.addAll(Arrays.asList(Tag.arrayFromString(xpp.nextText(), Tag.Type.CHARACTER)));
-          } else if (name.equals("tag-string-copyright")) {
+          } else if ("tag-string-copyright".equals(name)) {
             imageTags.addAll(Arrays.asList(Tag.arrayFromString(xpp.nextText(), Tag.Type.COPYRIGHT)));
-          } else if (name.equals("id")) {
+          } else if ("id".equals(name)) {
             image.id = xpp.nextText();
-          } else if (name.equals("parent-id")) {
+          } else if ("parent-id".equals(name)) {
             image.parentId = xpp.getAttributeValue(null, "nil") != null ? null : xpp.nextText();
-          } else if (name.equals("pixiv-id")) {
+          } else if ("pixiv-id".equals(name)) {
             image.pixivId = xpp.getAttributeValue(null, "nil") != null ? null : xpp.nextText();
-          } else if (name.equals("rating")) {
+          } else if ("rating".equals(name)) {
             image.obscenityRating = Image.ObscenityRating.fromString(xpp.nextText());
-          } else if (name.equals("score")) {
+          } else if ("score".equals(name)) {
             image.score = Integer.parseInt(xpp.nextText());
-          } else if (name.equals("source")) {
+          } else if ("source".equals(name)) {
             image.source = xpp.nextText();
-          } else if (name.equals("md5")) {
+          } else if ("md5".equals(name)) {
             image.md5 = xpp.nextText();
-          } else if (name.equals("created-at")) {
+          } else if ("created-at".equals(name)) {
             image.createdAt = DATE_FORMAT.parse(xpp.nextText());
           }
           // createdAt
         } else if (xpp.getEventType() == XmlPullParser.END_TAG) {
-          if (xpp.getName().equals("post")) {
+          if ("post".equals(xpp.getName())) {
             // Convert tag list to array.
             image.tags = imageTags.toArray(new Tag[imageTags.size()]);
             // Append values not returned by API to image.

@@ -29,10 +29,12 @@ public class SearchResultTests extends AndroidTestCase {
     unParceled = bundle.getParcelable("search-result");
 
     // Verify un-parceled data.
-    assertThat(unParceled.getImages()).containsOnly(original.getImages());
-    assertThat(unParceled.getCurrentOffset()).isEqualTo(original.getCurrentOffset());
-    assertThat(unParceled.getQuery()).containsOnly(original.getQuery());
-    assertThat(unParceled.hasNextPage()).isEqualTo(original.hasNextPage());
+    if (unParceled != null) {
+      assertThat(unParceled.getImages()).containsOnly(original.getImages());
+      assertThat(unParceled.getCurrentOffset()).isEqualTo(original.getCurrentOffset());
+      assertThat(unParceled.getQuery()).containsOnly(original.getQuery());
+      assertThat(unParceled.hasNextPage()).isEqualTo(original.hasNextPage());
+    }
   }
 
   /** Tests the {@link SearchResult#filter(io.github.tjg1.library.norilib.Tag...)}  method. */
@@ -83,7 +85,7 @@ public class SearchResultTests extends AndroidTestCase {
   }
 
   /** Create a SearchResult with fake data suitable for testing. */
-  static SearchResult getMockSearchResult() {
+  public static SearchResult getMockSearchResult() {
     final Image[] images = new Image[]{
         ImageTests.getMockImage(Image.ObscenityRating.SAFE,
             new Tag("duck"), new Tag("quack")),

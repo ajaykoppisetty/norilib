@@ -46,17 +46,6 @@ public class ServiceTypeDetectionService extends IntentService {
   /** Time to wait for the HTTP requests to complete. (Gelbooru tends to be slow :() */
   private static final int REQUEST_TIMEOUT = 30;
 
-
-  /** Called by the framework to instantiate the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
-  public ServiceTypeDetectionService() {
-    super("io.github.tjg1.library.norilib.ServiceTypeDetectionService");
-  }
-
-  /** Disables detection of the Danbooru 2.x API. Only intended for testing. */
-  public static void disableDanbooruDetection() {
-    API_ENDPOINT_PATHS.remove(SearchClient.Settings.APIType.DANBOORU);
-  }
-
   /** Uri schemes to use when detecting services. */
   // Would really like to default to HTTPS here, but the sad truth is that most sites either force TLS on all users
   // (yande.re) or do not support TLS at all (most sites, although danbooru is a notable exception).
@@ -65,7 +54,6 @@ public class ServiceTypeDetectionService extends IntentService {
   public static final String[] URI_SCHEMES_PREFER_SSL = {"https://", "http://"};
   /** List of site URIs known to support TLS. */
   public static final List<String> TLS_SUPPORT;
-
 
   static {
     // Populate the API type -> API endpoint path hash map.
@@ -81,6 +69,16 @@ public class ServiceTypeDetectionService extends IntentService {
     TLS_SUPPORT.add("konachan.com");
   }
 
+  /** Called by the framework to instantiate the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
+  public ServiceTypeDetectionService() {
+    super("io.github.tjg1.library.norilib.ServiceTypeDetectionService");
+  }
+
+  /** Disables detection of the Danbooru 2.x API. Only intended for testing. */
+  public static void disableDanbooruDetection() {
+    API_ENDPOINT_PATHS.remove(SearchClient.Settings.APIType.DANBOORU);
+  }
+  
   @Override
   protected void onHandleIntent(Intent intent) {
     // Extract SearchClient.Settings from the received Intent.

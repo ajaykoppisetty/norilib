@@ -180,7 +180,7 @@ public class DanbooruLegacy implements SearchClient {
       // Iterate over each XML element and handle pull parser "events".
       while (xpp.getEventType() != XmlPullParser.END_DOCUMENT) {
         if (xpp.getEventType() == XmlPullParser.START_TAG) {
-          if (xpp.getName().equals("post")) {
+          if ("post".equals(xpp.getName())) {
             // <post> tags contain metadata for each image.
             final Image image = new Image();
 
@@ -191,37 +191,37 @@ public class DanbooruLegacy implements SearchClient {
               final String value = xpp.getAttributeValue(i);
 
               // Set the appropriate value for each tag name.
-              if (name.equals("file_url")) {
+              if ("file_url".equals(name)) {
                 image.fileUrl = normalizeUrl(value);
-              } else if (name.equals("width")) {
+              } else if ("width".equals(name)) {
                 image.width = Integer.parseInt(value);
-              } else if (name.equals("height")) {
+              } else if ("height".equals(name)) {
                 image.height = Integer.parseInt(value);
-              } else if (name.equals("preview_url")) {
+              } else if ("preview_url".equals(name)) {
                 image.previewUrl = normalizeUrl(value);
-              } else if (name.equals("preview_width")) {
+              } else if ("preview_width".equals(name)) {
                 image.previewWidth = Integer.valueOf(value);
-              } else if (name.equals("preview_height")) {
+              } else if ("preview_height".equals(name)) {
                 image.previewHeight = Integer.valueOf(value);
-              } else if (name.equals("sample_url")) {
+              } else if ("sample_url".equals(name)) {
                 image.sampleUrl = normalizeUrl(value);
-              } else if (name.equals("sample_width")) {
+              } else if ("sample_width".equals(name)) {
                 image.sampleWidth = Integer.valueOf(value);
-              } else if (name.equals("sample_height")) {
+              } else if ("sample_height".equals(name)) {
                 image.sampleHeight = Integer.valueOf(value);
-              } else if (name.equals("tags")) {
+              } else if ("tags".equals(name)) {
                 image.tags = Tag.arrayFromString(value, Tag.Type.GENERAL);
-              } else if (name.equals("id")) {
+              } else if ("id".equals(name)) {
                 image.id = value;
-              } else if (name.equals("parent_id")) {
+              } else if ("parent_id".equals(name)) {
                 image.parentId = value;
-              } else if (name.equals("rating")) {
+              } else if ("rating".equals(name)) {
                 image.obscenityRating = Image.ObscenityRating.fromString(value);
-              } else if (name.equals("score")) {
+              } else if ("score".equals(name)) {
                 image.score = Integer.parseInt(value);
-              } else if (name.equals("md5")) {
+              } else if ("md5".equals(name)) {
                 image.md5 = value;
-              } else if (name.equals("created_at") || name.equals("date")) {
+              } else if ("created_at".equals(name) || "date".equals(name)) {
                 image.createdAt = dateFromString(value);
               }
             }

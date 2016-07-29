@@ -23,7 +23,7 @@ android {
     minSdkVersion 10
     targetSdkVersion 24
     versionCode 1
-    versionName "2.0.0-${gitRevision()}"
+    versionName "2.1.0-${gitRevision()}"
     testApplicationId "io.github.tjg1.library.norilib.test"
     testInstrumentationRunner "android.test.InstrumentationTestRunner"
   }

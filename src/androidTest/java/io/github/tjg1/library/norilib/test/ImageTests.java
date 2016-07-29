@@ -25,7 +25,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class ImageTests extends AndroidTestCase {
 
   /** LogCat tag. */
-  private static final String TAG = "io.github.tjg1.library.norilib.test.ImageTests";
+  private static final String TAG = "norilib.test.ImageTests";
 
   /**
    * RegEx Pattern used for matching URLs.
@@ -48,25 +48,29 @@ public class ImageTests extends AndroidTestCase {
     unParceled = bundle.getParcelable("image");
 
     // Verify data in the un-parceled Image object.
-    verifyImage(unParceled);
-    assertThat(unParceled.fileUrl).isEqualTo(original.fileUrl);
-    assertThat(unParceled.width).isEqualTo(original.width);
-    assertThat(unParceled.height).isEqualTo(original.height);
-    assertThat(unParceled.previewUrl).isEqualTo(original.previewUrl);
-    assertThat(unParceled.previewWidth).isEqualTo(original.previewWidth);
-    assertThat(unParceled.previewHeight).isEqualTo(original.previewHeight);
-    assertThat(unParceled.sampleUrl).isEqualTo(original.sampleUrl);
-    assertThat(unParceled.sampleWidth).isEqualTo(original.sampleWidth);
-    assertThat(unParceled.sampleHeight).isEqualTo(original.sampleHeight);
-    assertThat(unParceled.tags).containsOnly(original.tags);
-    assertThat(unParceled.id).isEqualTo(original.id);
-    assertThat(unParceled.parentId).isEqualTo(original.parentId);
-    assertThat(unParceled.webUrl).isEqualTo(original.webUrl);
-    assertThat(unParceled.pixivId).isEqualTo(original.pixivId);
-    assertThat(unParceled.obscenityRating).isEqualTo(original.obscenityRating);
-    assertThat(unParceled.score).isEqualTo(original.score);
-    assertThat(unParceled.md5).isEqualTo(original.md5);
-    assertThat(unParceled.createdAt).isEqualTo(original.createdAt);
+
+    assertThat(unParceled).isNotNull();
+    if (unParceled != null) {
+      verifyImage(unParceled);
+      assertThat(unParceled.fileUrl).isEqualTo(original.fileUrl);
+      assertThat(unParceled.width).isEqualTo(original.width);
+      assertThat(unParceled.height).isEqualTo(original.height);
+      assertThat(unParceled.previewUrl).isEqualTo(original.previewUrl);
+      assertThat(unParceled.previewWidth).isEqualTo(original.previewWidth);
+      assertThat(unParceled.previewHeight).isEqualTo(original.previewHeight);
+      assertThat(unParceled.sampleUrl).isEqualTo(original.sampleUrl);
+      assertThat(unParceled.sampleWidth).isEqualTo(original.sampleWidth);
+      assertThat(unParceled.sampleHeight).isEqualTo(original.sampleHeight);
+      assertThat(unParceled.tags).containsOnly(original.tags);
+      assertThat(unParceled.id).isEqualTo(original.id);
+      assertThat(unParceled.parentId).isEqualTo(original.parentId);
+      assertThat(unParceled.webUrl).isEqualTo(original.webUrl);
+      assertThat(unParceled.pixivId).isEqualTo(original.pixivId);
+      assertThat(unParceled.obscenityRating).isEqualTo(original.obscenityRating);
+      assertThat(unParceled.score).isEqualTo(original.score);
+      assertThat(unParceled.md5).isEqualTo(original.md5);
+      assertThat(unParceled.createdAt).isEqualTo(original.createdAt);
+    }
   }
 
   /** Tests the {@link Image#getPixivIdFromUrl(String)} method. */
@@ -83,7 +87,7 @@ public class ImageTests extends AndroidTestCase {
   }
 
   /** Get an Image suitable for testing. */
-  static Image getMockImage(Image.ObscenityRating obscenityRating, Tag... tags) {
+  public static Image getMockImage(Image.ObscenityRating obscenityRating, Tag... tags) {
     final Image image = new Image();
     image.fileUrl = "http://awesomeboorusite.org/data/images/image.png";
     image.width = 1000;
