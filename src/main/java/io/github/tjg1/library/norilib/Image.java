@@ -19,6 +19,53 @@ import java.util.regex.Pattern;
  * Metadata received from the API for each image.
  */
 public class Image implements Parcelable {
+  /** Full-resolution image URL. */
+  public String fileUrl;
+  /** Image width. */
+  public int width;
+  /** Image height. */
+  public int height;
+
+  /** Thumbnail URL. */
+  public String previewUrl;
+  /** Thumbnail width. */
+  public int previewWidth = 0;
+  /** Thumbnail height */
+  public int previewHeight = 0;
+
+  // Samples are medium-resolution images downsized for viewing on the web.
+  // Usually no more than ~1000px width.
+  // Suitable for slow networks and low resolution devices (mdpi or less).
+  /** Sample URL. */
+  public String sampleUrl;
+  /** Sample width. */
+  public int sampleWidth = 0;
+  /** Sample height. */
+  public int sampleHeight = 0;
+
+  /** Image tags. */
+  public Tag[] tags;
+
+  /** Image ID */
+  public String id;
+  /** Image parent ID. Used when there are multiple similar images. */
+  public String parentId;
+  /** Parent ID */
+  public String pixivId;
+  /** Web URL. */
+  public String webUrl;
+  /** Source URL. */
+  public String source;
+  /** MD5 hash */
+  public String md5;
+
+  /** SFW rating. */
+  public ObscenityRating obscenityRating;
+  /** Popularity score. */
+  public Integer score;
+  /** Upload date. */
+  public Date createdAt;
+
   // Parcelables are the standard Android serialization API used to retain data between sessions.
   /** Class loader used when deserializing from a {@link Parcel}. */
   public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
@@ -70,53 +117,6 @@ public class Image implements Parcelable {
     final long tmpCreatedAt = in.readLong();
     createdAt = (tmpCreatedAt != -1) ? new Date(tmpCreatedAt) : null;
   }
-
-  /** Full-resolution image URL. */
-  public String fileUrl;
-  /** Image width. */
-  public int width;
-  /** Image height. */
-  public int height;
-
-  /** Thumbnail URL. */
-  public String previewUrl;
-  /** Thumbnail width. */
-  public int previewWidth = 0;
-  /** Thumbnail height */
-  public int previewHeight = 0;
-
-  // Samples are medium-resolution images downsized for viewing on the web.
-  // Usually no more than ~1000px width.
-  // Suitable for slow networks and low resolution devices (mdpi or less).
-  /** Sample URL. */
-  public String sampleUrl;
-  /** Sample width. */
-  public int sampleWidth = 0;
-  /** Sample height. */
-  public int sampleHeight = 0;
-
-  /** Image tags. */
-  public Tag[] tags;
-
-  /** Image ID */
-  public String id;
-  /** Image parent ID. Used when there are multiple similar images. */
-  public String parentId;
-  /** Parent ID */
-  public String pixivId;
-  /** Web URL. */
-  public String webUrl;
-  /** Source URL. */
-  public String source;
-  /** MD5 hash */
-  public String md5;
-
-  /** SFW rating. */
-  public ObscenityRating obscenityRating;
-  /** Popularity score. */
-  public Integer score;
-  /** Upload date. */
-  public Date createdAt;
 
   @Override
   public int describeContents() {
@@ -193,13 +193,13 @@ public class Image implements Parcelable {
       final List<ObscenityRating> ratingList = new ArrayList<>(4);
 
       for (String string : strings) {
-        if (string.equals("safe")) {
+        if ("safe".equals(string)) {
           ratingList.add(ObscenityRating.SAFE);
-        } else if (string.equals("questionable")) {
+        } else if ("questionable".equals(string)) {
           ratingList.add(ObscenityRating.QUESTIONABLE);
-        } else if (string.equals("explicit")) {
+        } else if ("explicit".equals(string)) {
           ratingList.add(ObscenityRating.EXPLICIT);
-        } else if (string.equals("undefined")) {
+        } else if ("undefined".equals(string)) {
           ratingList.add(ObscenityRating.UNDEFINED);
         }
       }
