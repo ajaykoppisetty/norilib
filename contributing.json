@@ -1,40 +1,52 @@
 // https://gitmagic.io/rules
+
+// Code style: Android Studio defaults, except for: 2 spaces for tabs, 4 spaces for continuation,
+// single-line JavaDoc for fields (instance/class variables).
+
 {
-  "commit": {
-    "subject_cannot_be_empty": true,
-    "subject_must_be_longer_than": 4,
-    "subject_must_be_shorter_than": 101,
-    "subject_lines_must_be_shorter_than": 51,
-    "subject_must_be_single_line": true,
-    "subject_must_be_in_tense": "imperative",
-    "subject_must_start_with_case": "lower",
-    "subject_must_not_end_with_dot": true,
-
-    "body_lines_must_be_shorter_than": 73
+  "commit": { // COMMIT MESSAGES
+    "subject_cannot_be_empty": true, // Don't use empty subjects in commits.
+    "subject_must_be_longer_than": 4, // Commit subjects (first paragraph) must be longer than 4 characters.
+    "subject_must_be_shorter_than": 73, // Commit subjects (first paragraph) must be 72 characters or less.
+    "subject_must_be_single_line": true, // Commit subjects (first paragraph) must only be one line. Add a commit body (separated by an empty line) to add more information.
+    "subject_must_be_in_tense": "imperative", // Commit subjects must use imperative tense. "Fix" not "Fixes", "Fixed", or "Fixing"
+    "subject_must_start_with_case": "upper", // Commit subjects must start with an upper case character.
+    "subject_must_not_end_with_dot": true, // Commit subjects must not end with a dot.
+    "body_lines_must_be_shorter_than": 101 // Commit bodies (separated from the subject by an empty line) must be at most 100 characters long.
   },
-  "pull_request": {
-    "subject_cannot_be_empty": true,
-    "subject_must_be_longer_than": 4,
-    "subject_must_be_shorter_than": 101,
-    "subject_must_be_in_tense": "imperative",
-    "subject_must_start_with_case": "upper",
-    "subject_must_not_end_with_dot": true,
-
-    "body_cannot_be_empty": true,
-    "body_must_include_verification_steps": true,
-    "body_must_include_screenshot": ["html", "css"]
+  "pull_request": { // PULL REQUESTS
+    "subject_cannot_be_empty": true, // Pull request subjects must be empty.
+    "subject_must_be_longer_than": 4, // Pull request subjects must be longer than 4 characters.
+    "subject_must_be_shorter_than": 101, // Pull request subjects must be 100 characters or less.
+    "subject_must_be_in_tense": "imperative", // Pull request subjects must use imperative tense. "Fix", not "Fixes", "Fixed", or "Fixing"
+    "subject_must_start_with_case": "upper", // Pull request subjects must start with an upper-case character.
+    "subject_must_not_end_with_dot": true, // Pull request subjects must not end with a dot.
+    "body_cannot_be_empty": true, // Pull request bodies must not be empty.
+    "body_must_include_verification_steps": true // Pull request bodies must include verification steps.
+    // Must match one of these regexps: /to verify/i, /verification steps/i, /verification instructions/i, /to test/i, /testing steps/i, /testing instructions/i, /to review/i, /review steps/i, /review instructions/i
+    // Changes to UI/UX must include screenshots.
   },
-  "issue": {
-    "subject_cannot_be_empty": true,
-    "subject_must_be_longer_than": 4,
-    "subject_must_be_shorter_than": 101,
-    "subject_must_be_in_tense": "imperative",
-    "subject_must_start_with_case": "upper",
-    "subject_must_not_end_with_dot": true,
-
-    "body_cannot_be_empty": true,
-    "body_must_include_reproduction_steps": ["bug"],
-
-    "label_must_be_set": true
+  "issue": { // ISSUES
+    "subject_cannot_be_empty": true, // Issue subjects must not be empty.
+    "subject_must_be_longer_than": 4, // Issue subjects must be longer than 4 characters.
+    "subject_must_be_shorter_than": 101, // Issue subjects must be 100 characters or less.
+    "subject_must_be_in_tense": "imperative", // Issue subjects should use imperative tense. "Fix", not "Fixes", "Fixed", or "Fixing"
+    "subject_must_start_with_case": "upper", // Issue subjects must start with an upper-case character.
+    "subject_must_not_end_with_dot": true, // Issue subjects must not end with a dot.
+    "body_cannot_be_empty": true, // Issue bodies cannot be empty.
+    "body_must_include_reproduction_steps": ["bug"], // Bug reports must include reproduction steps.
+    // Bug reports must match one fo these regexps:
+    "label_must_be_set": true // At least one issue label must be set.
+  },
+  "branch": { // BRANCH NAMES
+    "name_must_be_longer_than": 4, // Branch names must be longer than 4 characters.
+    "name_must_be_shorter_than": 129, // Branch names should be 128 characters or less.
+    "name_must_include_prefix": {
+      "prefixes": ["feature", "fix", "docs", "refactor"], // Branch names must include one of these prefixes. E.g. fix/crash-when-searching-for-images-#134
+      "require_after_prefix": "/"
+    },
+    "name_must_include_github_issue": true // Branch name must end with the number of the related GitHub issue. E.g. feature/webm-support-#456
   }
+  // These rules are only guidelines and can be ignored at the discretion of the project maintainers.
+  // They do not apply as strictly to pull requests from new contributors, but they will be encouraged to read and follow them in the future.
 }
