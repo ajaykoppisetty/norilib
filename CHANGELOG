@@ -1,0 +1,8 @@
+### Version 2.1.0 (29/06/2016) ###
+
+Tomasz Jan Góralczyk (7 commits):
+      Update README.md with build instructions
+      Change package name to io.github.tjg1.library.norilib (See future announcement on my blog for reasoning. This will not happen again.)
+      Update dependencies
+      Fix connection memory leaks
+      Improve code quality using Codacy static code analysis
