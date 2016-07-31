@@ -18,4 +18,9 @@ public class GelbooruTest extends SearchClientTestCase {
   protected SearchClient createSearchClient() {
     return new Gelbooru("Gelbooru", "http://gelbooru.com");
   }
+
+  @Override
+  protected String getDefaultTag() {
+    return "blonde_hair";
+  }
 }

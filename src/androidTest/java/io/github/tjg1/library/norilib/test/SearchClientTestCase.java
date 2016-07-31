@@ -28,7 +28,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Create a new client connected to the Danbooru API.
     final SearchClient client = createSearchClient();
     // Retrieve a search result.
-    final SearchResult result = client.search("blonde_hair");
+    final SearchResult result = client.search(getDefaultTag());
 
     // Make sure we got results back.
     assertThat(result.getImages()).isNotEmpty();
@@ -40,7 +40,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Check rests of the values.
     assertThat(result.getCurrentOffset()).isEqualTo(0);
     assertThat(result.getQuery()).hasSize(1);
-    assertThat(result.getQuery()[0].getName()).isEqualTo("blonde_hair");
+    assertThat(result.getQuery()[0].getName()).isEqualTo(getDefaultTag());
     assertThat(result.hasNextPage()).isTrue();
   }
 
@@ -49,8 +49,8 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Create a new client connected to the Danbooru API.
     final SearchClient client = createSearchClient();
     // Retrieve search results.
-    final SearchResult page1 = client.search("blonde_hair", 0);
-    final SearchResult page2 = client.search("blonde_hair", 1);
+    final SearchResult page1 = client.search(getDefaultTag(), 0);
+    final SearchResult page2 = client.search(getDefaultTag(), 1);
 
     // Make sure that the results differ.
     assertThat(page1.getImages()).isNotEmpty();
@@ -80,7 +80,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
       public void run() {
         final SearchClient client = createSearchClient();
         // Retrieve a search result.
-        client.search("blonde_hair", new SearchClient.SearchCallback() {
+        client.search(getDefaultTag(), new SearchClient.SearchCallback() {
           @Override
           public void onFailure(IOException e) {
             error[0] = e;
@@ -135,5 +135,10 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
   }
 
   protected abstract SearchClient createSearchClient();
+
+  /**
+   * @return Tag to search for while testing the support of this API.
+   */
+  protected abstract String getDefaultTag();
 
 }

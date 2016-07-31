@@ -19,4 +19,9 @@ public class DanbooruTests extends SearchClientTestCase {
   protected SearchClient createSearchClient() {
     return new Danbooru("Danbooru", "https://danbooru.donmai.us");
   }
+
+  @Override
+  protected String getDefaultTag() {
+    return "blonde_hair";
+  }
 }

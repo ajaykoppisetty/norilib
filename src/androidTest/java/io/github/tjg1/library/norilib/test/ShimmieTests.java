@@ -18,4 +18,9 @@ public class ShimmieTests extends SearchClientTestCase {
   protected SearchClient createSearchClient() {
     return new Shimmie("Dollbooru", "http://dollbooru.org");
   }
+
+  @Override
+  protected String getDefaultTag() {
+    return "blonde_hair";
+  }
 }
