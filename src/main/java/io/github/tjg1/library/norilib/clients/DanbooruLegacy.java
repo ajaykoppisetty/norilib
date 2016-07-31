@@ -166,6 +166,7 @@ public class DanbooruLegacy implements SearchClient {
   protected SearchResult parseXMLResponse(String body, String tags, int offset) throws IOException {
     // Create variables to hold the values as XML is being parsed.
     final List<Image> imageList = new ArrayList<>(DEFAULT_LIMIT);
+    int position = 0;
 
     try {
       // Create an XML parser factory and disable namespace awareness for security reasons.
@@ -183,6 +184,8 @@ public class DanbooruLegacy implements SearchClient {
           if ("post".equals(xpp.getName())) {
             // <post> tags contain metadata for each image.
             final Image image = new Image();
+            image.searchPage = offset;
+            image.searchPagePosition = position;
 
             // Extract image metadata from XML attributes.
             for (int i = 0; i < xpp.getAttributeCount(); i++) {
@@ -237,6 +240,7 @@ public class DanbooruLegacy implements SearchClient {
             }
             // Add Image to search result.
             imageList.add(image);
+            position++;
           }
         }
         // Get next XMLPullParser event.

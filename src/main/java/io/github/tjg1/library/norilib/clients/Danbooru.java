@@ -174,6 +174,7 @@ public class Danbooru implements SearchClient {
     final List<Image> imageList = new ArrayList<>(DEFAULT_LIMIT);
     Image image = new Image();
     List<Tag> imageTags = new ArrayList<>();
+    int position = 0;
 
     try {
       // Create an XML parser factory and disable namespace awareness for security reasons.
@@ -195,6 +196,8 @@ public class Danbooru implements SearchClient {
             // Create a new image for each <post> tag.
             image = new Image();
             imageTags = new ArrayList<>();
+            image.searchPage = offset;
+            image.searchPagePosition = position;
           }
           // Extract image metadata from XML tags.
           else if ("large-file-url".equals(name)) {
@@ -249,6 +252,7 @@ public class Danbooru implements SearchClient {
             if (image.fileUrl != null) {
               // Add to result.
               imageList.add(image);
+              position++;
             }
           }
         }

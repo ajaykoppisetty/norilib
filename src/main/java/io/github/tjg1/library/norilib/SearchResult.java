@@ -137,6 +137,25 @@ public class SearchResult implements Parcelable {
   }
 
   /**
+   * Create a smaller version of this SearchResult containing {@link Image}s from the given Search
+   * paging offset only. This is to make it suitable for passing between Activities without
+   * triggering a {@link android.os.TransactionTooLargeException}.
+   *
+   * @param page Paging offset used to filter {@link Image}s.
+   * @return A {@link SearchResult} containing only {@link Image}s for the given search paging offset.
+   */
+  public SearchResult getSearchResultForPage(final int page) {
+    Collection<Image> selectedImages = CollectionUtils.select(images, new Predicate<Image>() {
+      @Override
+      public boolean evaluate(Image image) {
+        return (image.searchPage != null && image.searchPage == page);
+      }
+    });
+
+    return new SearchResult(selectedImages.toArray(new Image[selectedImages.size()]), this.query, page);
+  }
+
+  /**
    * Get {@link Image}s contained in this SearchResult.
    *
    * @return {@link Image}s returned by this SearchResult.

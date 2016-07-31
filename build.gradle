@@ -22,8 +22,8 @@ android {
   defaultConfig {
     minSdkVersion 10
     targetSdkVersion 24
-    versionCode 1
-    versionName "2.1.0-${gitRevision()}"
+    versionCode 2
+    versionName "2.2.0"
     testApplicationId "io.github.tjg1.library.norilib.test"
     testInstrumentationRunner "android.test.InstrumentationTestRunner"
   }
@@ -36,6 +36,10 @@ android {
     release {
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+    debug {
+      minifyEnabled false
+      versionNameSuffix "-${gitRevision()}"
     }
   }
   lintOptions {

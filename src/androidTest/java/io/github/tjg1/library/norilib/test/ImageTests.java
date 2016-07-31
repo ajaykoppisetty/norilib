@@ -69,6 +69,8 @@ public class ImageTests extends AndroidTestCase {
       assertThat(unParceled.obscenityRating).isEqualTo(original.obscenityRating);
       assertThat(unParceled.score).isEqualTo(original.score);
       assertThat(unParceled.md5).isEqualTo(original.md5);
+      assertThat(unParceled.searchPage).isEqualTo(original.searchPage);
+      assertThat(unParceled.searchPagePosition).isEqualTo(original.searchPagePosition);
       assertThat(unParceled.createdAt).isEqualTo(original.createdAt);
     }
   }
@@ -107,6 +109,8 @@ public class ImageTests extends AndroidTestCase {
     image.score = 23;
     image.source = "http://pixiv.com/duck.png";
     image.md5 = "cfaf278e8f522c72644cee2a753d2845";
+    image.searchPage = 0;
+    image.searchPagePosition = 1;
     image.createdAt = new Date(1398902400);
 
     return image;
@@ -167,6 +171,8 @@ public class ImageTests extends AndroidTestCase {
     else
       assertThat(image.source).isNotEmpty();
     assertThat(image.md5).hasSize(32); // MD5 hashes are always 32 characters long.
+    assertThat(image.searchPage).isNotNegative();
+    assertThat(image.searchPagePosition).isNotNegative();
     assertThat(image.createdAt).overridingErrorMessage("createdAt null for image: %s", image.webUrl).isNotNull();
   }
 
