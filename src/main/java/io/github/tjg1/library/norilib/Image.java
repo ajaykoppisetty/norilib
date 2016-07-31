@@ -59,6 +59,10 @@ public class Image implements Parcelable {
   public String source;
   /** MD5 hash */
   public String md5;
+  /** Search result page that contains this Image. */
+  public Integer searchPage;
+  /** The position of the Image on the search result page. */
+  public Integer searchPagePosition;
 
   /** SFW rating. */
   public ObscenityRating obscenityRating;
@@ -115,6 +119,10 @@ public class Image implements Parcelable {
     score = in.readInt();
     source = in.readString();
     md5 = in.readString();
+    final int tmpSearchPage = in.readInt();
+    searchPage = (tmpSearchPage != -1) ? tmpSearchPage : null;
+    final int tmpSearchPagePosition = in.readInt();
+    searchPagePosition = (tmpSearchPagePosition != -1) ? tmpSearchPagePosition : null;
     final long tmpCreatedAt = in.readLong();
     createdAt = (tmpCreatedAt != -1) ? new Date(tmpCreatedAt) : null;
   }
@@ -145,6 +153,8 @@ public class Image implements Parcelable {
     dest.writeInt(score);
     dest.writeString(source);
     dest.writeString(md5);
+    dest.writeInt(searchPage != null ? searchPage : -1);
+    dest.writeInt(searchPagePosition != null ? searchPagePosition : -1);
     dest.writeLong(createdAt != null ? createdAt.getTime() : -1L);
   }
 
