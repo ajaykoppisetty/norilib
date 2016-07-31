@@ -57,6 +57,12 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     assertThat(page2.getImages()).isNotEmpty();
     assertThat(page2.getCurrentOffset()).isEqualTo(1);
     assertThat(page1.getImages()[0].id).isNotEqualTo(page2.getImages()[0].id);
+    assertThat(page1.getImages()[0].searchPage).isEqualTo(page1.getCurrentOffset());
+    assertThat(page1.getImages()[0].searchPagePosition).isEqualTo(0);
+    assertThat(page1.getImages()[1].searchPagePosition).isEqualTo(1);
+    assertThat(page2.getImages()[0].searchPage).isEqualTo(page2.getCurrentOffset());
+    assertThat(page2.getImages()[0].searchPagePosition).isEqualTo(0);
+    assertThat(page2.getImages()[1].searchPagePosition).isEqualTo(1);
   }
 
   /** Test asynchronous search requests */
