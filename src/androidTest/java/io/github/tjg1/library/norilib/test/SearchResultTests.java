@@ -84,6 +84,18 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.hasNextPage()).isFalse();
   }
 
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#getSearchResultForPage(int) method.} */
+  public void testGetSearchResultForPage() throws Throwable {
+    final SearchResult searchResult = getMockSearchResult();
+    Image image = ImageTests.getMockImage(Image.ObscenityRating.EXPLICIT, new Tag("quack"));
+    image.searchPage = 1;
+    image.searchPagePosition = 0;
+    searchResult.addImages(new Image[]{image}, 1);
+    SearchResult filteredSearchResult = searchResult.getSearchResultForPage(1);
+    assertThat(searchResult.getImages()[0].searchPage).isEqualTo(0);
+    assertThat(filteredSearchResult.getImages()[0].searchPage).isEqualTo(1);
+  }
+
   /** Create a SearchResult with fake data suitable for testing. */
   public static SearchResult getMockSearchResult() {
     final Image[] images = new Image[]{
