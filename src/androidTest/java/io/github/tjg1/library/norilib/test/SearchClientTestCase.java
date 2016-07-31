@@ -10,13 +10,13 @@ package io.github.tjg1.library.norilib.test;
 import android.os.Bundle;
 import android.test.InstrumentationTestCase;
 
-import io.github.tjg1.library.norilib.Image;
-import io.github.tjg1.library.norilib.SearchResult;
-import io.github.tjg1.library.norilib.clients.SearchClient;
-
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.SearchResult;
+import io.github.tjg1.library.norilib.clients.SearchClient;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
@@ -28,7 +28,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Create a new client connected to the Danbooru API.
     final SearchClient client = createSearchClient();
     // Retrieve a search result.
-    final SearchResult result = client.search("tagme");
+    final SearchResult result = client.search("blonde_hair");
 
     // Make sure we got results back.
     assertThat(result.getImages()).isNotEmpty();
@@ -40,7 +40,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Check rests of the values.
     assertThat(result.getCurrentOffset()).isEqualTo(0);
     assertThat(result.getQuery()).hasSize(1);
-    assertThat(result.getQuery()[0].getName()).isEqualTo("tagme");
+    assertThat(result.getQuery()[0].getName()).isEqualTo("blonde_hair");
     assertThat(result.hasNextPage()).isTrue();
   }
 
@@ -49,8 +49,8 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     // Create a new client connected to the Danbooru API.
     final SearchClient client = createSearchClient();
     // Retrieve search results.
-    final SearchResult page1 = client.search("tagme", 0);
-    final SearchResult page2 = client.search("tagme", 1);
+    final SearchResult page1 = client.search("blonde_hair", 0);
+    final SearchResult page2 = client.search("blonde_hair", 1);
 
     // Make sure that the results differ.
     assertThat(page1.getImages()).isNotEmpty();
@@ -74,7 +74,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
       public void run() {
         final SearchClient client = createSearchClient();
         // Retrieve a search result.
-        client.search("tagme", new SearchClient.SearchCallback() {
+        client.search("blonde_hair", new SearchClient.SearchCallback() {
           @Override
           public void onFailure(IOException e) {
             error[0] = e;
