@@ -43,6 +43,7 @@ public class SearchResultTests extends AndroidTestCase {
     searchResult.filter(new Tag("duck"));
     assertThat(searchResult.getImages()).hasSize(1);
     assertThat(searchResult.getImages()[0].tags[0].getName()).isEqualTo("bird");
+    assertThat(searchResult.getImages()[0].searchPagePosition).isEqualTo(0);
   }
 
   /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#addImages(io.github.tjg1.library.norilib.Image[], int)} method. */
@@ -66,6 +67,7 @@ public class SearchResultTests extends AndroidTestCase {
     searchResult.filter(Image.ObscenityRating.QUESTIONABLE);
     assertThat(searchResult.getImages()).hasSize(1);
     assertThat(searchResult.getImages()[0].obscenityRating).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
+    assertThat(searchResult.getImages()[0].searchPagePosition).isEqualTo(0);
   }
 
   /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#getCurrentOffset()} method. */

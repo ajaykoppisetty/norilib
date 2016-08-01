@@ -1,6 +1,6 @@
 /*
  * This file is part of nori.
- * Copyright (c) 2014 Tomasz Jan Góralczyk <tomg@fastmail.uk>
+ * Copyright (c) 2014-2016 Tomasz Jan Góralczyk <tomg@fastmail.uk>
  * License: ISC
  */
 
@@ -96,6 +96,8 @@ public class SearchResult implements Parcelable {
         return !CollectionUtils.containsAny(Arrays.asList(image.tags), tagList);
       }
     });
+
+    reorderImagePageOffsets();
   }
 
   /**
@@ -118,6 +120,25 @@ public class SearchResult implements Parcelable {
         return ratingList.contains(image.obscenityRating);
       }
     });
+
+    reorderImagePageOffsets();
+  }
+
+  /** Re-calculate image page offsets after filtering. */
+  private void reorderImagePageOffsets() {
+    int page = 0;
+    int offset = 0;
+
+    for (Image image : images) {
+      if (image.searchPage != null) {
+        if (image.searchPage != page) {
+          page = image.searchPage;
+          offset = 0;
+        }
+        image.searchPagePosition = offset;
+        offset += 1;
+      }
+    }
   }
 
   /**
