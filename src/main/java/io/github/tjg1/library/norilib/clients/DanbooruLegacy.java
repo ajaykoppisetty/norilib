@@ -219,7 +219,7 @@ public class DanbooruLegacy implements SearchClient {
               } else if ("parent_id".equals(name)) {
                 image.parentId = value;
               } else if ("rating".equals(name)) {
-                image.obscenityRating = Image.ObscenityRating.fromString(value);
+                image.safeSearchRating = Image.SafeSearchRating.fromString(value);
               } else if ("score".equals(name)) {
                 image.score = Integer.parseInt(value);
               } else if ("md5".equals(name)) {

@@ -55,7 +55,7 @@ public interface SearchClient {
   public void search(String tags, int pid, SearchCallback callback);
 
   /**
-   * Get a SFW default query to search for when an app is launched.
+   * Get a SafeSearch default query to search for when an app is launched.
    *
    * @return Safe-for-work query to search for when an app is launched.
    */
