@@ -108,9 +108,9 @@ public class E621 extends DanbooruLegacy{
     final DateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
 
     //Annoying 'T' between the date and time
-    date = date.replace("T", " ");
+    String newDate = date.replace("T", " ");
 
-    return DATE_FORMAT_DEFAULT.parse(date);
+    return DATE_FORMAT_DEFAULT.parse(newDate);
   }
 
 }
