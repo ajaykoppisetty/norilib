@@ -100,8 +100,7 @@ public class ServiceTypeDetectionService extends IntentService {
     * Check host for E621 as it uses the same path as DANBOORU_LEGACY.
     * Shouldn't this be done for all default hosts?
     */
-    if(uri.getHost().equals("e621.net"))
-    {
+    if(uri.getHost().equals("e621.net")) {
       broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
       broadcastIntent.putExtra(ENDPOINT_URL, "https://e621.net");
       broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.E621.ordinal());
