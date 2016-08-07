@@ -96,6 +96,19 @@ public class ServiceTypeDetectionService extends IntentService {
     okHttpClient.setConnectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
     okHttpClient.setReadTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
 
+    /*
+    * Check host for E621 as it uses the same path as DANBOORU_LEGACY.
+    * Shouldn't this be done for all default hosts?
+    */
+    if(uri.getHost().equals("e621.net"))
+    {
+      broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
+      broadcastIntent.putExtra(ENDPOINT_URL, "https://e621.net");
+      broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.E621.ordinal());
+      sendBroadcast((broadcastIntent));
+      return;
+    }
+
     // Iterate over supported URI schemes for given URL.
     for (String uriScheme : (TLS_SUPPORT.contains(uri.getHost()) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
       String baseUri = uriScheme + uri.getHost();

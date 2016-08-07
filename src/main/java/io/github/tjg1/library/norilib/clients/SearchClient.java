@@ -205,6 +205,8 @@ public interface SearchClient {
           return new Shimmie(name, endpoint, username, password);
         case GELBOORU:
           return new Gelbooru(name, endpoint, username, password);
+        case E621:
+          return new E621(name, endpoint);
         default:
           return null;
       }
@@ -234,7 +236,8 @@ public interface SearchClient {
       DANBOORU,
       DANBOORU_LEGACY,
       GELBOORU,
-      SHIMMIE
+      SHIMMIE,
+      E621
     }
   }
 
