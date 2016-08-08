@@ -29,6 +29,7 @@ import io.github.tjg1.library.norilib.Tag;
 
 public class E621 extends DanbooruLegacy{
 
+  /** Number of images to fetch with each search. */
   private static final int DEFAULT_LIMIT = 100;
 
   public E621(String name, String endpoint) {
@@ -42,7 +43,7 @@ public class E621 extends DanbooruLegacy{
 
   @Override
   protected String webUrlFromId(String id) {
-    return String.format(Locale.US, apiEndpoint + "/post/index.xml?id=" + id);
+    return apiEndpoint + "/post/show/" + id;
   }
 
   @Override
@@ -83,6 +84,7 @@ public class E621 extends DanbooruLegacy{
 
           image.tags = Tag.arrayFromString(element.getElementsByTagName("tags").item(0).getTextContent(), Tag.Type.GENERAL);
           image.id = element.getElementsByTagName("id").item(0).getTextContent(); // Why not an int?
+          image.webUrl = webUrlFromId(image.id);
           image.parentId = element.getElementsByTagName("parent_id").item(0).getTextContent();
           image.obscenityRating = Image.ObscenityRating.fromString(element.getElementsByTagName("rating").item(0).getTextContent());
           image.score = Integer.parseInt(element.getElementsByTagName("score").item(0).getTextContent());
