@@ -8,12 +8,8 @@ package io.github.tjg1.library.norilib.clients;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.util.Base64;
+import android.text.TextUtils;
 
-import io.github.tjg1.library.norilib.Image;
-import io.github.tjg1.library.norilib.SearchResult;
-import io.github.tjg1.library.norilib.Tag;
-import com.squareup.okhttp.Authenticator;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -25,7 +21,6 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.Proxy;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+
+import io.github.tjg1.library.norilib.Image;
+import io.github.tjg1.library.norilib.SearchResult;
+import io.github.tjg1.library.norilib.Tag;
 
 /**
  * Client for the Danbooru 2.x API.
@@ -86,27 +85,6 @@ public class Danbooru implements SearchClient {
     this.apiEndpoint = endpoint;
     this.username = username;
     this.apiKey = apiKey;
-
-
-    /*
-    * This doesn't work as far as I can tell.  /Kycklingar
-    * The api accepts the parameters "login" and "api_key"
-    *
-    * // Enable HTTP Basic Authentication.
-    *
-    * okHttpClient.setAuthenticator(new Authenticator() {
-    *  @Override
-    *  public Request authenticate(Proxy proxy, Response response) throws IOException {
-    *    final String credential = Base64.encodeToString(String.format("%s:%s", Danbooru.this.username, Danbooru.this.apiKey).getBytes(), Base64.DEFAULT);
-    *    return response.request().newBuilder().header("Authorization", credential).build();
-    *  }
-    *
-    *  @Override
-    *  public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-    *    return null;
-    *  }
-    *});
-    */
   }
 
   @Override
@@ -119,7 +97,7 @@ public class Danbooru implements SearchClient {
   public SearchResult search(String tags, int pid) throws IOException {
     // Create HTTP request.
     final Request request = new Request.Builder()
-        .url(createSearchURL(tags, pid, DEFAULT_LIMIT) + String.format("&login=%s&api_key=%s", Danbooru.this.username, Danbooru.this.apiKey))// Maybe not ideal but it works.
+        .url(createSearchURL(tags, pid, DEFAULT_LIMIT))
         .build();
     // Get HTTP response.
     final Response response = okHttpClient.newCall(request).execute();
@@ -287,6 +265,10 @@ public class Danbooru implements SearchClient {
     // Page numbers are 1-indexed for this API.
     final int page = pid + 1;
 
+    if (!TextUtils.isEmpty(this.username) && !TextUtils.isEmpty(this.apiKey)) {
+      return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d&login=%s&api_key=%s",
+          Uri.encode(tags), page, limit, Uri.encode(this.username), Uri.encode(this.apiKey));
+    }
     return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d", Uri.encode(tags), page, limit);
   }
 
