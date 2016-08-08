@@ -1,6 +1,6 @@
 /*
  * This file is part of nori.
- * Copyright (c) 2014 Tomasz Jan Góralczyk <tomg@fastmail.uk>
+ * Copyright (c) 2014-2016 Tomasz Jan Góralczyk <tomg@fastmail.uk>
  * License: ISC
  */
 
@@ -27,7 +27,8 @@ import io.github.tjg1.library.norilib.Image;
 import io.github.tjg1.library.norilib.SearchResult;
 import io.github.tjg1.library.norilib.Tag;
 
-public class E621 extends DanbooruLegacy{
+/** {@link io.github.tjg1.library.norilib.clients.SearchClient} for the E621 imageboard. */
+public class E621 extends DanbooruLegacy {
 
   /** Number of images to fetch with each search. */
   private static final int DEFAULT_LIMIT = 100;
@@ -83,7 +84,7 @@ public class E621 extends DanbooruLegacy{
           image.sampleHeight = Integer.parseInt(element.getElementsByTagName("sample_height").item(0).getTextContent());
 
           image.tags = Tag.arrayFromString(element.getElementsByTagName("tags").item(0).getTextContent(), Tag.Type.GENERAL);
-          image.id = element.getElementsByTagName("id").item(0).getTextContent(); // Why not an int?
+          image.id = element.getElementsByTagName("id").item(0).getTextContent();
           image.webUrl = webUrlFromId(image.id);
           image.parentId = element.getElementsByTagName("parent_id").item(0).getTextContent();
           image.obscenityRating = Image.ObscenityRating.fromString(element.getElementsByTagName("rating").item(0).getTextContent());
