@@ -87,19 +87,26 @@ public class Danbooru implements SearchClient {
     this.username = username;
     this.apiKey = apiKey;
 
-    // Enable HTTP Basic Authentication.
-    okHttpClient.setAuthenticator(new Authenticator() {
-      @Override
-      public Request authenticate(Proxy proxy, Response response) throws IOException {
-        final String credential = Base64.encodeToString(String.format("%s:%s", Danbooru.this.username, Danbooru.this.apiKey).getBytes(), Base64.DEFAULT);
-        return response.request().newBuilder().header("Authorization", credential).build();
-      }
 
-      @Override
-      public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-      }
-    });
+    /*
+    * This doesn't work as far as I can tell.  /Kycklingar
+    * The api accepts the parameters "login" and "api_key"
+    *
+    * // Enable HTTP Basic Authentication.
+    *
+    * okHttpClient.setAuthenticator(new Authenticator() {
+    *  @Override
+    *  public Request authenticate(Proxy proxy, Response response) throws IOException {
+    *    final String credential = Base64.encodeToString(String.format("%s:%s", Danbooru.this.username, Danbooru.this.apiKey).getBytes(), Base64.DEFAULT);
+    *    return response.request().newBuilder().header("Authorization", credential).build();
+    *  }
+    *
+    *  @Override
+    *  public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
+    *    return null;
+    *  }
+    *});
+    */
   }
 
   @Override
@@ -112,7 +119,7 @@ public class Danbooru implements SearchClient {
   public SearchResult search(String tags, int pid) throws IOException {
     // Create HTTP request.
     final Request request = new Request.Builder()
-        .url(createSearchURL(tags, pid, DEFAULT_LIMIT))
+        .url(createSearchURL(tags, pid, DEFAULT_LIMIT) + String.format("&login=%s&api_key=%s", Danbooru.this.username, Danbooru.this.apiKey))// Maybe not ideal but it works.
         .build();
     // Get HTTP response.
     final Response response = okHttpClient.newCall(request).execute();
