@@ -105,13 +105,8 @@ public class E621 extends DanbooruLegacy{
 
   @Override
   protected Date dateFromString(String date) throws ParseException {
-
-    final DateFormat DATE_FORMAT_DEFAULT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
-
-    //Annoying 'T' between the date and time
-    String newDate = date.replace("T", " ");
-
-    return DATE_FORMAT_DEFAULT.parse(newDate);
+    final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+    return DATE_FORMAT.parse(date);
   }
 
 }
