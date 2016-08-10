@@ -219,6 +219,88 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOORU_LEGACY.ordinal());
   }
 
+  /** Test detection of the Mono-sodium Glutamate API. */
+  public void testE621Detection() throws Throwable {
+    // Create a lock that waits for the request to complete in background.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Values received from the BroadcastReceiver.
+    // One-element arrays are a hack used to set values from outside the main thread without bothering with locking.
+    final int[] resultCode = new int[1];
+    final int[] serviceType = new int[1];
+    final String[] endpointUrl = new String[1];
+
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // Register the broadcast receiver.
+        getInstrumentation().getContext().registerReceiver(new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            // Set values received in the intent.
+            resultCode[0] = intent.getIntExtra(ServiceTypeDetectionService.RESULT_CODE, -1);
+            serviceType[0] = intent.getIntExtra(ServiceTypeDetectionService.API_TYPE, -1);
+            endpointUrl[0] = intent.getStringExtra(ServiceTypeDetectionService.ENDPOINT_URL);
+            // Unregister broadcast receiver.
+            getInstrumentation().getContext().unregisterReceiver(this);
+            // Clear the lock in the main thread.
+            lock.countDown();
+          }
+        }, INTENT_FILTER);
+        // Start the service.
+        getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
+            ServiceTypeDetectionService.class)
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://e621.net/"));
+      }
+    });
+
+    // Wait to receive broadcast from the service.
+    lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+    assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
+    assertThat(endpointUrl[0]).isEqualTo("https://e621.net");
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.E621.ordinal());
+  }
+
+  /** Test detection of the Chlorine dioxide API. */
+  public void testE926Detection() throws Throwable {
+    // Create a lock that waits for the request to complete in background.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Values received from the BroadcastReceiver.
+    // One-element arrays are a hack used to set values from outside the main thread without bothering with locking.
+    final int[] resultCode = new int[1];
+    final int[] serviceType = new int[1];
+    final String[] endpointUrl = new String[1];
+
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // Register the broadcast receiver.
+        getInstrumentation().getContext().registerReceiver(new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            // Set values received in the intent.
+            resultCode[0] = intent.getIntExtra(ServiceTypeDetectionService.RESULT_CODE, -1);
+            serviceType[0] = intent.getIntExtra(ServiceTypeDetectionService.API_TYPE, -1);
+            endpointUrl[0] = intent.getStringExtra(ServiceTypeDetectionService.ENDPOINT_URL);
+            // Unregister broadcast receiver.
+            getInstrumentation().getContext().unregisterReceiver(this);
+            // Clear the lock in the main thread.
+            lock.countDown();
+          }
+        }, INTENT_FILTER);
+        // Start the service.
+        getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
+            ServiceTypeDetectionService.class)
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://e926.net/"));
+      }
+    });
+
+    // Wait to receive broadcast from the service.
+    lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+    assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
+    assertThat(endpointUrl[0]).isEqualTo("https://e926.net");
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.E621.ordinal());
+  }
+
   /** Test error returned when an invalid URL is supplied. */
   public void testInvalidUrlError() throws Throwable {
     // Create a lock that waits for the request to complete in background.

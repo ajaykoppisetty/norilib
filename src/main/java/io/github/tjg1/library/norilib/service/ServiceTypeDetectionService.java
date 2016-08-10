@@ -92,9 +92,9 @@ public class ServiceTypeDetectionService extends IntentService {
     }
 
     // Check host for E621 as it uses the same path as DANBOORU_LEGACY.
-    if("e621.net".equals(uri.getHost())) {
+    if("e621.net".equals(uri.getHost()) || "e926.net".equals(uri.getHost())) {
       broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
-      broadcastIntent.putExtra(ENDPOINT_URL, "https://e621.net");
+      broadcastIntent.putExtra(ENDPOINT_URL, "https://" + uri.getHost());
       broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.E621.ordinal());
       sendBroadcast((broadcastIntent));
       return;
