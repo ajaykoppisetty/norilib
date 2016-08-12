@@ -6,6 +6,8 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.text.TextUtils;
+
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
@@ -104,10 +106,26 @@ public class E621 extends DanbooruLegacy {
     return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags), offset);
   }
 
+  /**
+   * Create a {@link java.util.Date} object from String date representation used by this API.
+   *
+   * @param date Date string.
+   * @return Date converted from given String.
+   */
   @Override
   protected Date dateFromString(String date) throws ParseException {
     final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
-    return DATE_FORMAT.parse(date);
+
+    // Normalise the ISO8601 time zone into a format parse-able by SimpleDateFormat.
+    if (!TextUtils.isEmpty(date)) {
+      String newDate = date.replace("Z", "+0000");
+      if (newDate.length() == 25) {
+        newDate = newDate.substring(0, 22) + newDate.substring(23); // Remove timezone colon.
+      }
+      return DATE_FORMAT.parse(newDate);
+    }
+
+    return null;
   }
 
 }

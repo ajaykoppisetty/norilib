@@ -26,6 +26,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,8 +47,6 @@ public class Danbooru implements SearchClient {
   private static final int THUMBNAIL_SIZE = 150;
   /** Sample size set if not returned by the API. */
   private static final int SAMPLE_SIZE = 850;
-  /** Parser used to read the date format used by this API. */
-  private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
   /** OkHTTP Client. */
   private final OkHttpClient okHttpClient = new OkHttpClient();
   /** Human-readable service name */
@@ -218,7 +217,7 @@ public class Danbooru implements SearchClient {
           } else if ("md5".equals(name)) {
             image.md5 = xpp.nextText();
           } else if ("created-at".equals(name)) {
-            image.createdAt = DATE_FORMAT.parse(xpp.nextText());
+            image.createdAt = dateFromString(xpp.nextText());
           }
           // createdAt
         } else if (xpp.getEventType() == XmlPullParser.END_TAG) {
@@ -251,6 +250,27 @@ public class Danbooru implements SearchClient {
     }
 
     return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags), offset);
+  }
+
+  /**
+   * Create a {@link java.util.Date} object from String date representation used by this API.
+   *
+   * @param date Date string.
+   * @return Date converted from given String.
+   */
+  protected static Date dateFromString(String date) throws ParseException {
+    final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US);
+
+    // Normalise the ISO8601 time zone into a format parse-able by SimpleDateFormat.
+    if (!TextUtils.isEmpty(date)) {
+      String newDate = date.replace("Z", "+0000");
+      if (newDate.length() == 25) {
+        newDate = newDate.substring(0, 22) + newDate.substring(23); // Remove timezone colon.
+      }
+      return DATE_FORMAT.parse(newDate);
+    }
+
+    return null;
   }
 
   /**
