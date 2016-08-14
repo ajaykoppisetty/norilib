@@ -204,21 +204,15 @@ public class Image implements Parcelable {
       final List<SafeSearchRating> ratingList = new ArrayList<>(4);
 
       for (String string : strings) {
-        switch (string.toLowerCase(Locale.US).charAt(0)) {
-          case 's':
-            ratingList.add(SafeSearchRating.S);
-            break;
-          case 'q':
-            ratingList.add(SafeSearchRating.Q);
-            break;
-          case 'e':
-            ratingList.add(SafeSearchRating.E);
-            break;
-          case 'u':
-            ratingList.add(SafeSearchRating.U);
-            break;
-          default:
-            break;
+        string = string.toLowerCase(Locale.US);
+        if (string.contains("f")) { // saFe
+          ratingList.add(SafeSearchRating.S);
+        } else if (string.contains("q")) { // Questionable
+          ratingList.add(SafeSearchRating.Q);
+        } else if (string.contains("x")) { // eXplicit
+          ratingList.add(SafeSearchRating.E);
+        } else if (string.contains("u")) { // Undefined
+          ratingList.add(SafeSearchRating.U);
         }
       }
 
@@ -232,16 +226,15 @@ public class Image implements Parcelable {
      * @return SafeSearchRating for given value.
      */
     public static SafeSearchRating fromString(String s) {
-      // Convert string to lower-case and look at first character only.
-      switch (s.toLowerCase(Locale.US).charAt(0)) {
-        case 's':
-          return SafeSearchRating.S;
-        case 'q':
-          return SafeSearchRating.Q;
-        case 'e':
-          return SafeSearchRating.E;
-        default:
-          return SafeSearchRating.U;
+      final String string = s.toLowerCase();
+      if (string.contains("f")) {
+        return SafeSearchRating.S;
+      } else if (string.contains("q")) {
+        return SafeSearchRating.Q;
+      } else if (string.contains("x")) {
+        return SafeSearchRating.E;
+      } else {
+        return SafeSearchRating.U;
       }
     }
   }
