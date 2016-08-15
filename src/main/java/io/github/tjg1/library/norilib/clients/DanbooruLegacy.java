@@ -225,7 +225,14 @@ public class DanbooruLegacy implements SearchClient {
               } else if ("md5".equals(name)) {
                 image.md5 = value;
               } else if ("created_at".equals(name) || "date".equals(name)) {
-                image.createdAt = dateFromString(value);
+                try {
+                  image.createdAt = dateFromString(value);
+                } catch (ParseException e) {
+                  // There have been too many issues reported in Nori related to date parsing.
+                  // It's almost as if every site uses its own date format and, unfortunately,
+                  // I can't hard code all of them.
+                  image.createdAt = null;
+                }
               }
             }
 
@@ -246,7 +253,7 @@ public class DanbooruLegacy implements SearchClient {
         // Get next XMLPullParser event.
         xpp.next();
       }
-    } catch (XmlPullParserException | ParseException e) {
+    } catch (XmlPullParserException e) {
       // Convert into IOException.
       // Needed for consistent method signatures in the SearchClient interface for different APIs.
       // (Throwing an XmlPullParserException would be fine, until dealing with an API using JSON, etc.)
