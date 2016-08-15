@@ -98,7 +98,7 @@ public class ServiceTypeDetectionService extends IntentService {
 
     // Iterate over supported URI schemes for given URL.
     for (String uriScheme : (TLS_SUPPORT.contains(uri.getHost()) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
-      String baseUri = uriScheme + uri.getHost();
+      String baseUri = uriScheme + uri.getHost() + uri.getPath();
       // Iterate over each endpoint path.
       for (Map.Entry<SearchClient.Settings.APIType, String> entry : API_ENDPOINT_PATHS.entrySet()) {
         // Create a HTTP request object.
