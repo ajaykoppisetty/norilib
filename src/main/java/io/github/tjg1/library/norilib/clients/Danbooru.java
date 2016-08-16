@@ -209,7 +209,7 @@ public class Danbooru implements SearchClient {
           } else if ("pixiv-id".equals(name)) {
             image.pixivId = xpp.getAttributeValue(null, "nil") != null ? null : xpp.nextText();
           } else if ("rating".equals(name)) {
-            image.obscenityRating = Image.ObscenityRating.fromString(xpp.nextText());
+            image.safeSearchRating = Image.SafeSearchRating.fromString(xpp.nextText());
           } else if ("score".equals(name)) {
             image.score = Integer.parseInt(xpp.nextText());
           } else if ("source".equals(name)) {
@@ -310,7 +310,7 @@ public class Danbooru implements SearchClient {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOORU, name, apiEndpoint, username, apiKey);
+    return new Settings(Settings.APIType.DANBOARD, name, apiEndpoint, username, apiKey);
   }
 
   @Override

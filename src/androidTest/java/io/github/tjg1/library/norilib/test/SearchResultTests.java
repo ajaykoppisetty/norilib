@@ -49,9 +49,9 @@ public class SearchResultTests extends AndroidTestCase {
   /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#addImages(io.github.tjg1.library.norilib.Image[], int)} method. */
   public void testAddImages() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
-    searchResult.addImages(new Image[]{ImageTests.getMockImage(Image.ObscenityRating.EXPLICIT, new Tag("quack"))}, 20);
+    searchResult.addImages(new Image[]{ImageTests.getMockImage(Image.SafeSearchRating.E, new Tag("quack"))}, 20);
     assertThat(searchResult.getImages()).hasSize(3);
-    assertThat(searchResult.getImages()[2].obscenityRating).isEqualTo(Image.ObscenityRating.EXPLICIT);
+    assertThat(searchResult.getImages()[2].safeSearchRating).isEqualTo(Image.SafeSearchRating.E);
     assertThat(searchResult.getCurrentOffset()).isEqualTo(20);
   }
 
@@ -61,12 +61,12 @@ public class SearchResultTests extends AndroidTestCase {
     assertThat(searchResult.getImages()).isNotEmpty();
   }
 
-  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#filter(io.github.tjg1.library.norilib.Image.ObscenityRating...)} method. */
-  public void testFilterWithObscenityRating() throws Throwable {
+  /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#filter(Image.SafeSearchRating...)} method. */
+  public void testFilterWithSafeSearchRating() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
-    searchResult.filter(Image.ObscenityRating.QUESTIONABLE);
+    searchResult.filter(Image.SafeSearchRating.Q);
     assertThat(searchResult.getImages()).hasSize(1);
-    assertThat(searchResult.getImages()[0].obscenityRating).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
+    assertThat(searchResult.getImages()[0].safeSearchRating).isEqualTo(Image.SafeSearchRating.Q);
     assertThat(searchResult.getImages()[0].searchPagePosition).isEqualTo(0);
   }
 
@@ -89,7 +89,7 @@ public class SearchResultTests extends AndroidTestCase {
   /** Tests the {@link io.github.tjg1.library.norilib.SearchResult#getSearchResultForPage(int) method.} */
   public void testGetSearchResultForPage() throws Throwable {
     final SearchResult searchResult = getMockSearchResult();
-    Image image = ImageTests.getMockImage(Image.ObscenityRating.EXPLICIT, new Tag("quack"));
+    Image image = ImageTests.getMockImage(Image.SafeSearchRating.E, new Tag("quack"));
     image.searchPage = 1;
     image.searchPagePosition = 0;
     searchResult.addImages(new Image[]{image}, 1);
@@ -101,9 +101,9 @@ public class SearchResultTests extends AndroidTestCase {
   /** Create a SearchResult with fake data suitable for testing. */
   public static SearchResult getMockSearchResult() {
     final Image[] images = new Image[]{
-        ImageTests.getMockImage(Image.ObscenityRating.SAFE,
+        ImageTests.getMockImage(Image.SafeSearchRating.S,
             new Tag("duck"), new Tag("quack")),
-        ImageTests.getMockImage(Image.ObscenityRating.QUESTIONABLE,
+        ImageTests.getMockImage(Image.SafeSearchRating.Q,
             new Tag("bird"))
     };
     return new SearchResult(images, new Tag[]{new Tag("Tag")}, 0);

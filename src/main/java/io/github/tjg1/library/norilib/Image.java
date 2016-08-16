@@ -64,8 +64,8 @@ public class Image implements Parcelable {
   /** The position of the Image on the search result page. */
   public Integer searchPagePosition;
 
-  /** SFW rating. */
-  public ObscenityRating obscenityRating;
+  /** SafeSearch rating. */
+  public SafeSearchRating safeSearchRating;
   /** Popularity score. */
   public Integer score;
   /** Upload date. */
@@ -115,7 +115,7 @@ public class Image implements Parcelable {
     parentId = in.readString();
     webUrl = in.readString();
     pixivId = in.readString();
-    obscenityRating = ObscenityRating.values()[in.readInt()];
+    safeSearchRating = SafeSearchRating.values()[in.readInt()];
     score = in.readInt();
     source = in.readString();
     md5 = in.readString();
@@ -149,7 +149,7 @@ public class Image implements Parcelable {
     dest.writeString(parentId); //
     dest.writeString(webUrl); //
     dest.writeString(pixivId); //
-    dest.writeInt(obscenityRating.ordinal());
+    dest.writeInt(safeSearchRating.ordinal());
     dest.writeInt(score);
     dest.writeString(source);
     dest.writeString(md5);
@@ -182,59 +182,60 @@ public class Image implements Parcelable {
 
   /**
    * Safe-for-work ratings.
-   * Users can choose to hide images with certain SFW ratings.
+   * Users can choose to hide images with certain SafeSearch ratings.
    */
-  public enum ObscenityRating {
+  public enum SafeSearchRating {
     /** Image is safe for work. */
-    SAFE,
-    /** Image is generally safe, but may contain some sexually-suggestive content */
-    QUESTIONABLE,
-    /** Image is explicit and not safe for work. */
-    EXPLICIT,
+    S,
+    /** Image is generally safe, but may contain some suggestive content */
+    Q,
+    /** Image is not safe for work. */
+    E,
     /** Rating is unknown or has not been set. */
-    UNDEFINED;
+    U;
 
     /**
-     * Convert a String array into an array of {@link io.github.tjg1.library.norilib.Image.ObscenityRating}s.
+     * Convert a String array into an array of {@link SafeSearchRating}s.
      *
      * @param strings String array.
-     * @return Array of {@link io.github.tjg1.library.norilib.Image.ObscenityRating}s.
+     * @return Array of {@link SafeSearchRating}s.
      */
-    public static ObscenityRating[] arrayFromStrings(String... strings) {
-      final List<ObscenityRating> ratingList = new ArrayList<>(4);
+    public static SafeSearchRating[] arrayFromStrings(String... strings) {
+      final List<SafeSearchRating> ratingList = new ArrayList<>(4);
 
       for (String string : strings) {
-        if ("safe".equals(string)) {
-          ratingList.add(ObscenityRating.SAFE);
-        } else if ("questionable".equals(string)) {
-          ratingList.add(ObscenityRating.QUESTIONABLE);
-        } else if ("explicit".equals(string)) {
-          ratingList.add(ObscenityRating.EXPLICIT);
-        } else if ("undefined".equals(string)) {
-          ratingList.add(ObscenityRating.UNDEFINED);
+        string = string.toLowerCase(Locale.US);
+        if (string.contains("f")) { // saFe
+          ratingList.add(SafeSearchRating.S);
+        } else if (string.contains("q")) { // Questionable
+          ratingList.add(SafeSearchRating.Q);
+        } else if (string.contains("x")) { // eXplicit
+          ratingList.add(SafeSearchRating.E);
+        } else if (string.contains("u")) { // Undefined
+          ratingList.add(SafeSearchRating.U);
         }
       }
 
-      return ratingList.toArray(new ObscenityRating[ratingList.size()]);
+      return ratingList.toArray(new SafeSearchRating[ratingList.size()]);
     }
 
     /**
-     * Get a ObscenityRating from a raw String representation returned by the API.
+     * Get a SafeSearchRating from a raw String representation returned by the API.
      *
      * @param s String returned by the API.
-     * @return ObscenityRating for given value.
+     * @return SafeSearchRating for given value.
      */
-    public static ObscenityRating fromString(String s) {
+    public static SafeSearchRating fromString(String s) {
       // Convert string to lower-case and look at first character only.
       switch (s.toLowerCase(Locale.US).charAt(0)) {
         case 's':
-          return ObscenityRating.SAFE;
+          return SafeSearchRating.S;
         case 'q':
-          return ObscenityRating.QUESTIONABLE;
+          return SafeSearchRating.Q;
         case 'e':
-          return ObscenityRating.EXPLICIT;
+          return SafeSearchRating.E;
         default:
-          return ObscenityRating.UNDEFINED;
+          return SafeSearchRating.U;
       }
     }
   }

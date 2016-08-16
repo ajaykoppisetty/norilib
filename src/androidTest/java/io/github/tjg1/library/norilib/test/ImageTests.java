@@ -38,7 +38,7 @@ public class ImageTests extends AndroidTestCase {
 
   /** Test the {@link Image#writeToParcel(android.os.Parcel, int)} method. */
   public void testWriteToParcel() throws Throwable {
-    final Image original = getMockImage(Image.ObscenityRating.SAFE,
+    final Image original = getMockImage(Image.SafeSearchRating.S,
         new Tag("duck", Tag.Type.GENERAL), new Tag("revolutionary_girl_utena", Tag.Type.ARTIST));
     final Image unParceled;
     final Bundle bundle = new Bundle();
@@ -66,7 +66,7 @@ public class ImageTests extends AndroidTestCase {
       assertThat(unParceled.parentId).isEqualTo(original.parentId);
       assertThat(unParceled.webUrl).isEqualTo(original.webUrl);
       assertThat(unParceled.pixivId).isEqualTo(original.pixivId);
-      assertThat(unParceled.obscenityRating).isEqualTo(original.obscenityRating);
+      assertThat(unParceled.safeSearchRating).isEqualTo(original.safeSearchRating);
       assertThat(unParceled.score).isEqualTo(original.score);
       assertThat(unParceled.md5).isEqualTo(original.md5);
       assertThat(unParceled.searchPage).isEqualTo(original.searchPage);
@@ -80,16 +80,16 @@ public class ImageTests extends AndroidTestCase {
     assertThat(Image.getPixivIdFromUrl("http://www.pixiv.net/member_illust.php?mode=medium&illust_id=44466677")).isEqualTo("44466677");
   }
 
-  /** Tests the {@link io.github.tjg1.library.norilib.Image.ObscenityRating#fromString(String)} method. */
-  public void testObscenityRatingFromString() throws Throwable {
-    assertThat(Image.ObscenityRating.fromString("Safe")).isEqualTo(Image.ObscenityRating.SAFE);
-    assertThat(Image.ObscenityRating.fromString("Questionable")).isEqualTo(Image.ObscenityRating.QUESTIONABLE);
-    assertThat(Image.ObscenityRating.fromString("Explicit")).isEqualTo(Image.ObscenityRating.EXPLICIT);
-    assertThat(Image.ObscenityRating.fromString("Undefined")).isEqualTo(Image.ObscenityRating.UNDEFINED);
+  /** Tests the {@link Image.SafeSearchRating#fromString(String)} method. */
+  public void testSafeSearchRatingFromString() throws Throwable {
+    assertThat(Image.SafeSearchRating.fromString("Safe")).isEqualTo(Image.SafeSearchRating.S);
+    assertThat(Image.SafeSearchRating.fromString("Questionable")).isEqualTo(Image.SafeSearchRating.Q);
+    assertThat(Image.SafeSearchRating.fromString("Explicit")).isEqualTo(Image.SafeSearchRating.E);
+    assertThat(Image.SafeSearchRating.fromString("Undefined")).isEqualTo(Image.SafeSearchRating.U);
   }
 
   /** Get an Image suitable for testing. */
-  public static Image getMockImage(Image.ObscenityRating obscenityRating, Tag... tags) {
+  public static Image getMockImage(Image.SafeSearchRating safeSearchRating, Tag... tags) {
     final Image image = new Image();
     image.fileUrl = "http://awesomeboorusite.org/data/images/image.png";
     image.width = 1000;
@@ -105,7 +105,7 @@ public class ImageTests extends AndroidTestCase {
     image.parentId = "123455";
     image.webUrl = "http://awesomeboorusite.org/post/view/image";
     image.pixivId = "111222333";
-    image.obscenityRating = obscenityRating;
+    image.safeSearchRating = safeSearchRating;
     image.score = 23;
     image.source = "http://pixiv.com/duck.png";
     image.md5 = "cfaf278e8f522c72644cee2a753d2845";
@@ -165,7 +165,7 @@ public class ImageTests extends AndroidTestCase {
       Log.w(TAG, String.format(Locale.US, "No Pixiv ID for image: %s", image.webUrl));
 
     // Misc stuff.
-    assertThat(image.obscenityRating).isNotNull();
+    assertThat(image.safeSearchRating).isNotNull();
     if (image.source == null || image.source.isEmpty())
       Log.w(TAG, String.format(Locale.US, "No source for image: %s", image.webUrl));
     else

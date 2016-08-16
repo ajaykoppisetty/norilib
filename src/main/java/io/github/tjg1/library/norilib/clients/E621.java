@@ -89,7 +89,7 @@ public class E621 extends DanbooruLegacy {
           image.id = element.getElementsByTagName("id").item(0).getTextContent();
           image.webUrl = webUrlFromId(image.id);
           image.parentId = element.getElementsByTagName("parent_id").item(0).getTextContent();
-          image.obscenityRating = Image.ObscenityRating.fromString(element.getElementsByTagName("rating").item(0).getTextContent());
+          image.safeSearchRating = Image.SafeSearchRating.fromString(element.getElementsByTagName("rating").item(0).getTextContent());
           image.score = Integer.parseInt(element.getElementsByTagName("score").item(0).getTextContent());
           image.md5 = element.getElementsByTagName("md5").item(0).getTextContent();
           image.createdAt = dateFromString(element.getElementsByTagName("created_at").item(0).getTextContent());

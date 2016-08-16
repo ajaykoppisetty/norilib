@@ -55,7 +55,7 @@ public interface SearchClient {
   public void search(String tags, int pid, SearchCallback callback);
 
   /**
-   * Get a SFW default query to search for when an app is launched.
+   * Get a SafeSearch default query to search for when an app is launched.
    *
    * @return Safe-for-work query to search for when an app is launched.
    */
@@ -197,13 +197,13 @@ public interface SearchClient {
      */
     public SearchClient createSearchClient() {
       switch (apiType) {
-        case DANBOORU:
+        case DANBOARD:
           return new Danbooru(name, endpoint, username, password);
-        case DANBOORU_LEGACY:
+        case DANBOARD_LEGACY:
           return new DanbooruLegacy(name, endpoint, username, password);
         case SHIMMIE:
           return new Shimmie(name, endpoint, username, password);
-        case GELBOORU:
+        case GELBOARD:
           return new Gelbooru(name, endpoint, username, password);
         case E621:
           return new E621(name, endpoint);
@@ -233,9 +233,9 @@ public interface SearchClient {
 
     /** API client types used to construct an appropriate {@link SearchClient} from this Settings object. */
     public enum APIType {
-      DANBOORU,
-      DANBOORU_LEGACY,
-      GELBOORU,
+      DANBOARD,
+      DANBOARD_LEGACY,
+      GELBOARD,
       SHIMMIE,
       E621
     }

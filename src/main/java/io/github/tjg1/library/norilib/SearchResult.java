@@ -101,23 +101,23 @@ public class SearchResult implements Parcelable {
   }
 
   /**
-   * Remove images not in the given set of {@link Image.ObscenityRating} from this SearchResult.
+   * Remove images not in the given set of {@link Image.SafeSearchRating} from this SearchResult.
    *
-   * @param obscenityRatings Obscenity ratings to remove.
+   * @param safeSearchRatings SafeSearch ratings to remove.
    */
-  public void filter(final Image.ObscenityRating... obscenityRatings) {
+  public void filter(final Image.SafeSearchRating... safeSearchRatings) {
     // Don't waste time filtering against an empty array.
-    if (obscenityRatings == null || obscenityRatings.length == 0) {
+    if (safeSearchRatings == null || safeSearchRatings.length == 0) {
       return;
     }
 
     // Concert filtered rating array to List
-    final List<Image.ObscenityRating> ratingList = Arrays.asList(obscenityRatings);
+    final List<Image.SafeSearchRating> ratingList = Arrays.asList(safeSearchRatings);
     // Remove images containing filtered ratings.
     CollectionUtils.filter(images, new Predicate<Image>() {
       @Override
       public boolean evaluate(Image image) {
-        return ratingList.contains(image.obscenityRating);
+        return ratingList.contains(image.safeSearchRating);
       }
     });
 
@@ -144,7 +144,7 @@ public class SearchResult implements Parcelable {
   /**
    * Add more images to this SearchResult.
    * Usually called when new page of results has been fetched from the API.
-   * Don't forget to call {@link #filter(Tag[])} and {@link #filter(Image.ObscenityRating[])}
+   * Don't forget to call {@link #filter(Tag[])} and {@link #filter(Image.SafeSearchRating[])}
    * after adding more images.
    *
    * @param images Images to add.
@@ -224,7 +224,7 @@ public class SearchResult implements Parcelable {
    * - Immediately for empty results.
    * - When fetching the next page returns an empty result.
    * Don't rely on length of array returned by {@link #getImages()}, as its value can be affected
-   * by {@link #filter(Tag[])} and {@link #filter(Image.ObscenityRating[])}.
+   * by {@link #filter(Tag[])} and {@link #filter(Image.SafeSearchRating[])}.
    *
    * @see #hasNextPage()
    */
