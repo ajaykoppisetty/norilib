@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.net.Uri;
 
 import io.github.tjg1.library.norilib.clients.SearchClient;
+import io.github.tjg1.library.norilib.util.HashUtils;
+
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -64,9 +66,9 @@ public class ServiceTypeDetectionService extends IntentService {
     API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.SHIMMIE, "/api/danbooru/find_posts/index.xml");
     // Populate list of sites with known TLS support.
     TLS_SUPPORT = new ArrayList<>();
-    TLS_SUPPORT.add("danbooru.donmai.us");
-    TLS_SUPPORT.add("yande.re");
-    TLS_SUPPORT.add("konachan.com");
+    TLS_SUPPORT.add("b163eea7c4d359284718c64ed351b92ff2d2144c9cf85a6ef40253c87fb1c4e6df8c5b7e78f04c747d5e674c103320672bc769a68e28d202e092b49a5a13a768"); // danbooru.donmai.us
+    TLS_SUPPORT.add("cd939698bfab6cc0b6692c40be4e3696814cd5f04e68eba92614230014ad5b44683a626253f0f539ffac19d7859120227ae3fd7a15b4beca5c6c113a49e055af"); // yande.re
+    TLS_SUPPORT.add("c96a860f0c9a50a0f90ebf645b07964dacc2356a255928eefe8bb707b7316141c1d428e855077f0acf8f5ae4bc3bf5c4c31742494311afecab8044433831f8c4"); // konachan
   }
 
   /** Called by the framework to instantiate the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
@@ -96,8 +98,10 @@ public class ServiceTypeDetectionService extends IntentService {
     okHttpClient.setConnectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
     okHttpClient.setReadTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
 
+    // TODO: 621
+
     // Iterate over supported URI schemes for given URL.
-    for (String uriScheme : (TLS_SUPPORT.contains(uri.getHost()) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
+    for (String uriScheme : (TLS_SUPPORT.contains(HashUtils.sha512(uri.getHost(),"nori")) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
       String baseUri = uriScheme + uri.getHost() + uri.getPath();
       // Iterate over each endpoint path.
       for (Map.Entry<SearchClient.Settings.APIType, String> entry : API_ENDPOINT_PATHS.entrySet()) {
