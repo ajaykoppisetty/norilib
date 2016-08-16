@@ -31,7 +31,7 @@ public class Gelbooru extends DanbooruLegacy {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.GELBOORU, name, apiEndpoint, username, password);
+    return new Settings(Settings.APIType.GELBOARD, name, apiEndpoint, username, password);
   }
 
   @Override

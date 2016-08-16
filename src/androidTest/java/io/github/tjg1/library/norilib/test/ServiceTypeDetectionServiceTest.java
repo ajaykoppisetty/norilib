@@ -62,7 +62,7 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     // Wait to receive broadcast from the service.
     lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
     assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
-    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOORU.ordinal());
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOARD.ordinal());
   }
 
   /** Test detection of the Danbooru 1.x API */
@@ -102,7 +102,7 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     // Wait to receive broadcast from the service.
     lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
     assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
-    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOORU_LEGACY.ordinal());
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOARD_LEGACY.ordinal());
   }
 
   /** Test detection of the Gelbooru API. */
@@ -140,7 +140,7 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     // Wait to receive broadcast from the service.
     lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
     assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
-    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.GELBOORU.ordinal());
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.GELBOARD.ordinal());
   }
 
   /** Test detection of the Shimmie API. */
@@ -216,7 +216,7 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     // Wait to receive broadcast from the service.
     lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
     assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
-    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOORU_LEGACY.ordinal());
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.DANBOARD_LEGACY.ordinal());
   }
 
   /** Test error returned when an invalid URL is supplied. */

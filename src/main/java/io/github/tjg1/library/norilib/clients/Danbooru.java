@@ -301,7 +301,7 @@ public class Danbooru implements SearchClient {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOORU, name, apiEndpoint, username, apiKey);
+    return new Settings(Settings.APIType.DANBOARD, name, apiEndpoint, username, apiKey);
   }
 
   @Override

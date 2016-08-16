@@ -271,7 +271,7 @@ public class DanbooruLegacy implements SearchClient {
 
   @Override
   public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOORU_LEGACY, name, apiEndpoint, username, password);
+    return new Settings(Settings.APIType.DANBOARD_LEGACY, name, apiEndpoint, username, password);
   }
 
   /**

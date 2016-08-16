@@ -58,9 +58,9 @@ public class ServiceTypeDetectionService extends IntentService {
   static {
     // Populate the API type -> API endpoint path hash map.
     API_ENDPOINT_PATHS = new LinkedHashMap<>();
-    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.DANBOORU, "/posts.xml");
-    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.DANBOORU_LEGACY, "/post/index.xml");
-    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.GELBOORU, "/index.php?page=dapi&s=post&q=index");
+    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.DANBOARD, "/posts.xml");
+    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.DANBOARD_LEGACY, "/post/index.xml");
+    API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.GELBOARD, "/index.php?page=dapi&s=post&q=index");
     API_ENDPOINT_PATHS.put(SearchClient.Settings.APIType.SHIMMIE, "/api/danbooru/find_posts/index.xml");
     // Populate list of sites with known TLS support.
     TLS_SUPPORT = new ArrayList<>();
@@ -76,7 +76,7 @@ public class ServiceTypeDetectionService extends IntentService {
 
   /** Disables detection of the Danbooru 2.x API. Only intended for testing. */
   public static void disableDanbooruDetection() {
-    API_ENDPOINT_PATHS.remove(SearchClient.Settings.APIType.DANBOORU);
+    API_ENDPOINT_PATHS.remove(SearchClient.Settings.APIType.DANBOARD);
   }
   
   @Override
