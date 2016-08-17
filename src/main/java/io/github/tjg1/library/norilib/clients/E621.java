@@ -6,6 +6,7 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import org.xml.sax.InputSource;
@@ -35,8 +36,12 @@ public class E621 extends DanbooruLegacy {
   /** Number of images to fetch with each search. */
   private static final int DEFAULT_LIMIT = 100;
 
-  public E621(String name, String endpoint) {
-    super (name, endpoint);
+  public E621(Context context, String name, String endpoint) {
+    super(context, name, endpoint);
+  }
+
+  public E621(Context context, String name, String endpoint, String username, String password) {
+    super(context, name, endpoint, username, password);
   }
 
   @Override

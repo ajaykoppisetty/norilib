@@ -17,7 +17,8 @@ public class DanbooruLegacyTest extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new DanbooruLegacy("Danbooru", "https://danbooru.donmai.us");
+    return new DanbooruLegacy(getInstrumentation().getContext(),
+        "Danbooru", "https://danbooru.donmai.us");
   }
 
   @Override

@@ -10,7 +10,7 @@ public class E621Test extends SearchClientTestCase{
 
   @Override
   protected SearchClient createSearchClient(){
-    return new E621("E926", "https://e926.net");
+    return new E621(getInstrumentation().getContext(), "E926", "https://e926.net");
   }
 
   @Override

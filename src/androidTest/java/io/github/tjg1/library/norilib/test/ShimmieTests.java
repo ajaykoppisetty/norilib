@@ -16,7 +16,7 @@ public class ShimmieTests extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new Shimmie("Dollbooru", "http://dollbooru.org");
+    return new Shimmie(getInstrumentation().getContext(), "Dollbooru", "http://dollbooru.org");
   }
 
   @Override

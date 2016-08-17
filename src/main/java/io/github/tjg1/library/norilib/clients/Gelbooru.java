@@ -6,6 +6,7 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.content.Context;
 import android.net.Uri;
 
 import java.text.ParseException;
@@ -21,12 +22,12 @@ public class Gelbooru extends DanbooruLegacy {
   /** Date format used by Gelbooru. */
   private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("EEE MMM d HH:mm:ss Z yyyy", Locale.US);
 
-  public Gelbooru(String name, String endpoint) {
-    super(name, endpoint);
+  public Gelbooru(Context context, String name, String endpoint) {
+    super(context, name, endpoint);
   }
 
-  public Gelbooru(String name, String endpoint, String username, String password) {
-    super(name, endpoint, username, password);
+  public Gelbooru(Context context, String name, String endpoint, String username, String password) {
+    super(context, name, endpoint, username, password);
   }
 
   @Override

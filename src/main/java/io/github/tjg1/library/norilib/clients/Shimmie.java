@@ -6,6 +6,8 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.content.Context;
+
 import java.util.Locale;
 
 /**
@@ -13,12 +15,12 @@ import java.util.Locale;
  * Shimmie2 provides an extension that enables a Danbooru 1.x-based API.
  */
 public class Shimmie extends DanbooruLegacy {
-  public Shimmie(String name, String endpoint) {
-    super(name, endpoint);
+  public Shimmie(Context context, String name, String endpoint) {
+    super(context, name, endpoint);
   }
 
-  public Shimmie(String name, String endpoint, String username, String password) {
-    super(name, endpoint, username, password);
+  public Shimmie(Context context, String name, String endpoint, String username, String password) {
+    super(context, name, endpoint, username, password);
   }
 
   @Override

@@ -48,10 +48,12 @@ android {
 }
 
 dependencies {
-  // HTTP Client library from Square. (http://square.github.io/okhttp/)
-  compile 'com.squareup.okhttp:okhttp:2.7.5'
+  // HTTP Client library from Koush. (https://github.com/koush/ion)
+  compile 'com.koushikdutta.ion:ion:2.1.8'
   // Apache utility library for dealing with Collections.
   compile 'org.apache.commons:commons-collections4:4.1'
+  // Android support library.
+  compile 'com.android.support:support-v4:24.1.1'
   // FEST for easier unit testing.
   androidTestCompile 'org.easytesting:fest-assert-core:2.0M10'
 

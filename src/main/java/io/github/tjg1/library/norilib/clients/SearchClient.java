@@ -6,6 +6,7 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -195,18 +196,18 @@ public interface SearchClient {
      *
      * @return A {@link io.github.tjg1.library.norilib.clients.SearchClient} created using settings from this object.
      */
-    public SearchClient createSearchClient() {
+    public SearchClient createSearchClient(Context context) {
       switch (apiType) {
         case DANBOARD:
-          return new Danbooru(name, endpoint, username, password);
+          return new Danbooru(context, name, endpoint, username, password);
         case DANBOARD_LEGACY:
-          return new DanbooruLegacy(name, endpoint, username, password);
+          return new DanbooruLegacy(context, name, endpoint, username, password);
         case SHIMMIE:
-          return new Shimmie(name, endpoint, username, password);
+          return new Shimmie(context, name, endpoint, username, password);
         case GELBOARD:
-          return new Gelbooru(name, endpoint, username, password);
+          return new Gelbooru(context, name, endpoint, username, password);
         case E621:
-          return new E621(name, endpoint);
+          return new E621(context, name, endpoint, username, password);
         default:
           return null;
       }

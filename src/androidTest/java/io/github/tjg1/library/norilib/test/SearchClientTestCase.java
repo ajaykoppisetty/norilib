@@ -7,6 +7,7 @@
 package io.github.tjg1.library.norilib.test;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.test.InstrumentationTestCase;
 
@@ -130,7 +131,7 @@ public abstract class SearchClientTestCase extends InstrumentationTestCase {
     settings = bundle.getParcelable("settings");
 
     // Recreate SearchClient from the settings object and test it.
-    client = settings.createSearchClient();
+    client = settings.createSearchClient(getInstrumentation().getContext());
     assertThat(client).isInstanceOf(createSearchClient().getClass());
   }
 

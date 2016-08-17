@@ -9,21 +9,22 @@ package io.github.tjg1.library.norilib.service;
 import android.app.IntentService;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
+
+import io.github.tjg1.library.norilib.BuildConfig;
 import io.github.tjg1.library.norilib.clients.SearchClient;
 import io.github.tjg1.library.norilib.util.HashUtils;
 
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ExecutionException;
 
 /** Service that detects the {@link io.github.tjg1.library.norilib.clients.SearchClient} API type for given URL. */
 public class ServiceTypeDetectionService extends IntentService {
@@ -46,7 +47,7 @@ public class ServiceTypeDetectionService extends IntentService {
   /** Hash map containing the expected API endpoint path for each {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType}. */
   private static final AbstractMap<SearchClient.Settings.APIType, String> API_ENDPOINT_PATHS;
   /** Time to wait for the HTTP requests to complete. (Gelbooru tends to be slow :() */
-  private static final int REQUEST_TIMEOUT = 30;
+  private static final int REQUEST_TIMEOUT = 30000;
 
   /** Uri schemes to use when detecting services. */
   // Would really like to default to HTTPS here, but the sad truth is that most sites either force TLS on all users
@@ -103,28 +104,30 @@ public class ServiceTypeDetectionService extends IntentService {
       return;
     }
 
-    // Create the HTTP client.
-    final OkHttpClient okHttpClient = new OkHttpClient();
-    okHttpClient.setConnectTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
-    okHttpClient.setReadTimeout(REQUEST_TIMEOUT, TimeUnit.SECONDS);
-
-    // TODO: 621
-
     // Iterate over supported URI schemes for given URL.
     for (String uriScheme : (TLS_SUPPORT.contains(HashUtils.sha512(uri.getHost(),"nori")) ? URI_SCHEMES_PREFER_SSL : URI_SCHEMES)) {
       String baseUri = uriScheme + uri.getHost() + uri.getPath();
       // Iterate over each endpoint path.
       for (Map.Entry<SearchClient.Settings.APIType, String> entry : API_ENDPOINT_PATHS.entrySet()) {
-        // Create a HTTP request object.
-        final Request request = new Request.Builder()
-            .url(baseUri + entry.getValue())
-            .build();
+        String url = baseUri + entry.getValue();
 
         try {
           // Fetch response.
-          final Response response = okHttpClient.newCall(request).execute();
+          final Response<DataEmitter> response = Ion.with(this)
+              .load(url)
+              .setTimeout(REQUEST_TIMEOUT)
+              .userAgent("nori/" + BuildConfig.VERSION_NAME)
+              .followRedirect(false)
+              .noCache()
+              .asDataEmitter()
+              .withResponse()
+              .get();
+
+          // Close the data emitter.
+          response.getResult().close();
+
           // Make sure the response code was OK and that the HTTP client wasn't redirected along the way.
-          if (response.code() == 200 && response.priorResponse() == null) {
+          if (response.getHeaders().code() == 200) {
             // Found an API endpoint.
             broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
             broadcastIntent.putExtra(ENDPOINT_URL, baseUri);
@@ -132,10 +135,10 @@ public class ServiceTypeDetectionService extends IntentService {
             sendBroadcast(broadcastIntent);
             return;
           }
-        } catch (IOException e) {
-          // Network error. Notify the listeners and return.
-          sendBroadcast(broadcastIntent.putExtra(RESULT_CODE, RESULT_FAIL_NETWORK));
-          return;
+        } catch (InterruptedException | ExecutionException e) {
+          if (BuildConfig.DEBUG) {
+            Log.d("ServiceDetectionService", e.toString());
+          }
         }
       }
     }

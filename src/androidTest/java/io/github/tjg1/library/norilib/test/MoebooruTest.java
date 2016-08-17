@@ -14,7 +14,7 @@ public class MoebooruTest extends SearchClientTestCase {
 
   @Override
   protected SearchClient createSearchClient() {
-    return new DanbooruLegacy("yande.re", "https://yande.re");
+    return new DanbooruLegacy(getInstrumentation().getContext(), "yande.re", "https://yande.re");
   }
 
   @Override

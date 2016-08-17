@@ -6,19 +6,24 @@
 
 package io.github.tjg1.library.norilib.clients;
 
+import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.async.DataSink;
+import com.koushikdutta.async.callback.CompletedCallback;
+import com.koushikdutta.async.future.Future;
+import com.koushikdutta.async.future.FutureCallback;
+import com.koushikdutta.async.future.TransformFuture;
+import com.koushikdutta.async.parser.AsyncParser;
+import com.koushikdutta.async.parser.StringParser;
+import com.koushikdutta.ion.Ion;
+
+import io.github.tjg1.library.norilib.BuildConfig;
 import io.github.tjg1.library.norilib.Image;
 import io.github.tjg1.library.norilib.SearchResult;
 import io.github.tjg1.library.norilib.Tag;
-import com.squareup.okhttp.Authenticator;
-import com.squareup.okhttp.Credentials;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -26,7 +31,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.net.Proxy;
+import java.lang.reflect.Type;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -34,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Client for the Danbooru 1.x API.
@@ -44,8 +50,8 @@ public class DanbooruLegacy implements SearchClient {
    * Best to use a large value to minimize number of unique HTTP requests.
    */
   private static final int DEFAULT_LIMIT = 100;
-  /** OkHTTP Client. */
-  private final OkHttpClient okHttpClient = new OkHttpClient();
+  /** Android context. */
+  protected final Context context;
   /** Human-readable service name. */
   protected final String name;
   /** URL to the HTTP API Endpoint - the server implementing the API. */
@@ -60,7 +66,8 @@ public class DanbooruLegacy implements SearchClient {
    *
    * @param endpoint URL to the HTTP API Endpoint - the server implementing the API.
    */
-  public DanbooruLegacy(String name, String endpoint) {
+  public DanbooruLegacy(Context context, String name, String endpoint) {
+    this.context = context;
     this.name = name;
     this.apiEndpoint = endpoint;
     this.username = null;
@@ -74,27 +81,12 @@ public class DanbooruLegacy implements SearchClient {
    * @param username Username used for authentication.
    * @param password Password used for authentication.
    */
-  public DanbooruLegacy(String name, String endpoint, String username, String password) {
+  public DanbooruLegacy(Context context, String name, String endpoint, String username, String password) {
+    this.context = context;
     this.name = name;
     this.apiEndpoint = endpoint;
     this.username = username;
     this.password = password;
-
-    // Enable HTTP basic authentication.
-    okHttpClient.setAuthenticator(new Authenticator() {
-      @Override
-      public Request authenticate(Proxy proxy, Response response) throws IOException {
-        final String credential = Credentials.basic(DanbooruLegacy.this.username, DanbooruLegacy.this.password);
-        return response.request().newBuilder()
-            .header("Authorization", credential)
-            .build();
-      }
-
-      @Override
-      public Request authenticateProxy(Proxy proxy, Response response) throws IOException {
-        return null;
-      }
-    });
   }
 
   @Override
@@ -105,18 +97,26 @@ public class DanbooruLegacy implements SearchClient {
 
   @Override
   public SearchResult search(String tags, int pid) throws IOException {
-    // Create HTTP request.
-    final Request request = new Request.Builder()
-        .url(createSearchURL(tags, pid, DEFAULT_LIMIT))
-        .build();
-    // Get HTTP response.
-    final Response response = okHttpClient.newCall(request).execute();
-    final ResponseBody responseBody = response.body();
-    final String body = responseBody.string();
-    responseBody.close();
-
-    // Return parsed SearchResult.
-    return parseXMLResponse(body, tags, pid);
+    try {
+      if (!TextUtils.isEmpty(this.username) && !TextUtils.isEmpty(this.password)) {
+        return Ion.with(this.context)
+            .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
+            .userAgent("nori/" + BuildConfig.VERSION_NAME)
+            .basicAuthentication(this.username, this.password)
+            .as(new SearchResultParser(tags, pid))
+            .get();
+      } else {
+        return Ion.with(this.context)
+            .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
+            .userAgent("nori/" + BuildConfig.VERSION_NAME)
+            .as(new SearchResultParser(tags, pid))
+            .get();
+      }
+    } catch (InterruptedException | ExecutionException e) {
+      // Normalise exception to IOException, so method signatures are not tied to a single HTTP
+      // library.
+      throw new IOException(e);
+    }
   }
 
   @Override
@@ -127,32 +127,34 @@ public class DanbooruLegacy implements SearchClient {
 
   @Override
   public void search(final String tags, final int pid, final SearchCallback callback) {
-    // Fetch results on a background thread.
-    new AsyncTask<Void, Void, SearchResult>() {
-      /** Error returned when attempting to fetch the SearchResult. */
-      private IOException error;
-
+    // Define the ion callback. Not using FutureCallbacks as parameters, so the method signatures
+    // are not tied to a single download library.
+    FutureCallback<SearchResult> futureCallback = new FutureCallback<SearchResult>() {
       @Override
-      protected SearchResult doInBackground(Void... voids) {
-        try {
-          return DanbooruLegacy.this.search(tags, pid);
-        } catch (IOException e) {
-          // Hold on to the error for now and handle it on the main UI thread in #postExecute().
-          error = e;
-        }
-        return null;
-      }
-
-      @Override
-      protected void onPostExecute(SearchResult searchResult) {
-        // Pass the result or error to the SearchCallback.
-        if (error != null || searchResult == null) {
-          callback.onFailure(error);
+      public void onCompleted(Exception e, SearchResult result) {
+        if (e != null) {
+          callback.onFailure(new IOException(e));
         } else {
-          callback.onSuccess(searchResult);
+          callback.onSuccess(result);
         }
       }
-    }.execute();
+    };
+
+    // Handle authentication.
+    if (!TextUtils.isEmpty(this.username) && !TextUtils.isEmpty(this.password)) {
+      Ion.with(this.context)
+          .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
+          .userAgent("nori/" + BuildConfig.VERSION_NAME)
+          .basicAuthentication(this.username, this.password)
+          .as(new SearchResultParser(tags, pid))
+          .setCallback(futureCallback);
+    } else {
+      Ion.with(this.context)
+          .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
+          .userAgent("nori/" + BuildConfig.VERSION_NAME)
+          .as(new SearchResultParser(tags, pid))
+          .setCallback(futureCallback);
+    }
   }
 
   /**
@@ -340,5 +342,39 @@ public class DanbooruLegacy implements SearchClient {
   @Override
   public AuthenticationType requiresAuthentication() {
     return AuthenticationType.OPTIONAL;
+  }
+
+  /** Asynchronous search parser to use with ion. */
+  protected class SearchResultParser implements AsyncParser<SearchResult> {
+    /** Tags searched for. */
+    private final String tags;
+    /** Current page offset. */
+    private final int pageOffset;
+
+    public SearchResultParser(String tags, int pageOffset) {
+      this.tags = tags;
+      this.pageOffset = pageOffset;
+    }
+
+    @Override
+    public Future<SearchResult> parse(DataEmitter emitter) {
+      return new StringParser().parse(emitter)
+          .then(new TransformFuture<SearchResult, String>() {
+            @Override
+            protected void transform(String result) throws Exception {
+              setComplete(parseXMLResponse(result, tags, pageOffset));
+            }
+          });
+    }
+
+    @Override
+    public void write(DataSink sink, SearchResult value, CompletedCallback completed) {
+      // Not implemented.
+    }
+
+    @Override
+    public Type getType() {
+      return null;
+    }
   }
 }
