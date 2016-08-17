@@ -208,6 +208,10 @@ public interface SearchClient {
           return new Gelbooru(context, name, endpoint, username, password);
         case E621:
           return new E621(context, name, endpoint, username, password);
+        case FLICKR:
+          return new Flickr(context, name, endpoint);
+        case FLICKR_USER:
+          return new FlickrUser(context, name, endpoint);
         default:
           return null;
       }
@@ -238,7 +242,9 @@ public interface SearchClient {
       DANBOARD_LEGACY,
       GELBOARD,
       SHIMMIE,
-      E621
+      E621,
+      FLICKR,
+      FLICKR_USER
     }
   }
 

@@ -16,6 +16,8 @@ import com.koushikdutta.ion.Ion;
 import com.koushikdutta.ion.Response;
 
 import io.github.tjg1.library.norilib.BuildConfig;
+import io.github.tjg1.library.norilib.clients.Flickr;
+import io.github.tjg1.library.norilib.clients.FlickrUser;
 import io.github.tjg1.library.norilib.clients.SearchClient;
 import io.github.tjg1.library.norilib.util.HashUtils;
 
@@ -101,6 +103,21 @@ public class ServiceTypeDetectionService extends IntentService {
       broadcastIntent.putExtra(ENDPOINT_URL, "https://" + uri.getHost());
       broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.E621.ordinal());
       sendBroadcast((broadcastIntent));
+      return;
+    }
+
+    // api.flickr.com
+    if ("d9fe439308fd55bbfbc6ae351fc084f04fd64f96b6102bdb6edbc7edcc44889aa3a471469ca5ab529857ffaa3013c691c36812e0a1698257334efb4e9af358ea".equals(HashUtils.sha512(uri.getHost(),"nori"))) {
+      broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
+      broadcastIntent.putExtra(ENDPOINT_URL, Flickr.FLICKR_API_ENDPOINT.toString());
+      broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.FLICKR.ordinal());
+      sendBroadcast(broadcastIntent);
+      return;
+    } else if (uri.toString().matches(FlickrUser.FLICKR_USER_REGEX)) {
+      broadcastIntent.putExtra(RESULT_CODE, RESULT_OK);
+      broadcastIntent.putExtra(ENDPOINT_URL, "https://" + uri.getHost() + uri.getPath());
+      broadcastIntent.putExtra(API_TYPE, SearchClient.Settings.APIType.FLICKR_USER.ordinal());
+      sendBroadcast(broadcastIntent);
       return;
     }
 

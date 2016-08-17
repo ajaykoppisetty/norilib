@@ -301,6 +301,88 @@ public class ServiceTypeDetectionServiceTest extends InstrumentationTestCase {
     assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.E621.ordinal());
   }
 
+  /** Test detection of the Chlorine dioxide API. */
+  public void testFlickrDetection() throws Throwable {
+    // Create a lock that waits for the request to complete in background.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Values received from the BroadcastReceiver.
+    // One-element arrays are a hack used to set values from outside the main thread without bothering with locking.
+    final int[] resultCode = new int[1];
+    final int[] serviceType = new int[1];
+    final String[] endpointUrl = new String[1];
+
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // Register the broadcast receiver.
+        getInstrumentation().getContext().registerReceiver(new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            // Set values received in the intent.
+            resultCode[0] = intent.getIntExtra(ServiceTypeDetectionService.RESULT_CODE, -1);
+            serviceType[0] = intent.getIntExtra(ServiceTypeDetectionService.API_TYPE, -1);
+            endpointUrl[0] = intent.getStringExtra(ServiceTypeDetectionService.ENDPOINT_URL);
+            // Unregister broadcast receiver.
+            getInstrumentation().getContext().unregisterReceiver(this);
+            // Clear the lock in the main thread.
+            lock.countDown();
+          }
+        }, INTENT_FILTER);
+        // Start the service.
+        getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
+            ServiceTypeDetectionService.class)
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://api.flickr.com/services/"));
+      }
+    });
+
+    // Wait to receive broadcast from the service.
+    lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+    assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
+    assertThat(endpointUrl[0]).isEqualTo("https://api.flickr.com/services/rest");
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.FLICKR.ordinal());
+  }
+
+  /** Test detection of the Chlorine dioxide API. */
+  public void testFlickrUserDetection() throws Throwable {
+    // Create a lock that waits for the request to complete in background.
+    final CountDownLatch lock = new CountDownLatch(1);
+    // Values received from the BroadcastReceiver.
+    // One-element arrays are a hack used to set values from outside the main thread without bothering with locking.
+    final int[] resultCode = new int[1];
+    final int[] serviceType = new int[1];
+    final String[] endpointUrl = new String[1];
+
+    runTestOnUiThread(new Runnable() {
+      @Override
+      public void run() {
+        // Register the broadcast receiver.
+        getInstrumentation().getContext().registerReceiver(new BroadcastReceiver() {
+          @Override
+          public void onReceive(Context context, Intent intent) {
+            // Set values received in the intent.
+            resultCode[0] = intent.getIntExtra(ServiceTypeDetectionService.RESULT_CODE, -1);
+            serviceType[0] = intent.getIntExtra(ServiceTypeDetectionService.API_TYPE, -1);
+            endpointUrl[0] = intent.getStringExtra(ServiceTypeDetectionService.ENDPOINT_URL);
+            // Unregister broadcast receiver.
+            getInstrumentation().getContext().unregisterReceiver(this);
+            // Clear the lock in the main thread.
+            lock.countDown();
+          }
+        }, INTENT_FILTER);
+        // Start the service.
+        getInstrumentation().getContext().startService(new Intent(getInstrumentation().getContext(),
+            ServiceTypeDetectionService.class)
+            .putExtra(ServiceTypeDetectionService.ENDPOINT_URL, "http://flickr.com/photos/128962151@N05"));
+      }
+    });
+
+    // Wait to receive broadcast from the service.
+    lock.await(RESPONSE_TIMEOUT, TimeUnit.SECONDS);
+    assertThat(resultCode[0]).isEqualTo(ServiceTypeDetectionService.RESULT_OK);
+    assertThat(endpointUrl[0]).isEqualTo("https://flickr.com/photos/128962151@N05");
+    assertThat(serviceType[0]).isEqualTo(SearchClient.Settings.APIType.FLICKR_USER.ordinal());
+  }
+
   /** Test error returned when an invalid URL is supplied. */
   public void testInvalidUrlError() throws Throwable {
     // Create a lock that waits for the request to complete in background.
