@@ -8,6 +8,8 @@ package io.github.tjg1.library.norilib.clients;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import java.util.regex.Matcher;
@@ -16,7 +18,7 @@ import java.util.regex.Pattern;
 /** Flickr SearchClient limited to searching for images from a single user. */
 public class FlickrUser extends Flickr {
   /** Regex pattern used to match Flickr user URLs. */
-  public static final String FLICKR_USER_REGEX = "https?:\\/\\/(?:www\\.)?flickr\\.com\\/photos\\/(.+?)\\/?$";
+  public static final String FLICKR_USER_REGEX = "^https?:\\/\\/(?:www\\.|m\\.)?flickr\\.com\\/(?:#\\/)?photos\\/(.+?)\\/?$";
 
   /**
    * Create a new Flickr API client.
@@ -27,6 +29,19 @@ public class FlickrUser extends Flickr {
    */
   public FlickrUser(Context context, String name, String apiEndpoint) {
     super(context, name, apiEndpoint);
+  }
+
+  /**
+   * Checks if the given URL exposes a supported API endpoint.
+   *
+   * @param uri URL to test.
+   * @return Detected endpoint URL. null, if no supported endpoint URL was detected.
+   */
+  @Nullable
+  public static String detectService(@NonNull Uri uri) {
+    if (uri.toString().matches(FLICKR_USER_REGEX))
+      return "https://" + uri.getHost() + uri.getPath();
+    return null;
   }
 
   @Override

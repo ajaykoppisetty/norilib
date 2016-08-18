@@ -7,8 +7,16 @@
 package io.github.tjg1.library.norilib.clients;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import com.koushikdutta.async.DataEmitter;
+import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
 
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Client for the Shimmie2 API.
@@ -21,6 +29,42 @@ public class Shimmie extends DanbooruLegacy {
 
   public Shimmie(Context context, String name, String endpoint, String username, String password) {
     super(context, name, endpoint, username, password);
+  }
+
+  /**
+   * Checks if the given URL exposes a supported API endpoint.
+   *
+   * @param context Android {@link Context}.
+   * @param uri     URL to test.
+   * @param timeout Timeout in milliseconds.
+   * @return Detected endpoint URL. null, if no supported endpoint URL was detected.
+   */
+  @Nullable
+  public static String detectService(@NonNull Context context, @NonNull Uri uri, int timeout) {
+    final String endpointUrl = Uri.withAppendedPath(uri, "/api/danbooru/find_posts/index.xml")
+        .toString();
+
+    try {
+      final Response<DataEmitter> response = Ion.with(context)
+          .load(endpointUrl)
+          .setTimeout(timeout)
+          .userAgent(SearchClient.USER_AGENT)
+          .followRedirect(false)
+          .noCache()
+          .asDataEmitter()
+          .withResponse()
+          .get();
+
+      // Close the connection.
+      final DataEmitter dataEmitter = response.getResult();
+      if (dataEmitter != null) dataEmitter.close();
+
+      if (response.getHeaders().code() == 200) {
+        return uri.toString();
+      }
+    } catch (InterruptedException | ExecutionException ignored) {
+    }
+    return null;
   }
 
   @Override

@@ -7,8 +7,15 @@
 package io.github.tjg1.library.norilib.clients;
 
 import android.content.Context;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
@@ -21,14 +28,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import org.w3c.dom.*;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import io.github.tjg1.library.norilib.Image;
 import io.github.tjg1.library.norilib.SearchResult;
 import io.github.tjg1.library.norilib.Tag;
+import io.github.tjg1.library.norilib.util.HashUtils;
 
 /** {@link io.github.tjg1.library.norilib.clients.SearchClient} for the E621 imageboard. */
 public class E621 extends DanbooruLegacy {
@@ -42,6 +48,26 @@ public class E621 extends DanbooruLegacy {
 
   public E621(Context context, String name, String endpoint, String username, String password) {
     super(context, name, endpoint, username, password);
+  }
+
+  /**
+   * Checks if the given URL exposes a supported API endpoint.
+   *
+   * @param uri URL to test.
+   * @return Detected endpoint URL. null, if no supported endpoint URL was detected.
+   */
+  @Nullable
+  public static String detectService(@NonNull Uri uri) {
+    final String host = uri.getHost();
+
+    // Check hardcoded URLs.
+    if ("c6ce2f20c50fbc7c67fd34489bfb95a8d2ac0de0d4a44c380f8e6a8eea336a6373e8d7c33ab1a23cd64aa62ee7b7a920d0e0245165b337924e26c65f3646641e"
+        .equals(HashUtils.sha512(host, "nori")) ||
+        "29f0eb150146b597205df6b320ce551762459663b1c2333e29b3d08a0a7fcbc98644bf8e558ceefe8ceb3101463f7a04e14ab990215dce6bdbfb941951bb00fe"
+            .equals(HashUtils.sha512(host, "nori")))
+      return "https://" + host;
+
+    return null;
   }
 
   @Override

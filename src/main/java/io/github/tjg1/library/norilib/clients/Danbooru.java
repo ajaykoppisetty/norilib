@@ -8,6 +8,8 @@ package io.github.tjg1.library.norilib.clients;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.koushikdutta.async.DataEmitter;
@@ -19,6 +21,7 @@ import com.koushikdutta.async.future.TransformFuture;
 import com.koushikdutta.async.parser.AsyncParser;
 import com.koushikdutta.async.parser.StringParser;
 import com.koushikdutta.ion.Ion;
+import com.koushikdutta.ion.Response;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -37,7 +40,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
-import io.github.tjg1.library.norilib.BuildConfig;
 import io.github.tjg1.library.norilib.Image;
 import io.github.tjg1.library.norilib.SearchResult;
 import io.github.tjg1.library.norilib.Tag;
@@ -96,6 +98,41 @@ public class Danbooru implements SearchClient {
     this.apiKey = apiKey;
   }
 
+  /**
+   * Checks if the given URL exposes a supported API endpoint.
+   *
+   * @param context Android {@link Context}.
+   * @param uri URL to test.
+   * @param timeout Timeout in milliseconds.
+   * @return Detected endpoint URL. null, if no supported endpoint URL was detected.
+   */
+  @Nullable
+  public static String detectService(@NonNull Context context, @NonNull Uri uri, int timeout) {
+    final String endpointUrl = Uri.withAppendedPath(uri, "/posts.xml").toString();
+
+    try {
+      final Response<DataEmitter> response = Ion.with(context)
+          .load(endpointUrl)
+          .setTimeout(timeout)
+          .userAgent(SearchClient.USER_AGENT)
+          .followRedirect(false)
+          .noCache()
+          .asDataEmitter()
+          .withResponse()
+          .get();
+
+      // Close the connection.
+      final DataEmitter dataEmitter = response.getResult();
+      if (dataEmitter != null) dataEmitter.close();
+
+      if (response.getHeaders().code() == 200) {
+        return uri.toString();
+      }
+    } catch (InterruptedException | ExecutionException ignored) {
+    }
+    return null;
+  }
+
   @Override
   public SearchResult search(String tags) throws IOException {
     // Return results for page 0.
@@ -107,7 +144,7 @@ public class Danbooru implements SearchClient {
     try {
       return Ion.with(this.context)
           .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
-          .userAgent("nori/" + BuildConfig.VERSION_NAME)
+          .userAgent(SearchClient.USER_AGENT)
           .as(new SearchResultParser(tags, pid))
           .get();
     } catch (InterruptedException | ExecutionException e) {
@@ -127,7 +164,7 @@ public class Danbooru implements SearchClient {
   public void search(final String tags, final int pid, final SearchCallback callback) {
     Ion.with(this.context)
         .load(createSearchURL(tags, pid, DEFAULT_LIMIT))
-        .userAgent("nori/" + BuildConfig.VERSION_NAME)
+        .userAgent(SearchClient.USER_AGENT)
         .as(new SearchResultParser(tags, pid))
         .setCallback(new FutureCallback<SearchResult>() {
           @Override

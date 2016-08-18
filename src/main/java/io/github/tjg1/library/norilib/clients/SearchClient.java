@@ -10,14 +10,17 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import io.github.tjg1.library.norilib.SearchResult;
-
 import java.io.IOException;
+
+import io.github.tjg1.library.norilib.BuildConfig;
+import io.github.tjg1.library.norilib.SearchResult;
 
 /**
  * Interface for a client consuming a Danbooru style API.
  */
 public interface SearchClient {
+  /** Default user agent to use in all HTTP requests. */
+  public static final String USER_AGENT = "nori/" + BuildConfig.VERSION_NAME;
 
   /**
    * Fetch first page of results containing images with the given set of tags.

@@ -8,6 +8,8 @@ package io.github.tjg1.library.norilib.clients;
 
 import android.content.Context;
 import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.koushikdutta.async.DataEmitter;
@@ -38,7 +40,6 @@ import java.util.concurrent.ExecutionException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import io.github.tjg1.library.norilib.BuildConfig;
 import io.github.tjg1.library.norilib.Image;
 import io.github.tjg1.library.norilib.SearchResult;
 import io.github.tjg1.library.norilib.Tag;
@@ -72,6 +73,22 @@ public class Flickr implements SearchClient {
   }
 
   /**
+   * Checks if the given URL exposes a supported API endpoint.
+   *
+   * @param uri URL to test.
+   * @return Detected endpoint URL. null, if no supported endpoint URL was detected.
+   */
+  @Nullable
+  public static String detectService(@NonNull Uri uri) {
+    final String host = uri.getHost();
+
+    // Check for hardcoded URL.
+    if ("api.flickr.com".equals(host))
+      return FLICKR_API_ENDPOINT.toString();
+    return null;
+  }
+
+  /**
    * Fetch first page of results containing images with the given set of tags.
    *
    * @param tags Search query. A space-separated list of tags.
@@ -97,7 +114,7 @@ public class Flickr implements SearchClient {
     try {
       return Ion.with(this.context)
           .load(createSearchURL(tags, pid))
-          .userAgent("nori/" + BuildConfig.VERSION_NAME)
+          .userAgent(SearchClient.USER_AGENT)
           .as(new SearchResultParser(tags, pid))
           .get();
     } catch (InterruptedException | ExecutionException e) {
@@ -130,7 +147,7 @@ public class Flickr implements SearchClient {
   public void search(String tags, int pid, final SearchCallback callback) {
     Ion.with(this.context)
         .load(createSearchURL(tags, pid))
-        .userAgent("nori/" + BuildConfig.VERSION_NAME)
+        .userAgent(SearchClient.USER_AGENT)
         .as(new SearchResultParser(tags, pid))
         .setCallback(new FutureCallback<SearchResult>() {
           @Override
