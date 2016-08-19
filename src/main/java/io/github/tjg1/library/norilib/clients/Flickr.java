@@ -303,7 +303,7 @@ public class Flickr implements SearchClient {
         .authority(apiEndpoint.getAuthority())
         .path(apiEndpoint.getPath())
         .appendQueryParameter("api_key", FLICKR_API_KEY)
-        .appendQueryParameter("method", !TextUtils.isEmpty(tags) ? "flickr.photos.search" : "flickr.photos.getRecent")
+        .appendQueryParameter("method", !TextUtils.isEmpty(tags) ? "flickr.photos.search" : "flickr.interestingness.getList")
         .appendQueryParameter("text", tags != null ? tags : "")
         .appendQueryParameter("per_page", Integer.toString(DEFAULT_LIMIT, 10))
         .appendQueryParameter("extras", "date_upload,owner_name,media,tags,path_alias,icon_server,o_dims,path_alias,original_format,url_q,url_m,url_l,url_o")
