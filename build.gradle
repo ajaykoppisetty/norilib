@@ -22,7 +22,7 @@ android {
   defaultConfig {
     minSdkVersion 10
     targetSdkVersion 24
-    versionCode 3
+    versionCode 4
     versionName "3.0.0"
     testApplicationId "io.github.tjg1.library.norilib.test"
     testInstrumentationRunner "android.test.InstrumentationTestRunner"
