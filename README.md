@@ -3,7 +3,7 @@
 [![Codacy grade](https://img.shields.io/codacy/grade/ccfe6dee223944a08a7f5b01e15cfd6d.svg?maxAge=2592000)](https://www.codacy.com/app/tjg1/norilib)
 [![Twitter URL](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&maxAge=2592000)](https://twitter.com/Nori_Android)
 
-Norilib is a free and open source Android API client library for the most popular tag-based image archive implementations. It is used by [Nori](https://github.com/tjg1/nori), the most popular free and open source tag-based image archive client for Android.
+Norilib is a free and open source Android API client library for various online image hosting APIs. It is used by [Nori](https://github.com/tjg1/nori), the free and open source image search engine for Android.
 
 If you're interested in contributing to Nori/Norilib, use Norilib in your own app, have any questions or just want to hang out, join us in the `#nori` IRC channel on Freenode.
 
@@ -18,13 +18,6 @@ $ ./gradlew build
 ```
 
 You can also use [Android Studio](https://developer.android.com/studio/index.html) to build Norilib.
-
-### API types supported ###
-
-- Danbooru 2.x
-- Danbooru 1.x
-- Gelbooru
-- Shimmie2
 
 ### Donations ###
 
