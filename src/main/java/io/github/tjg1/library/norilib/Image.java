@@ -6,8 +6,11 @@
 
 package io.github.tjg1.library.norilib;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,33 +23,46 @@ import java.util.regex.Pattern;
  * Metadata received from the API for each image.
  */
 public class Image implements Parcelable {
+  /** Class loader used when deserializing from a {@link Parcel}. */
+  public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
+
+    @Override
+    public Image createFromParcel(Parcel source) {
+      // Use the Parcel constructor.
+      return new Image(source);
+    }
+
+    @Override
+    public Image[] newArray(int size) {
+      return new Image[size];
+    }
+  };
+  /** Regular expression for matching Pixiv image ID from Pixiv URLs */
+  private static final Pattern PIXIV_ID_FROM_URL_PATTERN = Pattern.compile("http://(?:www|i\\d)\\.pixiv\\.net/.+?(?:illust_id=|img/.+?/)(\\d+)");
   /** Full-resolution image URL. */
   public String fileUrl;
   /** Image width. */
   public int width;
   /** Image height. */
   public int height;
-
   /** Thumbnail URL. */
   public String previewUrl;
-  /** Thumbnail width. */
-  public int previewWidth = 0;
-  /** Thumbnail height */
-  public int previewHeight = 0;
 
   // Samples are medium-resolution images downsized for viewing on the web.
   // Usually no more than ~1000px width.
   // Suitable for slow networks and low resolution devices (mdpi or less).
+  /** Thumbnail width. */
+  public int previewWidth = 0;
+  /** Thumbnail height */
+  public int previewHeight = 0;
   /** Sample URL. */
   public String sampleUrl;
   /** Sample width. */
   public int sampleWidth = 0;
   /** Sample height. */
   public int sampleHeight = 0;
-
   /** Image tags. */
   public Tag[] tags;
-
   /** Image ID */
   public String id;
   /** Image parent ID. Used when there are multiple similar images. */
@@ -63,32 +79,14 @@ public class Image implements Parcelable {
   public Integer searchPage;
   /** The position of the Image on the search result page. */
   public Integer searchPagePosition;
-
   /** SafeSearch rating. */
   public SafeSearchRating safeSearchRating;
+
+  // Parcelables are the standard Android serialization API used to retain data between sessions.
   /** Popularity score. */
   public Integer score;
   /** Upload date. */
   public Date createdAt;
-
-  // Parcelables are the standard Android serialization API used to retain data between sessions.
-  /** Class loader used when deserializing from a {@link Parcel}. */
-  public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
-
-    @Override
-    public Image createFromParcel(Parcel source) {
-      // Use the Parcel constructor.
-      return new Image(source);
-    }
-
-    @Override
-    public Image[] newArray(int size) {
-      return new Image[size];
-    }
-  };
-
-  /** Regular expression for matching Pixiv image ID from Pixiv URLs */
-  private static final Pattern PIXIV_ID_FROM_URL_PATTERN = Pattern.compile("http://(?:www|i\\d)\\.pixiv\\.net/.+?(?:illust_id=|img/.+?/)(\\d+)");
 
   /** Default constructor */
   public Image() {
@@ -127,6 +125,28 @@ public class Image implements Parcelable {
     createdAt = (tmpCreatedAt != -1) ? new Date(tmpCreatedAt) : null;
   }
 
+  /**
+   * Extract a Pixiv ID from URL to an image's Pixiv page.
+   *
+   * @param url Pixiv URL.
+   * @return Pixiv ID. Null if an ID could not be matched.
+   */
+  public static String getPixivIdFromUrl(String url) {
+    // Make sure the URL isn't empty or null.
+    if (url == null || url.isEmpty()) {
+      return null;
+    }
+
+    // Match regular expression against URL.
+    Matcher matcher = PIXIV_ID_FROM_URL_PATTERN.matcher(url);
+    if (matcher.find()) {
+      return matcher.group(1);
+    }
+
+    // No ID matched.
+    return null;
+  }
+
   @Override
   public int describeContents() {
     return 0;
@@ -159,25 +179,19 @@ public class Image implements Parcelable {
   }
 
   /**
-   * Extract a Pixiv ID from URL to an image's Pixiv page.
+   * Attempts to *guess* the file type of the {@link Image} based on the File URL.
+   * May not be accurate for API types that don't include the file extension in image file names.
    *
-   * @param url Pixiv URL.
-   * @return Pixiv ID. Null if an ID could not be matched.
+   * @return Lower-case file extension, without the preceding dot. "jpeg" gets normalised into
+   *         "jpg".
    */
-  public static String getPixivIdFromUrl(String url) {
-    // Make sure the URL isn't empty or null.
-    if (url == null || url.isEmpty()) {
-      return null;
-    }
+  @Nullable
+  public String getFileExtension() {
+    String path = Uri.parse(this.fileUrl).getLastPathSegment();
+    String fileExt = (!TextUtils.isEmpty(path) && path.contains(".")) ?
+        path.toLowerCase(Locale.US).substring(path.lastIndexOf(".") + 1) : null;
 
-    // Match regular expression against URL.
-    Matcher matcher = PIXIV_ID_FROM_URL_PATTERN.matcher(url);
-    if (matcher.find()) {
-      return matcher.group(1);
-    }
-
-    // No ID matched.
-    return null;
+    return "jpeg".equals(fileExt) ? "jpg" : fileExt;
   }
 
   /**

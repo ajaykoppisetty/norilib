@@ -80,6 +80,24 @@ public class ImageTests extends AndroidTestCase {
     assertThat(Image.getPixivIdFromUrl("http://www.pixiv.net/member_illust.php?mode=medium&illust_id=44466677")).isEqualTo("44466677");
   }
 
+  public void testGetFileExtension() throws Throwable {
+    Image image = getMockImage(Image.SafeSearchRating.S, new Tag("duck"), new Tag("bird"));
+
+    assertThat(image.getFileExtension()).isEqualTo("png");
+    image.fileUrl = "http://awesomeboorusite.org/data/images/image.jpg";
+    assertThat(image.getFileExtension()).isEqualTo("jpg");
+    image.fileUrl = "http://awesomeboorusite.org/data/images/image.jpeg";
+    assertThat(image.getFileExtension()).isEqualTo("jpg");
+    image.fileUrl = "http://awesomeboorusite.org/data/images/image.gif";
+    assertThat(image.getFileExtension()).isEqualTo("gif");
+    image.fileUrl = "http://awesomeboorusite.org/data/images/image.webm";
+    assertThat(image.getFileExtension()).isEqualTo("webm");
+    image.fileUrl = "http://awesomeboorusite.org/data/images/image";
+    assertThat(image.getFileExtension()).isEqualTo(null);
+    image.fileUrl = "http://awesomeboorusite.org";
+    assertThat(image.getFileExtension()).isEqualTo(null);
+  }
+
   /** Tests the {@link Image.SafeSearchRating#fromString(String)} method. */
   public void testSafeSearchRatingFromString() throws Throwable {
     assertThat(Image.SafeSearchRating.fromString("Safe")).isEqualTo(Image.SafeSearchRating.S);
