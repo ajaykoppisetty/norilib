@@ -47,11 +47,15 @@ import io.github.tjg1.library.norilib.Tag;
  * Client for the Danbooru 1.x API.
  */
 public class DanbooruLegacy implements SearchClient {
+  //region Constants
   /**
    * Number of images per search results page.
    * Best to use a large value to minimize number of unique HTTP requests.
    */
   private static final int DEFAULT_LIMIT = 100;
+  //endregion
+
+  //region Service configuration instance fields
   /** Android context. */
   protected final Context context;
   /** Human-readable service name. */
@@ -62,7 +66,9 @@ public class DanbooruLegacy implements SearchClient {
   protected final String username;
   /** Password used for authentication. (optional) */
   protected final String password;
+  //endregion
 
+  //region Constructors
   /**
    * Create a new Danbooru 1.x client without authentication.
    *
@@ -90,7 +96,9 @@ public class DanbooruLegacy implements SearchClient {
     this.username = username;
     this.password = password;
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -125,7 +133,9 @@ public class DanbooruLegacy implements SearchClient {
     }
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   @Override
   public SearchResult search(String tags) throws IOException {
     // Return results for page 0.
@@ -194,6 +204,41 @@ public class DanbooruLegacy implements SearchClient {
     }
   }
 
+  @Override
+  public String getDefaultQuery() {
+    // Show all safe-for-work images by default.
+    return "";
+  }
+
+  @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.DANBOARD_LEGACY, name, apiEndpoint, username, password);
+  }
+
+  @Override
+  public AuthenticationType requiresAuthentication() {
+    return AuthenticationType.OPTIONAL;
+  }
+  //endregion
+
+  //region Creating Search URLs
+  /**
+   * Generate request URL to the search API endpoint.
+   *
+   * @param tags  Space-separated tags.
+   * @param pid   Page number (0-indexed).
+   * @param limit Images to fetch per page.
+   * @return URL to search results API.
+   */
+  protected String createSearchURL(String tags, int pid, int limit) {
+    // Page numbers are 1-indexed for this API.
+    final int page = pid + 1;
+
+    return String.format(Locale.US, apiEndpoint + "/post/index.xml?tags=%s&limit=%d&page=%d", Uri.encode(tags), limit, page);
+  }
+  //endregion
+
+  //region Parsing responses
   /**
    * Parse an XML response returned by the API.
    *
@@ -302,17 +347,6 @@ public class DanbooruLegacy implements SearchClient {
     return new SearchResult(imageList.toArray(new Image[imageList.size()]), Tag.arrayFromString(tags), offset);
   }
 
-  @Override
-  public String getDefaultQuery() {
-    // Show all safe-for-work images by default.
-    return "";
-  }
-
-  @Override
-  public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOARD_LEGACY, name, apiEndpoint, username, password);
-  }
-
   /**
    * Convert a relative image URL to an absolute URL.
    *
@@ -360,27 +394,9 @@ public class DanbooruLegacy implements SearchClient {
       return DATE_FORMAT_DEFAULT.parse(date);
     }
   }
+  //endregion
 
-  /**
-   * Generate request URL to the search API endpoint.
-   *
-   * @param tags  Space-separated tags.
-   * @param pid   Page number (0-indexed).
-   * @param limit Images to fetch per page.
-   * @return URL to search results API.
-   */
-  protected String createSearchURL(String tags, int pid, int limit) {
-    // Page numbers are 1-indexed for this API.
-    final int page = pid + 1;
-
-    return String.format(Locale.US, apiEndpoint + "/post/index.xml?tags=%s&limit=%d&page=%d", Uri.encode(tags), limit, page);
-  }
-
-  @Override
-  public AuthenticationType requiresAuthentication() {
-    return AuthenticationType.OPTIONAL;
-  }
-
+  //region Ion async SearchResult parser
   /** Asynchronous search parser to use with ion. */
   protected class SearchResultParser implements AsyncParser<SearchResult> {
     /** Tags searched for. */
@@ -414,4 +430,5 @@ public class DanbooruLegacy implements SearchClient {
       return null;
     }
   }
+  //endregion
 }

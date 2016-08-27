@@ -17,9 +17,12 @@ import java.util.regex.Pattern;
 
 /** Flickr SearchClient limited to searching for images from a single user. */
 public class FlickrUser extends Flickr {
+  //region Regular expression patterns
   /** Regex pattern used to match Flickr user URLs. */
   public static final String FLICKR_USER_REGEX = "^https?:\\/\\/(?:www\\.|m\\.)?flickr\\.com\\/(?:#\\/)?photos\\/(.+?)\\/?$";
+  //endregion
 
+  //region Constructors
   /**
    * Create a new Flickr API client.
    *
@@ -30,7 +33,9 @@ public class FlickrUser extends Flickr {
   public FlickrUser(Context context, String name, String apiEndpoint) {
     super(context, name, apiEndpoint);
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -43,12 +48,16 @@ public class FlickrUser extends Flickr {
       return "https://" + uri.getHost() + uri.getPath();
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   @Override
   public Settings getSettings() {
     return new Settings(Settings.APIType.FLICKR_USER, name, apiEndpoint.toString());
   }
+  //endregion
 
+  //region Creating search URLs
   /**
    * Generate request URL to the search API endpoint.
    *
@@ -77,4 +86,5 @@ public class FlickrUser extends Flickr {
     }
     return super.createSearchURL(tags, pid);
   }
+  //endregion
 }

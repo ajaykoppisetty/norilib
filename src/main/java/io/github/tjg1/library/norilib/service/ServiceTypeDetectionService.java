@@ -22,6 +22,7 @@ import io.github.tjg1.library.norilib.clients.Shimmie;
 
 /** Service that detects the {@link io.github.tjg1.library.norilib.clients.SearchClient} API type for given URL. */
 public class ServiceTypeDetectionService extends IntentService {
+  //region Constants (Broadcast result IDs)
   /** Result code returned when the service type was detected successfully. */
   public static final int RESULT_OK = 0x00;
   /** Result code returned when there was a problem with network connectivity. */
@@ -30,26 +31,40 @@ public class ServiceTypeDetectionService extends IntentService {
   public static final int RESULT_FAIL_INVALID_URL = 0x02;
   /** Result code returned when no valid API was found at given URL. */
   public static final int RESULT_FAIL_NO_API = 0x03;
+  //endregion
+
+  //region Constants (Broadcast actions)
   /** Action ID of the broadcast sent when the detection has completed. */
   public static final String ACTION_DONE = "io.github.tjg1.library.norilib.service.ServiceTypeDetectionService.done";
+  //endregion
+
+  //region Constants (Broadcast intent extra keys)
   /** Parcel ID to package the API endpoint URL to test. */
   public static final String ENDPOINT_URL = "io.github.tjg1.library.norilib.clients.SearchClient.Settings.url";
   /** Parcel ID used to send the result code back to the listening activity. */
   public static final String RESULT_CODE = "io.github.tjg1.library.norilib.service.ServiceTypeDetectionService.resultCode";
   /** Parcel ID used to send the {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType#ordinal()} value back to the {@link android.content.BroadcastReceiver}. */
   public static final String API_TYPE = "io.github.tjg1.library.norilib.clients.SearchClient.Settings.APIType.ordinal";
+  //endregion
+
+  //region Constants (Service detection settings)
   /** Uri schemes to use when detecting services. */
   public static final String[] URI_SCHEMES = {"https", "http"};
   /** Time to wait for the HTTP requests to complete. (Gelbooru tends to be slow :() */
   private static final int REQUEST_TIMEOUT = 15000;
   /** Time to wait for HTTPS requests to complete. */
-  private static final int REQUEST_TIMEOUT_TLS = 5000;
+  private static final int REQUEST_TIMEOUT_TLS = 5000; // Compromise. Not all sites support TLS,
+                                                       // so we wait longer for SSL checks to complete.
+  //endregion
 
+  //region Constructors
   /** Called by the framework to instantiate the {@link io.github.tjg1.library.norilib.service.ServiceTypeDetectionService}. */
   public ServiceTypeDetectionService() {
     super("io.github.tjg1.library.norilib.ServiceTypeDetectionService");
   }
-  
+  //endregion
+
+  //region IntentService methods (onHandleIntent)
   @Override
   protected void onHandleIntent(Intent intent) {
     // Extract SearchClient.Settings from the received Intent.
@@ -115,7 +130,9 @@ public class ServiceTypeDetectionService extends IntentService {
     // End of the loop was reached without finding an API endpoint. Send error code to the BroadcastReceiver.
     sendBroadcast(RESULT_FAIL_NO_API, null, null);
   }
+  //endregion
 
+  //region Sending result broadcasts
   /**
    * Send result broadcast back to the listening activity.
    *
@@ -137,4 +154,5 @@ public class ServiceTypeDetectionService extends IntentService {
 
     sendBroadcast(broadcastIntent);
   }
+  //endregion
 }

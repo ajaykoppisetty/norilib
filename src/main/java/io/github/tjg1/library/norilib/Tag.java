@@ -11,6 +11,8 @@ import android.os.Parcelable;
 
 /** Image tag */
 public class Tag implements Comparable<Tag>, Parcelable {
+
+  //region Parcelable
   /** Class loader used when deserializing from a {@link Parcel}. */
   public static final Parcelable.Creator<Tag> CREATOR = new Parcelable.Creator<Tag>() {
 
@@ -26,11 +28,36 @@ public class Tag implements Comparable<Tag>, Parcelable {
     }
   };
 
+  /**
+   * Re-create a serialize tag from {@link android.os.Parcel}.
+   *
+   * @param in Parcel containing a serialized {@link Tag}.
+   */
+  protected Tag(Parcel in) {
+    this.name = in.readString();
+    this.type = Type.values()[in.readInt()];
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel p, int flags) {
+    p.writeString(name);
+    p.writeInt(type.ordinal());
+  }
+  //endregion
+
+  //region Instance fields
   /** Tag name */
   private final String name;
   /** Tag type */
   private final Type type;
+  //endregion
 
+  //region Constructors
   /**
    * Create a new {@link Image} tag of the {@link Type#GENERAL} type.
    *
@@ -51,26 +78,9 @@ public class Tag implements Comparable<Tag>, Parcelable {
     this.name = name;
     this.type = type;
   }
+  //endregion
 
-  /**
-   * Re-create a serialize tag from {@link android.os.Parcel}.
-   *
-   * @param in Parcel containing a serialized {@link Tag}.
-   */
-  protected Tag(Parcel in) {
-    this.name = in.readString();
-    this.type = Type.values()[in.readInt()];
-  }
-
-  /**
-   * Get tag's name.
-   *
-   * @return Tag name.
-   */
-  public String getName() {
-    return name;
-  }
-
+  //region Equality & Comparisons
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
@@ -92,6 +102,17 @@ public class Tag implements Comparable<Tag>, Parcelable {
   public int compareTo(Tag another) {
     return this.name.compareTo(another.getName());
   }
+  //endregion
+
+  //region Getters
+  /**
+   * Get tag's name.
+   *
+   * @return Tag name.
+   */
+  public String getName() {
+    return name;
+  }
 
   /**
    * Get tag's type.
@@ -102,7 +123,9 @@ public class Tag implements Comparable<Tag>, Parcelable {
   public Type getType() {
     return type;
   }
+  //endregion
 
+  //region Tag colours
   /**
    * Get color used to display Tag's type.
    *
@@ -120,18 +143,9 @@ public class Tag implements Comparable<Tag>, Parcelable {
         return R.color.tag_color_general;
     }
   }
+  //endregion
 
-  @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel p, int flags) {
-    p.writeString(name);
-    p.writeInt(type.ordinal());
-  }
-
+  //region Static helper methods
   /**
    * Convert an array of tags into a querystring suitable for use with {@link io.github.tjg1.library.norilib.clients.SearchClient#search(String)}.
    *
@@ -182,7 +196,9 @@ public class Tag implements Comparable<Tag>, Parcelable {
     }
     return tags;
   }
+  //endregion
 
+  //region Tag type enum
   /**
    * Tag types.
    * Some APIs do not use tag types and will only use the {@link #GENERAL} type.
@@ -197,5 +213,5 @@ public class Tag implements Comparable<Tag>, Parcelable {
     /** Copyright tags. List the copyrights (shows, comics, etc.) in the image. */
     COPYRIGHT
   }
-
+  //endregion
 }

@@ -46,19 +46,26 @@ import io.github.tjg1.library.norilib.Tag;
 
 /** Search client for the Flickr API. */
 public class Flickr implements SearchClient {
+
+  //region Constants
+  /** Number of images to fetch per page. */
+  protected static final int DEFAULT_LIMIT = 100;
+  /** Default API endpoint. */
+  public static final Uri FLICKR_API_ENDPOINT = Uri.parse("https://api.flickr.com/services/rest");
+  /** Public API key used to access Flickr services. */
+  protected static final String FLICKR_API_KEY = "6b74179518fc00c8bef70b230c7ee880";
+  //endregion
+
+  //region Instance fields
   /** Android context. */
   protected final Context context;
   /** Human readable service name. */
   protected final String name;
   /** API Endpoint. */
   protected final Uri apiEndpoint;
-  /** Public API key used to access Flickr services. */
-  protected static final String FLICKR_API_KEY = "6b74179518fc00c8bef70b230c7ee880";
-  /** Default API endpoint. */
-  public static final Uri FLICKR_API_ENDPOINT = Uri.parse("https://api.flickr.com/services/rest");
-  /** Number of images to fetch per page. */
-  protected static final int DEFAULT_LIMIT = 100;
+  //endregion
 
+  //region Constructors
   /**
    * Create a new Flickr API client.
    *
@@ -71,7 +78,9 @@ public class Flickr implements SearchClient {
     this.name = name;
     this.apiEndpoint = apiEndpoint != null ? Uri.parse(apiEndpoint) : FLICKR_API_ENDPOINT;
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -87,7 +96,9 @@ public class Flickr implements SearchClient {
       return FLICKR_API_ENDPOINT.toString();
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   /**
    * Fetch first page of results containing images with the given set of tags.
    *
@@ -196,7 +207,33 @@ public class Flickr implements SearchClient {
   public AuthenticationType requiresAuthentication() {
     return AuthenticationType.NONE;
   }
+  //endregion
 
+  //region Creating search URLs
+  /**
+   * Generate request URL to the search API endpoint.
+   *
+   * @param tags Space-separated tags.
+   * @param pid  Page number (0-indexed).
+   * @return URL to search results API.
+   */
+  protected String createSearchURL(String tags, int pid) {
+    return new Uri.Builder()
+        .scheme(apiEndpoint.getScheme())
+        .authority(apiEndpoint.getAuthority())
+        .path(apiEndpoint.getPath())
+        .appendQueryParameter("api_key", FLICKR_API_KEY)
+        .appendQueryParameter("method", !TextUtils.isEmpty(tags) ? "flickr.photos.search" : "flickr.interestingness.getList")
+        .appendQueryParameter("text", tags != null ? tags : "")
+        .appendQueryParameter("per_page", Integer.toString(DEFAULT_LIMIT, 10))
+        .appendQueryParameter("extras", "date_upload,owner_name,media,tags,path_alias,icon_server,o_dims,path_alias,original_format,url_q,url_m,url_l,url_o")
+        .appendQueryParameter("page", Integer.toString(pid + 1, 10))
+        .build()
+        .toString();
+  }
+  //endregion
+
+  //region Parsing responses
   /**
    * Parse an XML response returned by the API.
    *
@@ -289,29 +326,9 @@ public class Flickr implements SearchClient {
   protected String webUrlFromId(String userId, String photoId) {
     return "https://www.flickr.com/photos/" + userId + "/" + photoId;
   }
+  //endregion
 
-  /**
-   * Generate request URL to the search API endpoint.
-   *
-   * @param tags Space-separated tags.
-   * @param pid  Page number (0-indexed).
-   * @return URL to search results API.
-   */
-  protected String createSearchURL(String tags, int pid) {
-    return new Uri.Builder()
-        .scheme(apiEndpoint.getScheme())
-        .authority(apiEndpoint.getAuthority())
-        .path(apiEndpoint.getPath())
-        .appendQueryParameter("api_key", FLICKR_API_KEY)
-        .appendQueryParameter("method", !TextUtils.isEmpty(tags) ? "flickr.photos.search" : "flickr.interestingness.getList")
-        .appendQueryParameter("text", tags != null ? tags : "")
-        .appendQueryParameter("per_page", Integer.toString(DEFAULT_LIMIT, 10))
-        .appendQueryParameter("extras", "date_upload,owner_name,media,tags,path_alias,icon_server,o_dims,path_alias,original_format,url_q,url_m,url_l,url_o")
-        .appendQueryParameter("page", Integer.toString(pid + 1, 10))
-        .build()
-        .toString();
-  }
-
+  //region Ion async SearchResult parser
   /** Asynchronous search parser to use with ion. */
   protected class SearchResultParser implements AsyncParser<SearchResult> {
     /** Tags searched for. */
@@ -345,4 +362,5 @@ public class Flickr implements SearchClient {
       return null;
     }
   }
+  //endregion
 }

@@ -23,6 +23,8 @@ import java.util.concurrent.ExecutionException;
  * Shimmie2 provides an extension that enables a Danbooru 1.x-based API.
  */
 public class Shimmie extends DanbooruLegacy {
+
+  //region Constructors
   public Shimmie(Context context, String name, String endpoint) {
     super(context, name, endpoint);
   }
@@ -30,7 +32,9 @@ public class Shimmie extends DanbooruLegacy {
   public Shimmie(Context context, String name, String endpoint, String username, String password) {
     super(context, name, endpoint, username, password);
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -66,17 +70,16 @@ public class Shimmie extends DanbooruLegacy {
     }
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   @Override
   public Settings getSettings() {
     return new Settings(Settings.APIType.SHIMMIE, name, apiEndpoint, username, password);
   }
+  //endregion
 
-  @Override
-  protected String webUrlFromId(String id) {
-    return String.format(Locale.US, "%s/post/view/%s", apiEndpoint, id);
-  }
-
+  //region Creating search URLs
   @Override
   protected String createSearchURL(String tags, int pid, int limit) {
     // Page numbers are 1-indexed for this api.
@@ -84,4 +87,12 @@ public class Shimmie extends DanbooruLegacy {
 
     return String.format(Locale.US, "%s/api/danbooru/find_posts/index.xml?tags=%s&page=%d&limit=%d", apiEndpoint, tags, page, limit);
   }
+  //endregion
+
+  //region Parsing responses
+  @Override
+  protected String webUrlFromId(String id) {
+    return String.format(Locale.US, "%s/post/view/%s", apiEndpoint, id);
+  }
+  //endregion
 }

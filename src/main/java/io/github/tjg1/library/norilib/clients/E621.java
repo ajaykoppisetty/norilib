@@ -39,9 +39,12 @@ import io.github.tjg1.library.norilib.util.HashUtils;
 /** {@link io.github.tjg1.library.norilib.clients.SearchClient} for the E621 imageboard. */
 public class E621 extends DanbooruLegacy {
 
+  //region Constants
   /** Number of images to fetch with each search. */
   private static final int DEFAULT_LIMIT = 100;
+  //endregion
 
+  //region Constructors
   public E621(Context context, String name, String endpoint) {
     super(context, name, endpoint);
   }
@@ -49,7 +52,9 @@ public class E621 extends DanbooruLegacy {
   public E621(Context context, String name, String endpoint, String username, String password) {
     super(context, name, endpoint, username, password);
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -69,12 +74,16 @@ public class E621 extends DanbooruLegacy {
 
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   @Override
   public Settings getSettings() {
     return new Settings(Settings.APIType.E621, name, apiEndpoint);
   }
+  //endregion
 
+  //region Parsing responses
   @Override
   protected String webUrlFromId(String id) {
     return apiEndpoint + "/post/show/" + id;
@@ -158,5 +167,5 @@ public class E621 extends DanbooruLegacy {
 
     return null;
   }
-
+  //endregion
 }

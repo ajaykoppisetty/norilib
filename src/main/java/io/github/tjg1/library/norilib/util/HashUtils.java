@@ -14,6 +14,7 @@ import java.security.NoSuchAlgorithmException;
 /** Cryptographic hashing utils. */
 public abstract class HashUtils {
 
+  //region SHA512 helper method
   /**
    * SHA-512 hashing function.
    *
@@ -39,4 +40,5 @@ public abstract class HashUtils {
       return null;
     }
   }
+  //endregion
 }

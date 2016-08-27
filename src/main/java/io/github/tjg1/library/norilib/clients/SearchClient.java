@@ -19,9 +19,12 @@ import io.github.tjg1.library.norilib.SearchResult;
  * Interface for a client consuming a Danbooru style API.
  */
 public interface SearchClient {
+  //region Constants
   /** Default user agent to use in all HTTP requests. */
   public static final String USER_AGENT = "nori/" + BuildConfig.VERSION_NAME;
+  //endregion
 
+  //region Search methods
   /**
    * Fetch first page of results containing images with the given set of tags.
    *
@@ -57,22 +60,18 @@ public interface SearchClient {
    * @param callback Callback listening for the SearchResult returned in the background.
    */
   public void search(String tags, int pid, SearchCallback callback);
+  //endregion
 
+  //region Default query
   /**
    * Get a SafeSearch default query to search for when an app is launched.
    *
    * @return Safe-for-work query to search for when an app is launched.
    */
   public String getDefaultQuery();
+  //endregion
 
-  /**
-   * Get a serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object with this
-   * {@link io.github.tjg1.library.norilib.clients.SearchClient}'s settings.
-   *
-   * @return A serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object.
-   */
-  public Settings getSettings();
-
+  //region API Authentication Types
   /**
    * Check if the API server requires or supports optional authentication.
    * <p/>
@@ -91,7 +90,9 @@ public interface SearchClient {
     OPTIONAL,
     NONE
   }
+  //endregion
 
+  //region Search callback inner interface
   /** Callback listening for an {@link io.github.tjg1.library.norilib.SearchResult} from an asynchronous request fetched on a background thread. */
   public static interface SearchCallback {
     /**
@@ -108,9 +109,21 @@ public interface SearchClient {
      */
     public void onSuccess(SearchResult searchResult);
   }
+  //endregion
+
+  //region API Settings getter + inner class
+  /**
+   * Get a serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object with this
+   * {@link io.github.tjg1.library.norilib.clients.SearchClient}'s settings.
+   *
+   * @return A serializable {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object.
+   */
+  public Settings getSettings();
 
   /** Class used to handle storing, serializing and deserializing {@link io.github.tjg1.library.norilib.clients.SearchClient} settings. */
   public static class Settings implements Parcelable {
+
+    //region Parcelable
     // Parcelable are the standard Android serialization API used to retain data between sessions.
     /** Class loader used when deserializing from a {@link android.os.Parcel}. */
     public static final Creator<Settings> CREATOR = new Creator<Settings>() {
@@ -126,28 +139,6 @@ public interface SearchClient {
         return new Settings[size];
       }
     };
-    /** {@link SearchClient} type. */
-    private final APIType apiType;
-    /** Human-readable service name. */
-    private final String name;
-    /** API server endpoint URL. */
-    private final String endpoint;
-    /** API authentication URL. */
-    private final String username;
-    /** API authentication password/API key. */
-    private final String password;
-
-    public Settings(APIType apiType, String name, String endpoint) {
-      this(apiType, name, endpoint, null, null);
-    }
-
-    public Settings(APIType apiType, String name, String endpoint, String username, String password) {
-      this.apiType = apiType;
-      this.name = name;
-      this.endpoint = endpoint;
-      this.username = username;
-      this.password = password;
-    }
 
     /**
      * Constructor used to deserialize a {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object from
@@ -169,6 +160,55 @@ public interface SearchClient {
       }
     }
 
+    @Override
+    public int describeContents() {
+      // Describe API type.
+      return apiType.ordinal();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+      dest.writeInt(apiType.ordinal());
+      dest.writeString(name);
+      dest.writeString(endpoint);
+      if (username != null && password != null) {
+        dest.writeByte((byte) 0x01);
+        dest.writeString(username);
+        dest.writeString(password);
+      } else {
+        dest.writeByte((byte) 0x00);
+      }
+    }
+    //endregion
+
+    //region Instance fields
+    /** {@link SearchClient} type. */
+    private final APIType apiType;
+    /** Human-readable service name. */
+    private final String name;
+    /** API server endpoint URL. */
+    private final String endpoint;
+    /** API authentication URL. */
+    private final String username;
+    /** API authentication password/API key. */
+    private final String password;
+    //endregion
+
+    //region Constructors
+    public Settings(APIType apiType, String name, String endpoint) {
+      this(apiType, name, endpoint, null, null);
+    }
+
+    public Settings(APIType apiType, String name, String endpoint, String username, String password) {
+      this.apiType = apiType;
+      this.name = name;
+      this.endpoint = endpoint;
+      this.username = username;
+      this.password = password;
+    }
+    //endregion
+
+    //region Getters
     /** Get the {@link io.github.tjg1.library.norilib.clients.SearchClient} type used by the API endpoint */
     public APIType getApiType() {
       return apiType;
@@ -193,7 +233,9 @@ public interface SearchClient {
     public String getPassword() {
       return password;
     }
+    //endregion
 
+    //region SearchClient deserialization
     /**
      * Create a {@link io.github.tjg1.library.norilib.clients.SearchClient} from this {@link io.github.tjg1.library.norilib.clients.SearchClient.Settings} object.
      *
@@ -219,26 +261,9 @@ public interface SearchClient {
           return null;
       }
     }
+    //endregion
 
-    public int describeContents() {
-      // Describe API type.
-      return apiType.ordinal();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-      dest.writeInt(apiType.ordinal());
-      dest.writeString(name);
-      dest.writeString(endpoint);
-      if (username != null && password != null) {
-        dest.writeByte((byte) 0x01);
-        dest.writeString(username);
-        dest.writeString(password);
-      } else {
-        dest.writeByte((byte) 0x00);
-      }
-    }
-
+    //region API type enumeration
     /** API client types used to construct an appropriate {@link SearchClient} from this Settings object. */
     public enum APIType {
       DANBOARD,
@@ -249,6 +274,7 @@ public interface SearchClient {
       FLICKR,
       FLICKR_USER
     }
+    //endregion
   }
-
+  //endregion
 }

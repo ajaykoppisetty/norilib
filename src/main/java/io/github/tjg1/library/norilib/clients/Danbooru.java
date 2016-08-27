@@ -48,6 +48,8 @@ import io.github.tjg1.library.norilib.Tag;
  * Client for the Danbooru 2.x API.
  */
 public class Danbooru implements SearchClient {
+
+  //region Constants
   /**
    * Number of images per search results page.
    * Best to use a large value to minimize number of unique HTTP requests.
@@ -57,6 +59,9 @@ public class Danbooru implements SearchClient {
   private static final int THUMBNAIL_SIZE = 150;
   /** Sample size set if not returned by the API. */
   private static final int SAMPLE_SIZE = 850;
+  //endregion
+
+  //region Service configuration instance fields
   /** Android context. */
   protected final Context context;
   /** Human-readable service name */
@@ -67,7 +72,9 @@ public class Danbooru implements SearchClient {
   private final String username;
   /** API key used for authentication. (optional) */
   private final String apiKey;
+  //endregion
 
+  //region Constructors
   /**
    * Create a new Danbooru 2.x client without authentication.
    *
@@ -97,7 +104,9 @@ public class Danbooru implements SearchClient {
     this.username = username;
     this.apiKey = apiKey;
   }
+  //endregion
 
+  //region Service detection
   /**
    * Checks if the given URL exposes a supported API endpoint.
    *
@@ -132,7 +141,9 @@ public class Danbooru implements SearchClient {
     }
     return null;
   }
+  //endregion
 
+  //region SearchClient methods
   @Override
   public SearchResult search(String tags) throws IOException {
     // Return results for page 0.
@@ -178,6 +189,46 @@ public class Danbooru implements SearchClient {
         });
   }
 
+  @Override
+  public String getDefaultQuery() {
+    // Show work-safe images by default.
+    return "";
+  }
+
+  @Override
+  public Settings getSettings() {
+    return new Settings(Settings.APIType.DANBOARD, name, apiEndpoint, username, apiKey);
+  }
+
+  @Override
+  public AuthenticationType requiresAuthentication() {
+    return AuthenticationType.OPTIONAL;
+  }
+  //endregion
+
+  //region Creating search URLs
+
+  /**
+   * Generate request URL to the search API endpoint.
+   *
+   * @param tags  Space-separated tags.
+   * @param pid   Page number (0-indexed).
+   * @param limit Images to fetch per page.
+   * @return URL to search results API.
+   */
+  protected String createSearchURL(String tags, int pid, int limit) {
+    // Page numbers are 1-indexed for this API.
+    final int page = pid + 1;
+
+    if (!TextUtils.isEmpty(this.username) && !TextUtils.isEmpty(this.apiKey)) {
+      return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d&login=%s&api_key=%s",
+          Uri.encode(tags), page, limit, Uri.encode(this.username), Uri.encode(this.apiKey));
+    }
+    return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d", Uri.encode(tags), page, limit);
+  }
+  //endregion
+
+  //region Parsing responses
   /**
    * Parse an XML response returned by the API.
    *
@@ -308,25 +359,6 @@ public class Danbooru implements SearchClient {
   }
 
   /**
-   * Generate request URL to the search API endpoint.
-   *
-   * @param tags  Space-separated tags.
-   * @param pid   Page number (0-indexed).
-   * @param limit Images to fetch per page.
-   * @return URL to search results API.
-   */
-  protected String createSearchURL(String tags, int pid, int limit) {
-    // Page numbers are 1-indexed for this API.
-    final int page = pid + 1;
-
-    if (!TextUtils.isEmpty(this.username) && !TextUtils.isEmpty(this.apiKey)) {
-      return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d&login=%s&api_key=%s",
-          Uri.encode(tags), page, limit, Uri.encode(this.username), Uri.encode(this.apiKey));
-    }
-    return String.format(Locale.US, apiEndpoint + "/posts.xml?tags=%s&page=%d&limit=%d", Uri.encode(tags), page, limit);
-  }
-
-  /**
    * Get a URL viewable in the system web browser for given Image ID.
    *
    * @param id {@link io.github.tjg1.library.norilib.Image} ID.
@@ -335,23 +367,9 @@ public class Danbooru implements SearchClient {
   protected String webUrlFromId(String id) {
     return String.format(Locale.US, "%s/posts/%s", apiEndpoint, id);
   }
+  //endregion
 
-  @Override
-  public String getDefaultQuery() {
-    // Show work-safe images by default.
-    return "";
-  }
-
-  @Override
-  public Settings getSettings() {
-    return new Settings(Settings.APIType.DANBOARD, name, apiEndpoint, username, apiKey);
-  }
-
-  @Override
-  public AuthenticationType requiresAuthentication() {
-    return AuthenticationType.OPTIONAL;
-  }
-
+  //region Ion async SearchResult parser
   /** Asynchronous search parser to use with ion. */
   protected class SearchResultParser implements AsyncParser<SearchResult> {
     /** Tags searched for. */
@@ -385,4 +403,5 @@ public class Danbooru implements SearchClient {
       return null;
     }
   }
+  //endregion
 }

@@ -23,6 +23,8 @@ import java.util.regex.Pattern;
  * Metadata received from the API for each image.
  */
 public class Image implements Parcelable {
+
+  //region Parcelable
   /** Class loader used when deserializing from a {@link Parcel}. */
   public static final Parcelable.Creator<Image> CREATOR = new Parcelable.Creator<Image>() {
 
@@ -37,8 +39,78 @@ public class Image implements Parcelable {
       return new Image[size];
     }
   };
+
+  /**
+   * Create a new Image by deserializing it from a {@link android.os.Parcel}.
+   *
+   * @param in {@link android.os.Parcel} used to deserialize the image.
+   */
+  protected Image(Parcel in) {
+    // Deserialize values from Parcel.
+    fileUrl = in.readString();
+    width = in.readInt();
+    height = in.readInt();
+    previewUrl = in.readString();
+    previewWidth = in.readInt();
+    previewHeight = in.readInt();
+    sampleUrl = in.readString();
+    sampleWidth = in.readInt();
+    sampleHeight = in.readInt();
+    tags = in.createTypedArray(Tag.CREATOR);
+    id = in.readString();
+    parentId = in.readString();
+    webUrl = in.readString();
+    pixivId = in.readString();
+    safeSearchRating = SafeSearchRating.values()[in.readInt()];
+    score = in.readInt();
+    source = in.readString();
+    md5 = in.readString();
+    final int tmpSearchPage = in.readInt();
+    searchPage = (tmpSearchPage != -1) ? tmpSearchPage : null;
+    final int tmpSearchPagePosition = in.readInt();
+    searchPagePosition = (tmpSearchPagePosition != -1) ? tmpSearchPagePosition : null;
+    final long tmpCreatedAt = in.readLong();
+    createdAt = (tmpCreatedAt != -1) ? new Date(tmpCreatedAt) : null;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    // Serialize data into a Parcel.
+    dest.writeString(fileUrl); //
+    dest.writeInt(width); //
+    dest.writeInt(height); //
+    dest.writeString(previewUrl); //
+    dest.writeInt(previewWidth); //
+    dest.writeInt(previewHeight); //
+    dest.writeString(sampleUrl); //
+    dest.writeInt(sampleWidth); //
+    dest.writeInt(sampleHeight); //
+    dest.writeTypedArray(tags, 0); //
+    dest.writeString(id); //
+    dest.writeString(parentId); //
+    dest.writeString(webUrl); //
+    dest.writeString(pixivId); //
+    dest.writeInt(safeSearchRating.ordinal());
+    dest.writeInt(score);
+    dest.writeString(source);
+    dest.writeString(md5);
+    dest.writeInt(searchPage != null ? searchPage : -1);
+    dest.writeInt(searchPagePosition != null ? searchPagePosition : -1);
+    dest.writeLong(createdAt != null ? createdAt.getTime() : -1L);
+  }
+  //endregion
+
+  //region Regular expressions
   /** Regular expression for matching Pixiv image ID from Pixiv URLs */
   private static final Pattern PIXIV_ID_FROM_URL_PATTERN = Pattern.compile("http://(?:www|i\\d)\\.pixiv\\.net/.+?(?:illust_id=|img/.+?/)(\\d+)");
+  //endregion
+
+  //region Instance fields
   /** Full-resolution image URL. */
   public String fileUrl;
   /** Image width. */
@@ -87,44 +159,15 @@ public class Image implements Parcelable {
   public Integer score;
   /** Upload date. */
   public Date createdAt;
+  //endregion
 
+  //region Constructors
   /** Default constructor */
   public Image() {
   }
+  //endregion
 
-  /**
-   * Create a new Image by deserializing it from a {@link android.os.Parcel}.
-   *
-   * @param in {@link android.os.Parcel} used to deserialize the image.
-   */
-  protected Image(Parcel in) {
-    // Deserialize values from Parcel.
-    fileUrl = in.readString();
-    width = in.readInt();
-    height = in.readInt();
-    previewUrl = in.readString();
-    previewWidth = in.readInt();
-    previewHeight = in.readInt();
-    sampleUrl = in.readString();
-    sampleWidth = in.readInt();
-    sampleHeight = in.readInt();
-    tags = in.createTypedArray(Tag.CREATOR);
-    id = in.readString();
-    parentId = in.readString();
-    webUrl = in.readString();
-    pixivId = in.readString();
-    safeSearchRating = SafeSearchRating.values()[in.readInt()];
-    score = in.readInt();
-    source = in.readString();
-    md5 = in.readString();
-    final int tmpSearchPage = in.readInt();
-    searchPage = (tmpSearchPage != -1) ? tmpSearchPage : null;
-    final int tmpSearchPagePosition = in.readInt();
-    searchPagePosition = (tmpSearchPagePosition != -1) ? tmpSearchPagePosition : null;
-    final long tmpCreatedAt = in.readLong();
-    createdAt = (tmpCreatedAt != -1) ? new Date(tmpCreatedAt) : null;
-  }
-
+  //region Static method: Pixiv URLs from IDs
   /**
    * Extract a Pixiv ID from URL to an image's Pixiv page.
    *
@@ -146,38 +189,9 @@ public class Image implements Parcelable {
     // No ID matched.
     return null;
   }
+  //endregion
 
-  @Override
-  public int describeContents() {
-    return 0;
-  }
-
-  @Override
-  public void writeToParcel(Parcel dest, int flags) {
-    // Serialize data into a Parcel.
-    dest.writeString(fileUrl); //
-    dest.writeInt(width); //
-    dest.writeInt(height); //
-    dest.writeString(previewUrl); //
-    dest.writeInt(previewWidth); //
-    dest.writeInt(previewHeight); //
-    dest.writeString(sampleUrl); //
-    dest.writeInt(sampleWidth); //
-    dest.writeInt(sampleHeight); //
-    dest.writeTypedArray(tags, 0); //
-    dest.writeString(id); //
-    dest.writeString(parentId); //
-    dest.writeString(webUrl); //
-    dest.writeString(pixivId); //
-    dest.writeInt(safeSearchRating.ordinal());
-    dest.writeInt(score);
-    dest.writeString(source);
-    dest.writeString(md5);
-    dest.writeInt(searchPage != null ? searchPage : -1);
-    dest.writeInt(searchPagePosition != null ? searchPagePosition : -1);
-    dest.writeLong(createdAt != null ? createdAt.getTime() : -1L);
-  }
-
+  //region File extension from URL
   /**
    * Attempts to *guess* the file type of the {@link Image} based on the File URL.
    * May not be accurate for API types that don't include the file extension in image file names.
@@ -193,7 +207,9 @@ public class Image implements Parcelable {
 
     return "jpeg".equals(fileExt) ? "jpg" : fileExt;
   }
+  //endregion
 
+  //region SafeSearchRating enum
   /**
    * Safe-for-work ratings.
    * Users can choose to hide images with certain SafeSearch ratings.
@@ -208,6 +224,7 @@ public class Image implements Parcelable {
     /** Rating is unknown or has not been set. */
     U;
 
+    //region Static helper methods
     /**
      * Convert a String array into an array of {@link SafeSearchRating}s.
      *
@@ -252,6 +269,7 @@ public class Image implements Parcelable {
           return SafeSearchRating.U;
       }
     }
+    //endregion
   }
-
+  //endregion
 }
