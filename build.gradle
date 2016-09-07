@@ -17,7 +17,7 @@ buildscript {
 
 android {
   compileSdkVersion 24
-  buildToolsVersion "24.0.1"
+  buildToolsVersion "24.0.2"
 
   defaultConfig {
     minSdkVersion 10
@@ -65,7 +65,7 @@ repositories {
 }
 
 // Used to append Git commit hash to version names.
-def gitRevision() {
+static def gitRevision() {
   def cmd = "git rev-parse --short HEAD"
   return cmd.execute().text.trim()
 }
